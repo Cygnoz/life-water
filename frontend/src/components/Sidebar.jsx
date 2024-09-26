@@ -3,7 +3,7 @@ import home from '../assets/images/home.svg'
 import orders from '../assets/images/orders.svg'
 import stock from '../assets/images/stock.svg'
 import summary from '../assets/images/summary.svg'
-import ret from '../assets/images/ret.svg' 
+import ret from '../assets/images/Vector.png' 
 import users from '../assets/images/users.svg'
 import close from '../assets/images/x-mark.svg'
 import bars from '../assets/images/bars-4.svg'
@@ -27,7 +27,7 @@ function Sidebar() {
         <div className="p-4 flex justify-between items-center">
           <h1 className={`text-2xl font-bold ${isSidebarOpen ? 'block' : 'hidden'}`}>Menu</h1>
           <button onClick={handleToggleSidebar} className="w-[41px] h-10 px-[9px] py-2  rounded-[27px] flex items-center justify-center">
-            <div className="w-6 h-6 relative">{isSidebarOpen ? <img className='bg-[#d8b0b0] rounded-[27px] ' src={close} alt="" /> : <img src={bars} alt="" /> }</div>
+            <div className="w-6 h-6 relative">{isSidebarOpen ? <img className='bg-[#d8b0b0] rounded-[27px]' src={close} alt="" /> : <img className='bg-white ' src={bars} alt="" /> }</div>
           </button>
         </div>
         <nav className="mt-10">
@@ -39,7 +39,7 @@ function Sidebar() {
     <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Home</span>
   </li>
   <li className="flex items-center p-2 gap-4 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl ">
-    <img src={orders} alt="Orders" className={`w-6 h-6 ${isSidebarOpen ? 'inline-block' : 'hidden'}`} />
+    <img  src={orders} alt="Orders" className={`w-6 h-6 ${isSidebarOpen ? 'inline-block' : 'hidden'}`} />
     <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Orders</span>
   </li>
   <li className="flex items-center p-2 gap-4 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl ">
@@ -55,7 +55,7 @@ function Sidebar() {
     <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Summary</span>
   </li>
   <li className="flex items-center p-2 gap-4 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl ">
-    <img src={ret} alt="Return" className={`w-6 h-6 ${isSidebarOpen ? 'inline-block' : 'hidden'}`} />
+    <img src={ret} alt="Return" className={`hover:text-white w-6 h-6 ${isSidebarOpen ? 'inline-block' : 'hidden'}`} />
     <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Return</span>
   </li>
   <li className="flex items-center p-2 gap-4 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl ">
