@@ -4,19 +4,39 @@ import packing from '../assets/packing_4536852 1.svg'
 import processing from '../assets/processing_2816119 1.svg'
 import shopping from '../assets/shopping-bag_6948334 1.svg'
 import plus from '../assets/circle-plus.svg'
+import eye from '../assets/images/eye.svg'
 import dot from '../assets/ellipsis-vertical.svg'
-
+import Sidebar from '../layout/Sidebar'
+import { useNavigate } from 'react-router-dom'
 function Createorder() {
+const navigate = useNavigate()
+
+const handleCreate = ()=>{
+  navigate('/addneworder')
+}
+const handleview =()=>{
+  navigate('/view')
+}
+
+
   return (
+    <div className="flex min-h-screen w-full">
+    {/* Sidebar */}
+    <div >
+      <Sidebar />
+    </div>
     <div>
-        <h1>Helo</h1>
       <div className="p-6">
       {/* Header Section */}
       <div className="flex justify-between items-center">
-        <div>        <h1 className="text-2xl font-bold">Create Order</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Create Order</h1>
         </div>
         <div className='flex justify-between'> 
-             <button className="bg-[#820000] text-white flex px-5 py-2 rounded-md"><img className='me-2' src={plus} alt="" />New Order</button>
+             <button onClick={handleCreate} className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md">
+              <img  src={plus} alt="" />
+              <p>Create New Order</p>
+              </button>
         <button className='ms-2 me-4'><img src={dot} alt="" /></button>
         </div>
       
@@ -115,7 +135,7 @@ function Createorder() {
               <td className="p-2">20</td>
               <td className="p-2">Joey</td>
               <td className="p-2">
-                <button className="text-blue-500">👁️</button>
+              <button onClick={handleview} className="text-blue-500"><img src={eye} alt="" /></button>
                 <button className="text-red-500 ml-2">🗑️</button>
               </td>
             </tr>
@@ -129,13 +149,14 @@ function Createorder() {
               <td className="p-2">20</td>
               <td className="p-2">Joey</td>
               <td className="p-2">
-                <button className="text-blue-500">👁️</button>
+                <button className="text-blue-500"><img src={eye} alt="" /></button>
                 <button className="text-red-500 ml-2">🗑️</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
     </div>
     </div>
   )
