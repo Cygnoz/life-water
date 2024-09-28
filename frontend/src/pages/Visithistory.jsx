@@ -38,7 +38,7 @@ const Visithistory = () => {
             className="ml-2 p-2 bg-gray-200 rounded-lg"
             onClick={toggleDropdown}
           >
-            <img src={filter} alt="Filter Icon" className="w-5 h-5" />
+            <img alt="Filter Icon" className="w-5 h-5" />
           </button>
         </div>
 
