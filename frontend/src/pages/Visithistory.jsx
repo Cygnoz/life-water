@@ -14,15 +14,7 @@ const Visithistory = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white shadow-md">
-        <div className="text-2xl font-semibold">☰</div>
-        <h1 className="text-xl font-bold">History</h1>
-        <img
-          src="https://via.placeholder.com/40"
-          alt="Profile"
-          className="w-10 h-10 rounded-full"
-        />
-      </div>
+   
 
       {/* Search Bar with Filter Icon */}
       <div className="relative">
