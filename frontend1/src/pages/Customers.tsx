@@ -1,12 +1,8 @@
  import rupee from '../assets/images/receipt-indian-rupee.svg';
 
 // Define the props interface
-interface CustomersProps {
-  title: string;
-  amount: number;
-}
 
-const Customers: React.FC<CustomersProps> = ({  }) => {
+const Customers: React.FC = () => {
   return (
     <div className="p-4 space-y-4">
       <div className="grid grid-cols-2 gap-4">

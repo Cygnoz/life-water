@@ -3,26 +3,40 @@ import bottle from '../assets/images/bottle.png';
 import bottleside from '../assets/images/bottleside.png';
 import printer from '../assets/images/printer.svg';
 import lines from '../assets/images/lines.svg';
+import lines2 from '../assets/images/lines2.svg';
 import Sidebar from '../layout/Sidebar';
+import Layout from '../layout/Layout';
+
 
 
 const ViewOrder: React.FC = () => {
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
-      <div>
-        <Sidebar  />
-      </div>
+
 
       {/* Main content: View Order */}
-      <div className="flex-1 p-8 bg-gray-100 max-h-screen overflow-auto">
+      <div className="flex-1 p-8  max-h-screen overflow-auto">
         <div className="bg-white p-6 rounded-lg shadow-md mx-auto">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">View Orders Details</h2>
           </div>
+
+         <div className="flex gap-3">
+         <p className="text-sm text-gray-500 mt-2">Order</p>
+         <div className='mt-2'>
+                  <img src={lines2} alt="" />
+                </div>
+         
           <p className="text-sm text-gray-500 mt-2">Order# IN-0001</p>
-          <p className="text-sm text-gray-500">Purchase Date: 24/06/2024</p>
+          <div className='mt-2'>
+                  <img src={lines2} alt="" />
+                </div>
+          <div className="h-[25px] px-1.5 py-1 bg-[#f2f2f2] rounded justify-start items-start gap-2 inline-flex mt-1">
+<div className="text-[#4b5c79] text-sm font-semibold font-['Inter']">Draft</div>
+</div>
+          
+         </div>
 
           {/* Item Details */}
           <div className="mt-6 bg-gradient-to-r from-[#e3e6d5] to-[#f7e7ce] rounded-lg flex justify-between items-center p-3">
