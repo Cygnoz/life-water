@@ -1,16 +1,17 @@
 
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import ViewOrder from './components/ViewOrder';
 
-import './App.css'
-
-function App() {
-
+const App: React.FC = () => {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+      <Routes>
+        <Route path="/vieworder" element={<ViewOrder />} />
+      </Routes>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
+

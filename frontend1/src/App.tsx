@@ -7,6 +7,7 @@ const App: React.FC = () => {
     
       <Routes>
         <Route path="/about" element={<Customers title={''} amount={0} />} />
+
       </Routes>
   );
 }
