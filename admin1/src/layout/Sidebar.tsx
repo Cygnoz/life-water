@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import dash from '../assets/images/dash.svg';
 import order from '../assets/images/orders2.svg';
 import staff from '../assets/images/staff.svg';
@@ -16,25 +17,33 @@ import accountant from '../assets/images/sale.svg';
 interface SidebarItem {
   src: string;
   label: string;
+  route: string; // Add a route property to map labels to routes
 }
 
 const Sidebar: React.FC = () => {
+  const navigate = useNavigate(); // Initialize the useNavigate hook
+
   const sidebarItems: SidebarItem[] = [
-    { src: dash, label: 'Dashboard' },
-    { src: order, label: 'Orders' },
-    { src: staff, label: 'Staff' },
-    { src: customer, label: 'Customer' },
-    { src: sale, label: 'Sales' },
-    { src: accountant, label: 'Accountant' },
-    { src: supply, label: 'Supplier' },
-    { src: purchase, label: 'Purchase' },
-    { src: expense, label: 'Expense' },
-    { src: staff, label: 'Teams' },
-    { src: contract, label: 'Contract' },
-    { src: payroll, label: 'Payroll' },
-    { src: reports, label: 'Reports' },
-    { src: service1, label: 'Service' }
+    { src: dash, label: 'Dashboard', route: '/dashboard' },
+    { src: order, label: 'Orders', route: '/orders' },
+    { src: staff, label: 'Staff', route: '/staff' },
+    { src: customer, label: 'Customer', route: '/customer' },
+    { src: sale, label: 'Sales', route: '/sales' },
+    { src: accountant, label: 'Accountant', route: '/accountant' },
+    { src: supply, label: 'Supplier', route: '/supplier' },
+    { src: purchase, label: 'Purchase', route: '/purchase' },
+    { src: expense, label: 'Expense', route: '/expense' },
+    { src: staff, label: 'Teams', route: '/teams' },
+    { src: contract, label: 'Contract', route: '/contract' },
+    { src: payroll, label: 'Payroll', route: '/payroll' },
+    { src: reports, label: 'Reports', route: '/reports' },
+    { src: service1, label: 'Service', route: '/service' },
   ];
+
+  // Event handler for clicking on a sidebar item
+  const handleClick = (route: string) => {
+    navigate(route); // Navigate to the specified route
+  };
 
   return (
     <div className="w-[76px] h-[1080px] pt-[50px] pb-[134px] bg-[#820000] flex-col justify-start items-center inline-flex">
@@ -43,6 +52,7 @@ const Sidebar: React.FC = () => {
           <div
             key={index}
             className="self-stretch h-[54px] flex-col justify-start items-center gap-1.5 flex hover:bg-[#530015] rounded-lg p-2 cursor-pointer transition-all duration-200 ease-in-out"
+            onClick={() => handleClick(item.route)} // Pass the route to handleClick
           >
             <div className="w-[42px] h-9 px-2.5 rounded-lg flex-col justify-center items-center gap-2 flex">
               <div className="justify-start items-center gap-2 inline-flex">

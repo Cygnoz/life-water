@@ -10,30 +10,27 @@ import plus from '../assets/circle-plus.svg'
 import eye from '../assets/images/eye.svg'
 import dot from '../assets/ellipsis-vertical.svg'
 import user from '../assets/images/circle-user.svg'
-import Sidebar from '../layout/Sidebar'
 import { useNavigate } from 'react-router-dom'
 const CreateStaff: React.FC = () => {
   const navigate = useNavigate()
 
   const handleCreate = (): void => {
-    navigate('/addneworder')
+    navigate('/')
   }
 
   const handleView = (): void => {
-    navigate('/view')
+    navigate('/')
   }
   return (
 <div className="flex min-h-screen w-full">
       {/* Sidebar */}
-      <div>
-        <Sidebar />
-      </div>
+      
       <div>
         <div className="p-6">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Create Satff</h1>
+              <h1 className="text-2xl font-bold">Create Staff</h1>
             </div>
             <div className="flex justify-between">
               <button

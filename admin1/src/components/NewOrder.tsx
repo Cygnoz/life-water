@@ -48,10 +48,7 @@ const NewOrder: React.FC = () => {
   return (
     <>
       <div className="flex min-h-screen w-full">
-        {/* Sidebar */}
-        <div>
-          <Sidebar />
-        </div>
+       
 
         {/* Main content */}
         <div className="flex-1 p-8 bg-gray-50 min-h-screen">

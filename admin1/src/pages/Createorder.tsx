@@ -23,15 +23,12 @@ const CreateOrder: React.FC = () => {
   }
 
   const handleView = (): void => {
-    navigate('/view')
+    navigate('/vieworder')
   }
 
   return (
     <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
-      <div>
-        <Sidebar />
-      </div>
+      
       <div>
         <div className="p-6">
           {/* Header Section */}

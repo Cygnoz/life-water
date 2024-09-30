@@ -1,4 +1,3 @@
-import React from 'react'
 import delivery from '../assets/delivery-box_4047598 1.svg'
 import packing from '../assets/packing_4536852 1.svg'
 import processing from '../assets/processing_2816119 1.svg'

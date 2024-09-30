@@ -114,3 +114,4 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, handleToggleSidebar })
 }
 
 export default Sidebar;
+
