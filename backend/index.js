@@ -3,18 +3,25 @@ const app = express();
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
-require('./db/connection');
+require('./db/connection'); // Ensure the path to your MongoDB connection is correct
 
+// Import routes
+const staffRoutes = require('./routes/router.js'); // Adjust the path based on your project structure
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// Routes
+app.use('/api', staffRoutes); // This prefixes all your staff routes with '/api'
 
-const PORT = process.env.PORT || 4000;
-
-app.listen(PORT, () => {
-  console.log(`listening to ${PORT}`);
-});
-
+// Test route
 app.get('/', (req, res) => {
   res.send('Hello World!');
+});
+
+// Server listen
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
