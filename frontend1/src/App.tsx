@@ -1,16 +1,14 @@
-import './App.css'
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Customers from './pages/Customers';
 
-
-function App() {
- 
-
+const App: React.FC = () => {
   return (
-    <>
-   <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-    </>
-  )
+    
+      <Routes>
+        <Route path="/about" element={<Customers title={''} amount={0} />} />
+      </Routes>
+  );
 }
 
-export default App
+export default App;
