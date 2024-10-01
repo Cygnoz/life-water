@@ -15,6 +15,7 @@ import ViewOrder from '../components/ViewOrder';
 import CreateStaff from '../pages/Createstaff';
 import NewOrder from '../components/NewOrder';
 import EditStaff from '../pages/EditStaff';
+import CreateRoute from '../pages/Createroute';
 
 // import Header from './layout/Header';
 // import SubHeader from './layout/SubHeader';
@@ -42,6 +43,8 @@ const App: React.FC = () => {
         <Route path='/vieworder' element={<ViewOrder/>}/>
         <Route path='/staff' element={<CreateStaff/>}/>
         <Route path='/editstaff' element={<EditStaff/>}/>
+        <Route path='/createroute' element={<CreateRoute/>}/>
+
       
       </Routes>
 
