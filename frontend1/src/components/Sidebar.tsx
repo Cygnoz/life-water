@@ -82,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, handleToggleSidebar })
               <img src={ret} alt="Return" className="hover:text-white w-6 h-6" />
               <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Return</span>
             </li>
-            <li onClick={() => handleNavigation('/payment')} className="flex items-center p-2 gap-4 mb-1 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl">
+            <li onClick={() => handleNavigation('/collection')} className="flex items-center p-2 gap-4 mb-1 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl">
               <img src={pay} alt="Payment" className="w-6 h-6" />
               <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Payment Collection</span>
             </li>
@@ -98,7 +98,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isSidebarOpen, handleToggleSidebar })
               <img src={rout} alt="Route" className="w-6 h-6" />
               <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Route</span>
             </li>
-            <li onClick={() => handleNavigation('/history')} className="flex items-center p-2 gap-4 mb-1 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl">
+            <li onClick={() => handleNavigation('/visithistory')} className="flex items-center p-2 gap-4 mb-1 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl">
               <img src={hstory} alt="History" className="w-6 h-6" />
               <span className={`${isSidebarOpen ? 'inline-block ml-3' : 'hidden'}`}>Visit History</span>
             </li>

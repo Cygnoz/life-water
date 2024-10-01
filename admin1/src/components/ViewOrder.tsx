@@ -4,8 +4,7 @@ import bottleside from '../assets/images/bottleside.png';
 import printer from '../assets/images/printer.svg';
 import lines from '../assets/images/lines.svg';
 import lines2 from '../assets/images/lines2.svg';
-import Sidebar from '../layout/Sidebar';
-import Layout from '../layout/Layout';
+
 import backbutton from '../assets/images/backbutton.svg'
 import { Link } from 'react-router-dom';
 
