@@ -1,37 +1,61 @@
- <div className="w-[1299px] h-[76px] px-8 py-[18px] bg-[#e3e6d5] rounded-[40px] justify-start items-center gap-4 inline-flex">
-   
-</div> 
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Home from '../assets/images/home.svg';
+import frame from '../assets/images/frame.svg';
 
-const SubHeader:React.FC = () => {
-  return (
-   <>
-    <div className="w-[1299px] h-[76px] px-8 py-[18px] bg-[#e3e6d5] rounded-[40px] justify-start items-center gap-4 inline-flex">
-   
-  
-    <div className="px-3 py-1 bg-white rounded-[30px] justify-start items-center gap-0.5 flex">
-        <div className="h-8 px-0.5 rounded-[56px] flex-col justify-center items-start gap-2 inline-flex">
-            <div className="justify-start items-center gap-2 inline-flex">
-                <div className="w-5 h-5 relative" />
-            </div>
-        </div>
-    </div>
-    <div className="grow shrink basis-0 h-[35px] justify-start items-center gap-3.5 flex">
-        <div className="px-4 py-2 rounded-[30px] justify-center items-center gap-2.5 flex">
-            <div className="text-[#585953] text-base font-bold font-['Inter']">Dashboard</div>
-        </div>
-        <div className="px-4 py-2 bg-[#fcffed] rounded-[30px] justify-center items-center gap-2.5 flex">
-            <div className="text-[#585953] text-base font-semibold font-['Inter']">Order</div>
-        </div>
-    </div>
-    <div className="h-[38px] justify-end items-center gap-1 flex">
-        <div className="p-2 bg-white rounded-[40px] justify-start items-center gap-2.5 flex">
-            <div className="w-[22px] h-[22px] relative" />
-        </div>
-    </div>
-    </div> 
-   </>
-  )
+interface SubHeaderProps {
+  selectedNav: string;
+  subhead: { headName: string; subRoute: string }[]; // Receive subhead data
 }
 
-export default SubHeader
+const SubHeader: React.FC<SubHeaderProps> = ({ selectedNav, subhead }) => {
+  const navigate = useNavigate();
+  const [selectedSubhead, setSelectedSubhead] = useState(''); // State for the selected subhead
+
+  const handleSubheadClick = (subRoute: string, headName: string) => {
+    setSelectedSubhead(headName); // Set the selected subhead
+    navigate(subRoute); // Navigate to the selected subRoute
+  };
+
+  return (
+    <div className="w-[1380px] h-[76px] px-8 py-[18px] bg-[#e3e6d5] rounded-[40px] flex items-center gap-4">
+      <div className="px-3 py-1 bg-white rounded-[30px] flex items-center">
+        <div className="h-8 px-0.5 rounded-[56px] flex items-center">
+          <img src={Home} alt="Home" />
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-4">
+        <div className="px-4 py-2 rounded-[30px] flex items-center gap-2.5">
+          <div className="text-[#585953] text-base font-bold">
+            Dashboard {/* Display selected nav */}
+          </div>
+        </div>
+
+        {/* Render subhead items next to Dashboard */}
+        {subhead.length > 0 && (
+          <div className="flex gap-2">
+            {subhead.map((subItem, index) => (
+              <div
+                key={index}
+                className={`cursor-pointer text-[#585953] text-base font-bold p-2 rounded-full transition-all duration-300 ${
+                  selectedSubhead === subItem.headName ? 'bg-[#FCFFED] text-[#000000]' : 'hover:bg-[#FCFFED]'
+                }`}
+                onClick={() => handleSubheadClick(subItem.subRoute, subItem.headName)}
+              >
+                {subItem.headName}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Align the frame image to the end */}
+      <div className="ml-auto">
+        <img src={frame} alt="Frame" />
+      </div>
+    </div>
+  );
+};
+
+export default SubHeader;
