@@ -17,7 +17,10 @@ function SubRoute({}: Props) {
     const navigate = useNavigate()
 
     const handleCreate = (): void => {
-      navigate('/')
+      navigate('/route/newsubroute')
+    }
+    const handleEdit = (): void => {
+      navigate('/route/editsubroute')
     }
   
   
@@ -97,7 +100,7 @@ function SubRoute({}: Props) {
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                  <button className="text-blue-500 mx-2 items-center">
+                  <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
                       <img src={pen} alt="" />
                     </button>
                     <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
