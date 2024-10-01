@@ -26,7 +26,7 @@ const CreateStaff: React.FC = () => {
   }
   return (
 <div className="flex min-h-screen w-full">
-      {/* Sidebar */}
+      
       
       <div>
         <div className="p-6">

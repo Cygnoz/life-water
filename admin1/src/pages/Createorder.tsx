@@ -71,7 +71,6 @@ const CreateOrder: React.FC = () => {
               <img src={processing} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Sold Item</div>
               <p className='text-[#4B5C79] w-[400] text-[12]' >Lorem ipsum dolor sit amet consectetur </p>           
-
               <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">10</div>
             </div>
 
@@ -79,7 +78,6 @@ const CreateOrder: React.FC = () => {
               <img src={delivery} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Revenue</div>
               <p className='text-[#4B5C79] w-[400] text-[12]' >Lorem ipsum dolor sit amet consectetur </p>           
-
               <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">12</div>
             </div>
           </div>
