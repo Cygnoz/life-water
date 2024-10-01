@@ -2,7 +2,8 @@ import React from 'react';
 
 const EditStaff: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-10">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-10">
+      {/* Main Container */}
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
         <h2 className="text-2xl font-bold mb-4">Edit Staff</h2>
 
@@ -20,11 +21,7 @@ const EditStaff: React.FC = () => {
                   />
                   <label className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
                     Upload New Photo
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                    />
+                    <input type="file" accept="image/*" className="hidden" />
                   </label>
                 </div>
                 <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">
@@ -34,7 +31,9 @@ const EditStaff: React.FC = () => {
 
               {/* Mobile Number */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Mobile Number
+                </label>
                 <input
                   type="text"
                   className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
@@ -44,10 +43,17 @@ const EditStaff: React.FC = () => {
 
               {/* WhatsApp Number with Checkbox */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">WhatsApp Number</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  WhatsApp Number
+                </label>
                 <div className="mt-2 flex items-center">
-                  <input type="checkbox" className="form-checkbox h-4 w-4 text-red-600" />
-                  <span className="ml-2 text-sm text-gray-700 m-1">Same as phone number</span>
+                  <input
+                    type="checkbox"
+                    className="form-checkbox h-4 w-4 text-red-600"
+                  />
+                  <span className="ml-2 text-sm text-gray-700 m-1">
+                    Same as phone number
+                  </span>
                 </div>
                 <input
                   type="text"
@@ -58,7 +64,9 @@ const EditStaff: React.FC = () => {
 
               {/* Visa Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Visa Status</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Visa Status
+                </label>
                 <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
                   <option>Approved</option>
                   <option>Pending</option>
@@ -68,9 +76,13 @@ const EditStaff: React.FC = () => {
 
               {/* Visa Number (Dropdown) */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Visa Number</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Visa Number
+                </label>
                 <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option value="" disabled selected>Select Visa Number</option>
+                  <option value="" disabled selected>
+                    Select Visa Number
+                  </option>
                   <option value="234">234***********</option>
                   <option value="235">235***********</option>
                   <option value="236">236***********</option>
@@ -79,9 +91,13 @@ const EditStaff: React.FC = () => {
 
               {/* Emirates ID (Dropdown) */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Emirates ID</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Emirates ID
+                </label>
                 <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option value="" disabled selected>Select Emirates ID</option>
+                  <option value="" disabled selected>
+                    Select Emirates ID
+                  </option>
                   <option value="Em-01">Em-01******</option>
                   <option value="Em-02">Em-02******</option>
                   <option value="Em-03">Em-03******</option>
@@ -94,7 +110,9 @@ const EditStaff: React.FC = () => {
               {/* Full Name and Date of Birth */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
@@ -103,7 +121,9 @@ const EditStaff: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Date of Birth
+                  </label>
                   <input
                     type="date"
                     className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
@@ -113,7 +133,9 @@ const EditStaff: React.FC = () => {
 
               {/* Address */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Address</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Address
+                </label>
                 <input
                   type="text"
                   className="mt-1 p-2 border border-gray-300 rounded-lg w-full h-20"
@@ -123,7 +145,9 @@ const EditStaff: React.FC = () => {
 
               {/* Designation */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Designation</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Designation
+                </label>
                 <div className="flex flex-col space-y-2 mt-2">
                   <label className="inline-flex items-center">
                     <input type="radio" name="designation" className="form-radio" />
@@ -142,7 +166,9 @@ const EditStaff: React.FC = () => {
 
               {/* Visa Validity */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Visa Validity</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Visa Validity
+                </label>
                 <input
                   type="date"
                   className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
@@ -151,32 +177,33 @@ const EditStaff: React.FC = () => {
 
               {/* Nationality */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Nationality</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Nationality
+                </label>
                 <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
                   <option>Indian</option>
                   <option>Other</option>
                 </select>
               </div>
             </div>
-
-            {/* Buttons - Bottom Right */}
-            <div className="col-span-2 flex justify-end space-x-4 mt-4">
-              <button
-                type="button"
-                className="bg-gray-400 text-white p-2 rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
-              type='submit' className="bg-[#820000] rounded-lg text-white py-2 px-4">
-                  Save
-                </button>
-            </div>
           </div>
         </form>
       </div>
+
+      {/* Buttons Section - Separate and Outside the Main Container */}
+      <div className="flex justify-end w-full max-w-8xl mx-4 mt-6 space-x-4">
+        <button
+          type="button"
+          className="bg-gray-400 text-white p-2 rounded-lg"
+        >
+          Cancel
+        </button>
+        <button type="submit" className="bg-[#820000] rounded-lg text-white py-2 px-4">
+          Save
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 export default EditStaff;
