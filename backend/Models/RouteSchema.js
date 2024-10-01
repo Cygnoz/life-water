@@ -13,11 +13,7 @@ const routeSchema = new Schema({
   },
   description: {
     type: String
-  },
-  subroutes: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Subroute'
-  }]
+  }
 });
 
 const Route = mongoose.model('Route', routeSchema);

@@ -3,6 +3,7 @@ const router = express.Router();
 const staffController = require('../controller/staffController');
 const vehicleController = require('../controller/VehicleController');
 const routeController = require('../controller/RouteController');
+const subrouteController = require('../controller/SubRouteController');
 
 // Add staff
 router.post('/staff', staffController.addStaff);
@@ -34,5 +35,11 @@ router.put('/updateRoute/:id', routeController.updateRoute);       // Update rou
 router.get('/viewRoutes', routeController.viewAllRoutes);         // View all routes
 router.get('/viewRoute/:id', routeController.viewRouteById);     // View route by ObjectId
 
+// subroute
+router.post('/addSRoute', subrouteController.addSubroute);
+router.put('/updateSRoute/:id', subrouteController.editSubroute);
+router.delete('/delSRoute/:id', subrouteController.deleteSubroute);
+router.get('/viewSRoute', subrouteController.viewAllSubroutes);
+router.get('/viewSRoute/:id', subrouteController.viewSubroute);
 
 module.exports = router;
