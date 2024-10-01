@@ -53,7 +53,8 @@ const CreateOrder: React.FC = () => {
           <div className="grid grid-cols-4 gap-4 my-6">
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={shopping} alt="" />
-              <div className="w-[587px] font-bold leading-normal text-[20px] mt-2">Cash Sale</div>             
+              <div className="w-[587px] font-bold leading-normal text-[20px] mt-2">Cash Sale</div>  
+              <p>Lorem ipsum dolor sit amet consectetur </p>           
               <div className="w-[587px] text-[#820000] font-bold leading-normal text-[25px] mt-3">120</div>
             </div>
 
@@ -92,7 +93,7 @@ const CreateOrder: React.FC = () => {
               </div>
             </div>
             <table className="w-full text-left">
-              <thead>
+              <thead className=' bg-[#fdf8f0]'>
                 <tr className="border-b">
                   <th className="p-2">Sl No</th>
                   <th className="p-2">Date</th>

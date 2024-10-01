@@ -7,6 +7,8 @@ require('./db/connection'); // Ensure the path to your MongoDB connection is cor
 
 // Import routes
 const staffRoutes = require('./routes/router.js'); // Adjust the path based on your project structure
+const routeRoute = require('./routes/router.js');
+const vehicleRoute = require('./routes/router.js');
 
 // Middleware
 app.use(cors());
@@ -14,6 +16,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api', staffRoutes); // This prefixes all your staff routes with '/api'
+app.use('/api', routeRoute);
+app.use('/api',vehicleRoute);
 
 // Test route
 app.get('/', (req, res) => {

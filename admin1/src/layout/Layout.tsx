@@ -14,6 +14,7 @@ import CreateOrder from '../pages/Createorder';
 import ViewOrder from '../components/ViewOrder';
 import CreateStaff from '../pages/Createstaff';
 import NewOrder from '../components/NewOrder';
+import EditStaff from '../pages/EditStaff';
 
 // import Header from './layout/Header';
 // import SubHeader from './layout/SubHeader';
@@ -37,9 +38,10 @@ const App: React.FC = () => {
         <div>
         <Routes>
         <Route path='/orders' element={<CreateOrder/>}/>
+        <Route path='/addneworder' element={<NewOrder/>}/>
         <Route path='/vieworder' element={<ViewOrder/>}/>
         <Route path='/staff' element={<CreateStaff/>}/>
-        <Route path='/addneworder' element={<NewOrder/>}/>
+        <Route path='/editstaff' element={<EditStaff/>}/>
       
       </Routes>
 

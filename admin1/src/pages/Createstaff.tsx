@@ -21,6 +21,9 @@ const CreateStaff: React.FC = () => {
   const handleView = (): void => {
     navigate('/')
   }
+  const handleEdit = (): void => {
+    navigate('/editstaff')
+  }
   return (
 <div className="flex min-h-screen w-full">
       {/* Sidebar */}
@@ -53,6 +56,7 @@ const CreateStaff: React.FC = () => {
               <img src={shopping} alt="" />
               <div className="w-[587px] font-bold leading-normal text-[20px] mt-2">Total Staff</div>             
               <div className="w-[587px] text-[#820000] font-bold leading-normal text-[25px] mt-3">120</div>
+              
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
@@ -90,7 +94,7 @@ const CreateStaff: React.FC = () => {
               </div>
             </div>
             <table className="w-full text-left">
-              <thead>
+              <thead className=' bg-[#fdf8f0]'>
                 <tr className="border-b">
                   <th className="p-2">Sl No</th>
                   <th className="p-2">Photo</th>
@@ -109,11 +113,11 @@ const CreateStaff: React.FC = () => {
                   <td className="p-2">Purathezhath House, Indira Gandhi, kochi</td>
                   <td className="p-2">9092333300</td>
                   <td className="p-2">Sales Men</td>
-                  <td className="p-2">
+                  <td className="p-2 flex gap-1">
                     <button onClick={handleView} className="text-blue-500">
                       <img src={eye} alt="" />
                     </button>
-                    <button className="text-red-500 ml-2"><img src={vector} alt="" /></button>
+                    <button onClick={handleEdit} className="text-red-500 ml-2"><img src={vector} alt="" /></button>
                     <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
 
                   </td>
@@ -125,11 +129,11 @@ const CreateStaff: React.FC = () => {
                   <td className="p-2">Purathezhath House, Indira Gandhi, kochi</td>
                   <td className="p-2">9092333300</td>
                   <td className="p-2">Sales Men</td>
-                  <td className="p-2">
+                  <td className="p-2 flex gap-1">
                   <button onClick={handleView} className="text-blue-500">
                       <img src={eye} alt="" />
                     </button>
-                    <button className="text-red-500 ml-2"><img src={vector} alt="" /></button>
+                    <button onClick={handleEdit} className="text-red-500 ml-2"><img src={vector} alt="" /></button>
                     <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
 
                   </td>

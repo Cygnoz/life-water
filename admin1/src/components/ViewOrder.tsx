@@ -4,10 +4,9 @@ import bottleside from '../assets/images/bottleside.png';
 import printer from '../assets/images/printer.svg';
 import lines from '../assets/images/lines.svg';
 import lines2 from '../assets/images/lines2.svg';
-import Sidebar from '../layout/Sidebar';
-import Layout from '../layout/Layout';
 
-
+import backbutton from '../assets/images/backbutton.svg'
+import { Link } from 'react-router-dom';
 
 const ViewOrder: React.FC = () => {
   return (
@@ -18,7 +17,10 @@ const ViewOrder: React.FC = () => {
       <div className="flex-1 p-8  max-h-screen overflow-auto">
         <div className="bg-white p-6 rounded-lg shadow-md mx-auto">
           {/* Header Section */}
-          <div className="flex justify-between items-center">
+          <div className="flex gap-3 items-center">
+          <Link to={'/orders'}>
+            <button  className='h-10 px-2.5 bg-[#f6f6f6] rounded-[56px]'>
+              <img src={backbutton} alt="" /></button></Link>
             <h2 className="text-xl font-semibold">View Orders Details</h2>
           </div>
 
@@ -36,6 +38,10 @@ const ViewOrder: React.FC = () => {
 <div className="text-[#4b5c79] text-sm font-semibold font-['Inter']">Draft</div>
 </div>
           
+         </div>
+         <hr className='mt-2'/>
+         <div className="flex">
+          <p className='text-sm text-gray-500 mt-2'>Purchase date : <span className='font-bold'>8/08/2024</span></p>
          </div>
 
           {/* Item Details */}
