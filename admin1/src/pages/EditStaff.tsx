@@ -168,11 +168,9 @@ const EditStaff: React.FC = () => {
                 Cancel
               </button>
               <button
-                type="submit"
-                className="bg-red-600 text-white p-2 rounded-lg"
-              >
-                Update
-              </button>
+              type='submit' className="bg-[#820000] rounded-lg text-white py-2 px-4">
+                  Save
+                </button>
             </div>
           </div>
         </form>
