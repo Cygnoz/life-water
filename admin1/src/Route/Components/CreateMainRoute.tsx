@@ -1,6 +1,9 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import back from '../../assets/images/backbutton.svg'
 import { Link } from 'react-router-dom';
+
+
+
 const EditSubRoute: React.FC = () => {
   // State to manage form values
   const [formData, setFormData] = useState({
@@ -30,12 +33,12 @@ const EditSubRoute: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
       {/* First Row: Heading and Icon */}
       <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
-     <Link to={'/route/subroute'}>
+     <Link to={'/route/createroute'}>
      <div className="icon-placeholder">
          <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
         </div>
      </Link>
-        <h2 className="text-2xl font-bold">Edit Sub Route</h2>
+        <h2 className="text-2xl font-bold">Create New Main Route</h2>
         {/* Placeholder for Icon */}
         
       </div>
@@ -47,7 +50,7 @@ const EditSubRoute: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
-                Sub Route
+                Main Route
               </label>
               <input
                 type="text"
@@ -61,7 +64,7 @@ const EditSubRoute: React.FC = () => {
 
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
-                Sub Route code
+                 Route code
               </label>
               <input
                 type="text"
@@ -75,7 +78,7 @@ const EditSubRoute: React.FC = () => {
             
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
-                Main Route
+                Sub Route
               </label>
               <select
                 name="mainRoute"
