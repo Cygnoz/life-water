@@ -28,7 +28,7 @@ const App: React.FC = () => {
   return (
     <>
       {/* Header at the top, spans full width */}
-      <div className="flex h-screen bg-[#f6f6f6]">
+      <div className="flex h-[1080px] bg-[#f6f6f6]">
         {/* Sidebar on the left, fixed width */}
         <Sidebar onSelect={handleNavSelect} className="w-1/4" />
         {/* Main content (SubHeader) on the right, takes up remaining space */}
