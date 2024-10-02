@@ -15,6 +15,9 @@ const vehicleRoute = require('./routes/router.js');
 app.use(cors());
 app.use(express.json());
 
+app.use('/uploads', express.static('uploads')); // Ensure the path is correct
+
+
 // Routes
 app.use('/api', staffRoutes); // This prefixes all your staff routes with '/api'
 app.use('/api', routeRoute);
