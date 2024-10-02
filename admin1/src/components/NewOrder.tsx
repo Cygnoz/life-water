@@ -237,6 +237,7 @@ const NewOrder: React.FC = () => {
                  className="w-full p-2 border rounded-md"
                  placeholder='Add Terms and Condition of Your Business'
                ></textarea>
+               
              </div>
 
              {/* Total and Actions */}

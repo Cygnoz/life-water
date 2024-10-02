@@ -1,11 +1,22 @@
  import printer from '../../assets/images/printer.svg'
 import split from '../../assets/images/list-filter.svg'
 import search from '../../assets/images/search.svg'
-
+import back from '../../assets/images/backbutton.svg'
+import { Link } from 'react-router-dom';
  
 const ActiveRoute: React.FC = () => {
   return (
 <div className='mt-5'>
+<div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
+     <Link to={'/route/createroute'}>
+     <div className="icon-placeholder">
+         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
+        </div>
+     </Link>
+        <h2 className="text-2xl font-bold">Add New Sub Route</h2>
+        {/* Placeholder for Icon */}
+        
+      </div>
 
     {/* Table Section */}
     <div className="bg-white shadow-md rounded-lg p-4">

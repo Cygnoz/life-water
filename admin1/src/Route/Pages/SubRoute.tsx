@@ -38,7 +38,7 @@ function SubRoute({}: Props) {
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white px-5 py-2 rounded-md"
               >
                 <img src={plus} alt="" />
-                <p>Add New SubRoute</p>
+                <p>Add New Sub Route</p>
               </button>
 
               

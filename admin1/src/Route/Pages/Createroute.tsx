@@ -9,8 +9,18 @@ import split from '../../assets/images/list-filter.svg'
 import plus from '../../assets/circle-plus.svg'
 import eye from '../../assets/images/eye.svg'
 import dot from '../../assets/ellipsis-vertical.svg'
+import { useNavigate } from 'react-router-dom'
   
 const CreateRoute: React.FC = () => {
+
+  const navigate=useNavigate()
+  
+  const handlecreate = (): void => {
+    navigate('/route/createmainroute')
+  }
+
+
+
     return (
         <div className="flex min-h-screen w-full">  
         <div>
@@ -22,8 +32,7 @@ const CreateRoute: React.FC = () => {
                 <p className='text-[#4B5C79]' >Lorem ipsum dolor sit amet consectetur </p>             
               </div>
               <div className="flex justify-between">
-                <button
-                  
+                <button onClick={handlecreate}
                   className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
                 >
                   <img src={plus} alt="" />

@@ -18,7 +18,7 @@ const SubHeader: React.FC<SubHeaderProps> = ({ selectedNav, subhead }) => {
   };
 
   return (
-    <div className="w-[1380px] h-[76px] px-8 py-[18px] bg-[#e3e6d5] rounded-[40px] flex items-center gap-4">
+    <div className="w-[1380px] h-[76px] px-8 py-[18px] bg-[#e3e6d5] rounded-[40px] flex items-center gap-4 mt-4">
       <div className="px-3 py-1 bg-white rounded-[30px] flex items-center">
         <div className="h-8 px-0.5 rounded-[56px] flex items-center">
           <img src={Home} alt="Home" />
