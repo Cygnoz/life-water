@@ -5,8 +5,10 @@ const vehicleController = require('../controller/VehicleController');
 const routeController = require('../controller/RouteController');
 const subrouteController = require('../controller/SubRouteController');
 
+const upload = require('../middleware/Multermiddleware')
+
 // Add staff
-router.post('/staff', staffController.addStaff);
+router.post('/addstaff',upload.single('profile'),staffController.addStaff);
 
 // Get all staff
 router.get('/getallstaff', staffController.getAllStaff);
