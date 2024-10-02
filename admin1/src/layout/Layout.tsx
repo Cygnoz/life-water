@@ -13,6 +13,8 @@ import SubRoute from '../Route/Pages/SubRoute';
 import EditSubRoute from '../Route/Pages/EditSubRoute';
 import CreateSubRoute from '../Route/Components/CreateSubRoute';
 import CreateRoute from '../Route/Pages/Createroute';
+import AddStaff from '../pages/AddStaff';
+import CreateMainRoute from '../Route/Components/CreateMainRoute';
 
 const App: React.FC = () => {
   const [selectedNav, setSelectedNav] = useState<string>(''); // Store selected nav
@@ -39,12 +41,14 @@ const App: React.FC = () => {
               <Route path='/addneworder' element={<NewOrder />} />
               <Route path='/vieworder' element={<ViewOrder />} />
               <Route path='/staff' element={<CreateStaff />} />
+              <Route path='/addstaff' element={<AddStaff />} />
               <Route path='/editstaff' element={<EditStaff />} />
+              <Route path='/route/createroute' element={<CreateRoute />} />
+              <Route path='/route/createmainroute' element={<CreateMainRoute />} />
               <Route path='/route/activeroute' element={<ActiveRoute />} />
               <Route path='/route/subroute' element={<SubRoute />} />
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
               <Route path='/route/editsubroute' element={<EditSubRoute />} />
-              <Route path='/route/createroute' element={<CreateRoute />} />
 
             </Routes>
           </div>

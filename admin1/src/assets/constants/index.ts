@@ -51,7 +51,7 @@ const navlist = [
   {
     nav: "Route",
     icon:supply,
-    route: "/route",
+    route: "/route/createroute",
     subhead: [
       // {
       //   subhead: "Route",
@@ -59,7 +59,7 @@ const navlist = [
       // },
       {
         headName: "Main Route",
-        subRoute: "/activeroute",
+        subRoute: "/route/createroute",
       },
       {
         headName: "Active Route",

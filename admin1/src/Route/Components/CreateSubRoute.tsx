@@ -1,4 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import back from '../../assets/images/backbutton.svg'
+import { Link } from 'react-router-dom';
 
 const CreateSubRoute: React.FC = () => {
   // State to manage form values
@@ -28,12 +30,15 @@ const CreateSubRoute: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
       {/* First Row: Heading and Icon */}
-      <div className="flex justify-between items-center w-full max-w-8xl mb-6">
-        <h2 className="text-2xl font-semibold">Create New Sub Route</h2>
-        {/* Placeholder for Icon */}
-        <div className="icon-placeholder">
-          {/* Add your icon here */}
+      <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
+     <Link to={'/route/subroute'}>
+     <div className="icon-placeholder">
+         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
         </div>
+     </Link>
+        <h2 className="text-2xl font-bold">Add New Sub Route</h2>
+        {/* Placeholder for Icon */}
+        
       </div>
 
       {/* Second Row: Form Container */}
