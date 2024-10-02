@@ -19,6 +19,12 @@ const CreateRoute: React.FC = () => {
     navigate('/route/createmainroute')
   }
 
+  const handleView = ():void=>{
+    navigate('/route/viewroute')
+
+  }
+
+
 
 
     return (
@@ -110,7 +116,7 @@ const CreateRoute: React.FC = () => {
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79] ">
-                      <button  className="text-blue-500">
+                      <button onClick={handleView}  className="text-blue-500">
                         <img src={eye} alt="" />
                       </button>
                       <button className="text-red-500 ml-2"><img src={vector} alt="" /></button>

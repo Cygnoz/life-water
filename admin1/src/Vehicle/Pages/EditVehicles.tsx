@@ -8,7 +8,7 @@ function EditVehicles({}: Props) {
   return (
     <div className='p-6'>
         <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
-     <Link to={''}>
+     <Link to={'/vehicle'}>
      <div className="icon-placeholder">
          <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
         </div>

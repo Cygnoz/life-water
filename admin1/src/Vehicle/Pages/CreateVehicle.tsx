@@ -1,14 +1,14 @@
-import printer from '../assets/images/printer.svg'
-import vector from '../assets/images/Vector.svg'
-import trash from '../assets/images/trash.svg'
-import split from '../assets/images/list-filter.svg'
-import plus from '../assets/circle-plus.svg'
-import eye from '../assets/images/eye.svg'
-import dot from '../assets/ellipsis-vertical.svg'
-import user from '../assets/images/circle-user.svg'
+import printer from '../../assets/images/printer.svg'
+import vector from '../../assets/images/Vector.svg'
+import trash from '../../assets/images/trash.svg'
+import split from '../../assets/images/list-filter.svg'
+import plus from '../../assets/circle-plus.svg'
+import eye from '../../assets/images/eye.svg'
+import dot from '../../assets/ellipsis-vertical.svg'
+import user from '../../assets/images/circle-user.svg'
 
-import search from '../assets/images/search.svg'
-import vehicle from '../assets/images/vehicle 1.svg'
+import search from '../../assets/images/search.svg'
+import vehicle from '../../assets/images/vehicle 1.svg'
 
 import { useNavigate } from "react-router-dom";
 
@@ -21,13 +21,15 @@ const CreateVehicle: React.FC = () => {
 
     
   
+    const handleAdd = (): void => {
+      navigate('/vehicle/addvehicle')
+    }
+    const handleEdit = (): void => {
+      navigate('/vehicle/editvehicle')
+    }
     const handleView = (): void => {
       navigate('/')
     }
-    const handleEdit = (): void => {
-      navigate('/')
-    }
-    
 
 
   return (
@@ -44,6 +46,7 @@ const CreateVehicle: React.FC = () => {
             </div>
             <div className="flex justify-between">
               <button
+              onClick={handleAdd}
               
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
               >
@@ -116,7 +119,7 @@ const CreateVehicle: React.FC = () => {
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">1111</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">12 days left</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">300</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">Expired</td>
+                  <td className="p-2 text-[14] text-center text-red-500"><span className='bg-red-100 p-2 rounded-lg'>Expired</span></td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79] ">
                     <button onClick={handleView} className="text-blue-500">
                       <img src={eye} alt="" />
@@ -135,7 +138,7 @@ const CreateVehicle: React.FC = () => {
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">2222</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">20 days left</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">200</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">Expired</td>
+                  <td className="p-2 text-[14] text-center text-red-500"><span className='bg-red-100 p-2 rounded-lg'>Expired</span></td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79] ">
                     <button onClick={handleView} className="text-blue-500">
                       <img src={eye} alt="" />
@@ -157,7 +160,7 @@ const CreateVehicle: React.FC = () => {
   );
 };
  
-export default CreateVehicle;
+export default CreateVehicle;
 
 
 
