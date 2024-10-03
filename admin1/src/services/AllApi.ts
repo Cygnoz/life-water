@@ -33,3 +33,16 @@ export const getAllStaffsAPI = async (): Promise<ApiResponse> => {
   }
 };
 
+export const getStaffByIdAPI = async (id): Promise<ApiResponse> => {
+  try {
+    const response = await commonAPI('GET', `${BASEURL}/api/staff/${_id}`, null, {
+      // No need to specify any headers for GET requests
+    });
+
+    return response; // Ensure the response matches the expected ApiResponse structure
+  } catch (error: any) {
+    console.error("Error fetching staff data:", error); // Log the full error for debugging
+    return { message: error.message || "An unexpected error occurred." }; // Fallback error message
+  }
+}
+

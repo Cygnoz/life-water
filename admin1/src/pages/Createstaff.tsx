@@ -24,9 +24,11 @@ const CreateStaff: React.FC = () => {
     navigate("/addstaff")
   }
  
-  const handleView = (): void => {
-    navigate("/viewstaff")
-  }
+  const handleView = (id) => {
+    navigate(`/viewstaff/${id}`); // Pass the staff ID to the view page
+  };
+  
+  
   const handleEdit = (): void => {
     navigate("/")
   }
@@ -152,16 +154,16 @@ const CreateStaff: React.FC = () => {
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">{staff.mobileNumber}</td>
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">{staff.designation}</td>
                       <td className="p-2 text-center">
-                        <button onClick={handleView} className="text-blue-500">
-                          <img src={eye} alt="View" />
-                        </button>
-                        <button onClick={handleEdit} className="text-red-500 ml-2">
-                          <img src={vector} alt="Edit" />
-                        </button>
-                        <button className="text-red-500 ml-2">
-                          <img src={trash} alt="Delete" />
-                        </button>
-                      </td>
+  <button onClick={() => handleView(staff._id)} className="text-blue-500">
+    <img src={eye} alt="View" />
+  </button>
+  <button onClick={handleEdit} className="text-red-500 ml-2">
+    <img src={vector} alt="Edit" />
+  </button>
+  <button className="text-red-500 ml-2">
+    <img src={trash} alt="Delete" />
+  </button>
+</td>
                     </tr>
                   ))
                 ) : (
