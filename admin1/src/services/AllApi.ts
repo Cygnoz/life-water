@@ -47,4 +47,24 @@ export const getStaffByIdAPI = async (id: string): Promise<ApiResponse> => {
   }
 }
 
+export const deleteStaffByIdAPI = async (id: string) => {
+  try {
+    const response = await fetch(`${BASEURL}/api/staff/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete staff');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Error deleting staff:', error);
+    throw new Error(error.message || 'An unexpected error occurred.');
+  }
+};
+
+
+
 
