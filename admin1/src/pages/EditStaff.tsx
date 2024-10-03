@@ -1,9 +1,21 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
+import backbutton from "../assets/images/backbutton.svg";
 const EditStaff: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-10">
-      {/* Main Container */}
+    <div className="min-h-screen bg-gray-100  items-center justify-center p-10">
+     
+     <div className="flex mt-3">
+        <Link to={'/staff'}>
+        <button className="w-[40px] h-[40px] px-2.5 bg-[#FFFFFF] rounded-[56px]">
+          <img src={backbutton} alt="" />
+        </button>
+        </Link>
+        <h3 className="text-[#303F58] mt-1 ms-3 text-[20px] font-bold">
+          Edit Staff
+        </h3>
+      </div>
+
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
         <h2 className="text-2xl font-bold mb-4">Edit Staff</h2>
 
@@ -192,15 +204,18 @@ const EditStaff: React.FC = () => {
 
       {/* Buttons Section - Separate and Outside the Main Container */}
       <div className="flex justify-end w-full max-w-8xl mx-4 mt-6 space-x-4">
+      <Link to={'/staff'}>
         <button
           type="button"
           className="bg-gray-400 text-white p-2 rounded-lg"
         >
           Cancel
         </button>
+        </Link>
         <button type="submit" className="bg-[#820000] rounded-lg text-white py-2 px-4">
           Save
         </button>
+       
       </div>
     </div>
   );
