@@ -6,10 +6,10 @@ const vehicleSchema = new mongoose.Schema({
     required: true
     // unique: true
   },
-//   image: {
-//     type: String,
-//     required: true
-//   },
+  image: {
+    type: String,
+    required: true
+  },
   insuranceValidity: {
     type: Date,
     required: true

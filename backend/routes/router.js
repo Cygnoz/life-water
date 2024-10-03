@@ -10,8 +10,9 @@ const upload = require('../middleware/Multermiddleware')
 // Add staff
 router.post('/addstaff',upload.single('profile'),staffController.addStaff);
 
-// Get all staff setted
+// Get all staff
 router.get('/getallstaffs', staffController.getAllStaff);
+
 
 // Get staff by ID
 router.get('/staff/:id', staffController.getStaffById);
@@ -24,7 +25,7 @@ router.delete('/staff/:id', staffController.deleteStaff);
 
 
 // Define routes
-router.post('/addVehicle', vehicleController.addVehicle);
+router.post('/addVehicle', upload.single('vehicleImage'), vehicleController.addVehicle);
 router.get('/viewVehicles', vehicleController.getAllVehicles);
 router.put('/update/:id', vehicleController.updateVehicle);
 router.delete('/delete/:id', vehicleController.deleteVehicle);
