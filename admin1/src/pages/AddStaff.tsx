@@ -219,12 +219,14 @@ function AddStaff({}: Props) {
             </div>
 
             <div className="mt-8 flex justify-end">
-              <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              <button type="submit" className="px-4 py-2 bg-[#820000] rounded-lg text-white" >
                 Submit
               </button>
-              <button type="button" className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600" onClick={clearForm}>
+             <Link to={'/staff'}>
+             <button type="button" className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600" onClick={clearForm}>
                 Cancel
               </button>
+             </Link>
             </div>
           </form>
         </div>
