@@ -139,7 +139,7 @@ const CreateStaff: React.FC = () => {
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">{index + 1}</td>
                       <td className="p-2 text-center">
                         <img
-                          className="ms-5 w-10 h-10 mx-auto rounded-full"
+                          className="ms-5 mx-auto object-cover w-11 h-11 rounded-full"
                           src={staff.profile ? `${BASEURL}/${staff.profile.replace(/\\/g, "/")}` : defaultImage}
                           alt={`${staff.firstname} ${staff.lastname}`} // Use full name for alt text
                         />
