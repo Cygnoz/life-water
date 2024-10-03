@@ -20,8 +20,6 @@ const subRouteSchema = new Schema({
     required: true,
     ref: 'Route'  // Reference to Route schema's routeCode
   }
-}, {
-  timestamps: true  // This adds createdAt and updatedAt fields
 });
 
 const SubRoute = mongoose.model('SubRoute', subRouteSchema);
