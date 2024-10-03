@@ -28,7 +28,7 @@ const CreateVehicle: React.FC = () => {
       navigate('/vehicle/editvehicle')
     }
     const handleView = (): void => {
-      navigate('/')
+      navigate('/vehicle/viewvehicle')
     }
 
 

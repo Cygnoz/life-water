@@ -27,7 +27,7 @@ const CreateStaff: React.FC = () => {
   }
 
   const handleView = (): void => {
-    navigate('/')
+    navigate('/viewstaff')
   }
   const handleEdit = (): void => {
     navigate('/')

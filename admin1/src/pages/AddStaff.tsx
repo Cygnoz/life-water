@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { addStaffAPI } from "../services/AllApi"
-
+import back from '../assets/images/backbutton.svg'
+import { Link } from 'react-router-dom';
 type Props = {}
 
 function AddStaff({}: Props) {
@@ -103,7 +104,7 @@ function AddStaff({}: Props) {
       </div>
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
           <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
-          <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
+         
 
           {error && <p className="text-red-600">{error}</p>}
           {successMessage && <p className="text-green-600">{successMessage}</p>}

@@ -25,7 +25,7 @@ const ViewVehicle: React.FC = () => {
         </div>
      </Link>
         </button>
-        <h1 className="text-xl font-semibold text-gray-800">View Customer Profile</h1>
+        <h1 className="text-xl font-bold text-gray-800">View Customer Profile</h1>
       </div>
 
       {/* Row 2: Profile Picture and Vehicle Number in a rounded container */}
