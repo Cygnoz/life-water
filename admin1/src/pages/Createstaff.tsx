@@ -11,8 +11,14 @@ import eye from '../assets/images/eye.svg'
 import dot from '../assets/ellipsis-vertical.svg'
 import user from '../assets/images/circle-user.svg'
 import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { getAllStaffsAPI } from '../services/AllApi'
 const CreateStaff: React.FC = () => {
   const navigate = useNavigate()
+  const [staffList, setStaffList] = useState([]);
+
+  
+  
 
   const handleCreate = (): void => {
 
@@ -26,10 +32,31 @@ const CreateStaff: React.FC = () => {
   const handleEdit = (): void => {
     navigate('/')
   }
+
+
+   // Fetch staff data on component mount
+   useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const response = await getAllStaffsAPI();
+        setStaffList(response.data); // Assuming the API returns staff data in the 'data' field
+        console.log(response);
+        
+      } catch (error) {
+        console.error('Error fetching staff data:', error);
+      }
+    };
+
+    fetchStaff();
+  }, []);
+
+
+
+
   return (
-<div className="flex min-h-screen w-full">
-      
-      
+
+
+    <div className="flex min-h-screen w-full">
       <div>
         <div className="p-6">
           {/* Header Section */}
@@ -41,7 +68,7 @@ const CreateStaff: React.FC = () => {
             <div className="flex justify-between">
               <button
                 onClick={handleCreate}
-                className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
+                className=" justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
               >
                 <img src={plus} alt="" />
                 <p>Add New Staff</p>
