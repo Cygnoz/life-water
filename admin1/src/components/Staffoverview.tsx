@@ -20,23 +20,24 @@ import { useParams } from 'react-router-dom';
 const StaffOverview: React.FC = () => {
   const [activeTab, setActiveTab] = useState('personalDetails');
   const [staff, setStaff] = useState<any>(null); // Changed to any for flexibility
-  const { _id } = useParams(); // Get the staff ID from the URL
+  const { id } = useParams(); // Get the staff ID from the URL
 
 
    useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await getStaffByIdAPI(_id); // Use the dynamic staff ID here
-        setStaff(response);
-      } catch (error) {
+        const response = await getStaffByIdAPI(id); // Use the dynamic staff ID here
+        console.log(response);
+        setStaff(response)
+      } catch (error:any) {
         console.error("Error fetching staff data:", error.message);
       }
     };
 
-    if (_id) {
+    if (id) {
       fetchStaff();
     }
-  }, [_id]);
+  }, [id]);
   
 
   if (!staff) return <div>Loading...</div>; // Loading state
