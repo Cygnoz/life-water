@@ -19,6 +19,8 @@ import ViewRoute from '../Route/Components/ViewRoute';
 import AddVehicle from '../Vehicle/Components/AddVehicle';
 import CreateVehicle from '../Vehicle/Pages/CreateVehicle';
 import EditVehicles from '../Vehicle/Pages/EditVehicles';
+import ViewVehicle from '../Vehicle/Components/ViewVehicle';
+import StaffOverview from '../components/Staffoverview';
 
 const App: React.FC = () => {
   const [selectedNav, setSelectedNav] = useState<string>(''); // Store selected nav
@@ -44,9 +46,13 @@ const App: React.FC = () => {
               <Route path='/orders' element={<CreateOrder />} />
               <Route path='/addneworder' element={<NewOrder />} />
               <Route path='/vieworder' element={<ViewOrder />} />
+
+
               <Route path='/staff' element={<CreateStaff />} />
               <Route path='/addstaff' element={<AddStaff />} />
               <Route path='/editstaff' element={<EditStaff />} />
+              <Route path='/viewstaff' element={<StaffOverview />} />
+
               <Route path='/route/createroute' element={<CreateRoute />} />
               <Route path='/route/createmainroute' element={<CreateMainRoute />} />
               <Route path='/route/viewroute' element={<ViewRoute />} />
@@ -54,9 +60,13 @@ const App: React.FC = () => {
               <Route path='/route/subroute' element={<SubRoute />} />
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
               <Route path='/route/editsubroute' element={<EditSubRoute />} />
+
+
+              
               <Route path='/vehicle' element={<CreateVehicle />} />
               <Route path='/vehicle/addvehicle' element={<AddVehicle />} />
               <Route path='/vehicle/editvehicle' element={<EditVehicles />} />
+              <Route path='/vehicle/viewvehicle' element={<ViewVehicle />} />
 
             </Routes>
           </div>
