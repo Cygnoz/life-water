@@ -11,7 +11,7 @@ import eye from "../assets/images/eye.svg"
 import dot from "../assets/ellipsis-vertical.svg"
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
-import { getAllStaffsAPI } from "../services/AllApi"
+import { deleteStaffByIdAPI, getAllStaffsAPI } from "../services/AllApi"
 import { BASEURL } from "../services/Baseurl"
 
 const CreateStaff: React.FC = () => {
@@ -66,6 +66,27 @@ const CreateStaff: React.FC = () => {
 
     setFilteredStaffList(filteredList) // Update the filtered staff list
   }
+
+
+
+  ///delete
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this staff?");
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await deleteStaffByIdAPI(id);
+      alert(response.message); // Show success message
+  
+      // Remove the deleted staff from the list
+      setStaffList(staffList.filter((staff: any) => staff._id !== id));
+      setFilteredStaffList(filteredStaffList.filter((staff: any) => staff._id !== id));
+    } catch (error) {
+      console.error('Error deleting staff:', error);
+      alert('An error occurred while deleting staff.');
+    }
+  };
+  
 
   return (
     <div className="flex min-h-screen w-full">
@@ -177,7 +198,7 @@ const CreateStaff: React.FC = () => {
                             <button onClick={handleEdit} className="text-red-500 ml-2">
                               <img src={vector} alt="Edit" />
                             </button>
-                            <button className="text-red-500 ml-2">
+                            <button onClick={() => handleDelete(staff._id)} className="text-red-500 ml-2">
                               <img src={trash} alt="Delete" />
                             </button>
                           </td>
