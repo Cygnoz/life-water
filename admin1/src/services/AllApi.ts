@@ -33,9 +33,10 @@ export const getAllStaffsAPI = async (): Promise<ApiResponse> => {
   }
 };
 
-export const getStaffByIdAPI = async (id): Promise<ApiResponse> => {
+export const getStaffByIdAPI = async (id: string): Promise<ApiResponse> => {
   try {
-    const response = await commonAPI('GET', `${BASEURL}/api/staff/${_id}`, null, {
+    // Use `id` instead of `_id`
+    const response = await commonAPI('GET', `${BASEURL}/api/staff/${id}`, null, {
       // No need to specify any headers for GET requests
     });
 
@@ -45,4 +46,5 @@ export const getStaffByIdAPI = async (id): Promise<ApiResponse> => {
     return { message: error.message || "An unexpected error occurred." }; // Fallback error message
   }
 }
+
 

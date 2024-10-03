@@ -13,26 +13,25 @@ import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { getAllStaffsAPI } from "../services/AllApi"
 import { BASEURL } from "../services/Baseurl"
- 
+
 const CreateStaff: React.FC = () => {
   const navigate = useNavigate()
   const [staffList, setStaffList] = useState([])
- 
+
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
- 
+
   const handleCreate = (): void => {
     navigate("/addstaff")
   }
- 
-  const handleView = (id) => {
-    navigate(`/viewstaff/${id}`); // Pass the staff ID to the view page
-  };
-  
-  
+
+  const handleView = (id:any) => {
+    navigate(`/viewstaff/${id}`) // Pass the staff ID to the view page
+  }
+
   const handleEdit = (): void => {
     navigate("/")
   }
- 
+
   // Fetch staff data on component mount
   useEffect(() => {
     const fetchStaff = async () => {
@@ -44,14 +43,14 @@ const CreateStaff: React.FC = () => {
         console.error("Error fetching staff data:", error)
       }
     }
- 
+
     fetchStaff()
   }, [])
- 
+
   useEffect(() => {
     console.log("Updated staff list:", staffList)
   }, [staffList])
- 
+
   return (
     <div className="flex min-h-screen w-full">
       <div>
@@ -67,7 +66,7 @@ const CreateStaff: React.FC = () => {
                 <img src={plus} alt="" />
                 <p>Add New Staff</p>
               </button>
- 
+
               <button className="ms-2 me-4">
                 <img src={dot} alt="" />
               </button>
@@ -81,21 +80,21 @@ const CreateStaff: React.FC = () => {
               <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">120</div>
             </div>
- 
+
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={salesmen} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Sales man</div>
               <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">10</div>
             </div>
- 
+
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={packing} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Helpers</div>
               <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">20</div>
             </div>
- 
+
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={seatbelt} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Drivers</div>
@@ -103,12 +102,12 @@ const CreateStaff: React.FC = () => {
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">12</div>
             </div>
           </div>
- 
+
           {/* Table Section */}
           <div className="bg-white shadow-md rounded-lg p-4">
             <div className="flex justify-between items-center mb-4">
               <input type="text" className="p-2 border  bg-[#fdf8f0] rounded-lg w-3/4" placeholder="Search Staff" />
- 
+
               <div className="flex">
                 <button className="flex border text-[14] w-[500]  text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
                   {" "}
@@ -146,7 +145,7 @@ const CreateStaff: React.FC = () => {
                           alt={`${staff.firstname} ${staff.lastname}`} // Use full name for alt text
                         />
                       </td>
- 
+
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                         {staff.firstname} {staff.lastname}
                       </td>
@@ -154,16 +153,16 @@ const CreateStaff: React.FC = () => {
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">{staff.mobileNumber}</td>
                       <td className="p-2 text-[14px] text-center text-[#4B5C79]">{staff.designation}</td>
                       <td className="p-2 text-center">
-  <button onClick={() => handleView(staff._id)} className="text-blue-500">
-    <img src={eye} alt="View" />
-  </button>
-  <button onClick={handleEdit} className="text-red-500 ml-2">
-    <img src={vector} alt="Edit" />
-  </button>
-  <button className="text-red-500 ml-2">
-    <img src={trash} alt="Delete" />
-  </button>
-</td>
+                        <button onClick={() => handleView(staff._id)} className="text-blue-500">
+                          <img src={eye} alt="View" />
+                        </button>
+                        <button onClick={handleEdit} className="text-red-500 ml-2">
+                          <img src={vector} alt="Edit" />
+                        </button>
+                        <button className="text-red-500 ml-2">
+                          <img src={trash} alt="Delete" />
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (
@@ -181,5 +180,5 @@ const CreateStaff: React.FC = () => {
     </div>
   )
 }
- 
+
 export default CreateStaff
