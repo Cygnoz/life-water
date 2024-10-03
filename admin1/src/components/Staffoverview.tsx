@@ -80,7 +80,7 @@ const StaffOverview: React.FC = () => {
         <div className='mt-2'>
           {activeTab === 'personalDetails' && (
             <div className="p-4">
-              <div className="flex items-center  bg-[#bfa276] h-[82px] rounded-lg space-x-4">
+              <div className="flex items-center bg-gradient-to-l from-[#cead7c] to-[#a8b18c] rounded-lg h-[82px] rounded-lg space-x-4">
                 <img
                   src={kim}
                   alt="Staff"
