@@ -12,6 +12,7 @@ import service1 from '../images/service1.svg';
 import reports from '../images/reports.svg';
 import contract from '../images/contract.svg';
 import accountant from '../images/sale.svg';
+import vehicle from '../images/vehicle.svg';
 
 
 
@@ -80,6 +81,19 @@ const navlist = [
       {
         headName: "Dashboard",
         subRoute: "accountant",
+      },
+      
+    ],
+  },
+  {
+    nav: "Vehicle",
+    icon:vehicle,
+    route: "/vehicle",
+    subhead: [
+      
+      {
+        headName: "Vehicle",
+        subRoute: "/vehicle",
       },
       
     ],

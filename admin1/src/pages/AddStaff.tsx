@@ -92,8 +92,17 @@ function AddStaff({}: Props) {
 
   return (
     <div>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-10">
+      <div className="min-h-screen bg-gray-100 items-center justify-center ">
+      <div className="flex gap-3 items-center w-full max-w-8xl mt-5 mb-6 ms-3">
+     <Link to={'/staff'}>
+     <div className="icon-placeholder">
+         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
+        </div>
+     </Link>
+        <h2 className="text-2xl font-bold">Create New Staff</h2>
+      </div>
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
+          <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
           <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
 
           {error && <p className="text-red-600">{error}</p>}
