@@ -1,5 +1,5 @@
 import React from 'react';
-import bottle from '../assets/images/bottle.png';
+import bottle from '../assets/images/bottle1.svg';
 import bottleside from '../assets/images/bottleside.png';
 import printer from '../assets/images/printer.svg';
 import lines from '../assets/images/lines.svg';
@@ -21,7 +21,7 @@ const ViewOrder: React.FC = () => {
           <Link to={'/orders'}>
             <button  className='h-10 px-2.5 bg-[#f6f6f6] rounded-[56px]'>
               <img src={backbutton} alt="" /></button></Link>
-            <h2 className="text-xl font-semibold">View Orders Details</h2>
+            <h2 className="text-xl font-bold">View Orders Details</h2>
           </div>
 
          <div className="flex gap-3">
@@ -50,7 +50,7 @@ const ViewOrder: React.FC = () => {
               <img
                 src={bottle}
                 alt="Item"
-                className="w-12 h-12"
+                className=""
               />
               <div className="flex gap-10">
                 <div>

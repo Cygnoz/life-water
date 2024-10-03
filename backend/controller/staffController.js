@@ -3,7 +3,7 @@ const Staff = require('../models/StaffSchema'); // Adjust the path based on your
 // Add new staff
 const addStaff = async (req, res) => {
   try {
-    // Check if a staff member with the same mobile number already exists
+    // Check if a staff member with the same emiratesId already exists
     const existingStaff = await Staff.findOne({ emiratesId: req.body.emiratesId });
 
     if (existingStaff) {
@@ -11,7 +11,22 @@ const addStaff = async (req, res) => {
     }
 
     // If no existing staff member is found, proceed to create a new one
-    const newStaff = new Staff(req.body);
+    const newStaff = new Staff({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      profile: req.file ? req.file.path : null, // Store the file path if a file was uploaded
+      address: req.body.address,
+      visaStatus: req.body.visaStatus,
+      visaValidity: req.body.visaValidity,
+      mobileNumber: req.body.mobileNumber,
+      whatsAppNumber: req.body.whatsAppNumber,
+      visaNumber: req.body.visaNumber,
+      dateofBirth: req.body.dateofBirth,
+      nationality: req.body.nationality,
+      designation: req.body.designation,
+      emiratesId: req.body.emiratesId,
+    });
+
     const savedStaff = await newStaff.save();
 
     res.status(201).json(savedStaff);
@@ -19,7 +34,6 @@ const addStaff = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 
 // Get all staff members
 const getAllStaff = async (req, res) => {
