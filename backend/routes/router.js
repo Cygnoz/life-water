@@ -10,7 +10,7 @@ const upload = require('../middleware/Multermiddleware')
 // Add staff
 router.post('/addstaff',upload.single('profile'),staffController.addStaff);
 
-// Get all staff
+// Get all staff setted
 router.get('/getallstaffs', staffController.getAllStaff);
 
 // Get staff by ID
