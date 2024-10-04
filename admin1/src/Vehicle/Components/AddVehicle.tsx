@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import uploadvehicle from '../../assets/images/uploadvehicle.svg';
 import { Link } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
-import { addVehicleAPI } from '../../services/AllApi';
+import { addVehicleAPI } from '../../services/VehicleAPI/Vehicle';
+
 
 type Props = {};
 

@@ -73,7 +73,7 @@ const CreateVehicle: React.FC = () => {
       </div>
     </div>
     {/* Value */}
-    <div className="text-[#820000] font-bold text-[18px] mx-7">10</div>
+    <div className="text-[#820000] font-bold text-[18px] mx-10">10</div>
   </div>
 </div>
 
