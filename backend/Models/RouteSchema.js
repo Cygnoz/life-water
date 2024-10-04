@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const routeSchema = new Schema({
-  routeName: {
+  mainRoute: {
     type: String,
     required: true
   },
@@ -16,5 +16,5 @@ const routeSchema = new Schema({
   }
 });
 
-const Route = mongoose.model('Route', routeSchema);
-module.exports = Route;
+const MainRoute = mongoose.model('MainRoute', routeSchema);
+module.exports = MainRoute;

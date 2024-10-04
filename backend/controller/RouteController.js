@@ -1,29 +1,35 @@
-const Route = require('../Models/RouteSchema');
+const MainRoute = require("../Models/RouteSchema");
+
+
 
 // Add a new route
 const addRoute = async (req, res) => {
   try {
-    const { routeName, routeCode, description } = req.body;
+    // Check if a route with the same routeCode already exists
+    const existingRoute = await MainRoute.findOne({ routeCode: req.body.routeCode });
 
-    // Check if the routeCode already exists
-    const existingRoute = await Route.findOne({ routeCode });
     if (existingRoute) {
-      return res.status(400).json({ message: 'Route with this code already exists' });
+      return res.status(400).json({ message: 'Route with this code already exists.' });
     }
 
-    const newRoute = new Route({
-      routeName,
-      routeCode,
-      description
+    // If no existing route is found, proceed to create a new one
+    const newRoute = new MainRoute({
+      mainRoute: req.body.mainRoute,
+      routeCode: req.body.routeCode,
+      description: req.body.description
     });
 
+    // Save the new route in the database
     const savedRoute = await newRoute.save();
-    return res.status(201).json({ message: 'Route created successfully', route: savedRoute });
+
+    // Send success response with the newly created route
+    res.status(201).json(savedRoute);
   } catch (error) {
-    console.error('Error creating route:', error.message);
-    return res.status(500).json({ message: 'Error creating route', error: error.message });
+    // Handle any errors and send a failure response
+    res.status(500).json({ message: 'Error creating route', error: error.message });
   }
 };
+
 
 // Delete a route by ObjectId
 const deleteRoute = async (req, res) => {
