@@ -1,6 +1,6 @@
 import { BASEURL } from "./Baseurl";
 import { commonAPI } from "./CommonApi";
-
+import axios from 'axios';
 interface ApiResponse {
   message?: string;
   data?: any;
@@ -65,7 +65,7 @@ export const deleteStaffByIdAPI = async (id: string) => {
   }
 };
 
-import axios from 'axios';
+
 
 // Update staff by ID
 export const updateStaffAPI = async (id: string, updatedStaffData: any) => {
