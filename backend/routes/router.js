@@ -7,29 +7,37 @@ const subrouteController = require('../controller/SubRouteController');
 
 const upload = require('../middleware/Multermiddleware')
 
+// STAFF 
+
 // Add staff
 router.post('/addstaff',upload.single('profile'),staffController.addStaff);
-
 // Get all staff
 router.get('/getallstaffs', staffController.getAllStaff);
-
-
 // Get staff by ID
 router.get('/staff/:id', staffController.getStaffById);
-
 // Edit staff
 router.put('/staff/:id', staffController.editStaff);
-
 // Delete staff
 router.delete('/staff/:id', staffController.deleteStaff);
 
 
-// Define routes
+// VEHICLE 
+// Add vehicle 
 router.post('/addVehicle', upload.single('vehicleImage'), vehicleController.addVehicle);
+// view vehicle 
 router.get('/viewVehicles', vehicleController.getAllVehicles);
-router.put('/update/:id', vehicleController.updateVehicle);
-router.delete('/delete/:id', vehicleController.deleteVehicle);
+// view single vehicle 
 router.get('/view/:id',vehicleController.viewVehicleById)
+// edit vehicle 
+router.put('/updatevehicle/:id', vehicleController.updateVehicle);
+// delete vehicle 
+router.delete('/deletevehicle/:id', vehicleController.deleteVehicle);
+
+
+
+
+
+// ROUTE 
 
 // Route endpoints
 router.post('/addRoute', routeController.addRoute);
