@@ -1,20 +1,18 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import back from '../../assets/images/backbutton.svg'
+import back from '../../assets/images/backbutton.svg';
 import { Link } from 'react-router-dom';
-
-
+import { addRouteAPI } from '../../services/RouteAPI/RouteAPI'; // Ensure this path is correct
 
 const EditSubRoute: React.FC = () => {
   // State to manage form values
   const [formData, setFormData] = useState({
-    subRoute: '',
-    subRouteCode: '',
     mainRoute: '',
+    routeCode: '',
     description: ''
   });
 
   // Handler to update form state
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -22,73 +20,69 @@ const EditSubRoute: React.FC = () => {
     });
   };
 
+  console.log(formData);
+  
+
   // Handler for form submission
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add your form submission logic here
+    console.log('Form submitted:', formData); // Log the form data
+
+
+    try {
+      const response = await addRouteAPI(formData);
+      console.log('API Response:', response);
+      // Optionally handle success (e.g., redirect or show a success message)
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
       {/* First Row: Heading and Icon */}
       <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
-     <Link to={'/route/createroute'}>
-     <div className="icon-placeholder">
-         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
-        </div>
-     </Link>
+        <Link to={'/route/createroute'}>
+          <div className="icon-placeholder">
+            <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
+          </div>
+        </Link>
         <h2 className="text-2xl font-bold">Create New Main Route</h2>
-        {/* Placeholder for Icon */}
-        
       </div>
 
       {/* Second Row: Form Container */}
       <div className="w-full max-w-8xl bg-white rounded-md shadow-md p-8">
         <form onSubmit={handleSubmit}>
-          {/* First Row with 3 Input Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          {/* Input Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
                 Main Route
               </label>
               <input
                 type="text"
-                name="subRoute"
-                value={formData.subRoute}
+                name="mainRoute"
+                value={formData.mainRoute}
                 onChange={handleInputChange}
-                placeholder="Enter subroute"
+                placeholder="Enter main route"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required // Add required attribute for validation
               />
             </div>
 
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
-                 Route code
+                Route Code
               </label>
               <input
                 type="text"
-                name="subRouteCode"
-                value={formData.subRouteCode}
+                name="routeCode"
+                value={formData.routeCode}
                 onChange={handleInputChange}
-                placeholder="Enter Sub route code"
+                placeholder="Enter route code"
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required // Add required attribute for validation
               />
-            </div>
-            
-            <div>
-              <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
-                Sub Route
-              </label>
-              <select
-                name="mainRoute"
-                value={formData.mainRoute}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="" disabled>Select Main Route</option>
-                {/* Add options as needed */}
-              </select>
             </div>
           </div>
 
@@ -100,7 +94,7 @@ const EditSubRoute: React.FC = () => {
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              placeholder="Enter Description"
+              placeholder="Enter description"
               className="w-full h-[36px] px-3 py-2 border border-[#CECECE] rounded-[4px] bg-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
               style={{ resize: 'none', overflow: 'hidden' }} // Inline styles to remove resize handles
             />

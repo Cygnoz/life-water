@@ -8,7 +8,7 @@ interface ApiResponse {
 
 export const addRouteAPI = async (routeData: FormData): Promise<ApiResponse> => {
   try {
-    const response = await commonAPI('POST', `${BASEURL}/api/addRoute`, routeData, {
+    const response = await commonAPI('POST',` ${BASEURL}/api/addRoute`, routeData, {
       // No need to specify Content-Type for FormData
     });
 

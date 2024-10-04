@@ -16,5 +16,5 @@ const routeSchema = new Schema({
   }
 });
 
-const MainRoute = mongoose.model('MainRoute', routeSchema);
-module.exports = MainRoute;
+const MainRouteSchema = mongoose.model('MainRoute', routeSchema);
+module.exports = MainRouteSchema; // Make sure this line is correct

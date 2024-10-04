@@ -39,7 +39,7 @@ const CreateRoute: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <button onClick={handlecreate}
-                  className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
+                  className="flex justify-between items-center gap-2 bg-[#820000] text-white  px-5 py-2 rounded-md"
                 >
                   <img src={plus} alt="" />
                   <p>Add New </p>

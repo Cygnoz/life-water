@@ -27,7 +27,7 @@ router.post('/addVehicle', upload.single('vehicleImage'), vehicleController.addV
 // view vehicle 
 router.get('/viewVehicles', vehicleController.getAllVehicles);
 // view single vehicle 
-router.get('/view/:id',vehicleController.viewVehicleById)
+router.get('/viewvehicle/:id',vehicleController.viewVehicleById)
 // edit vehicle 
 router.put('/updatevehicle/:id', vehicleController.updateVehicle);
 // delete vehicle 
