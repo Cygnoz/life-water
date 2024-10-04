@@ -114,29 +114,39 @@ const CreateStaff: React.FC = () => {
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={shopping} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Total Staff</div>
-              <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">120</div>
+              {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
+              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">{staffList.length}</div>
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={salesmen} alt="" />
-              <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Sales man</div>
-              <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">10</div>
-            </div>
+  <img src={salesmen} alt="" />
+  <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Salesman</div>
+  {/* <p className="text-[#4B5C79] w-[400px] text-[12px]">
+    Lorem ipsum dolor sit amet consectetur
+  </p> */}
+  <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
+    {staffList.filter((staff) => staff.designation === 'Sales').length}
+  </div>
+</div>
+
+
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={packing} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Helpers</div>
-              <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">20</div>
+              {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
+              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
+    {staffList.filter((staff) => staff.designation === 'Helper').length}
+  </div>
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={seatbelt} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Drivers</div>
-              <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p>
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">12</div>
+              {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
+              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
+    {staffList.filter((staff) => staff.designation === 'Driver').length}
+  </div>
             </div>
           </div>
 
