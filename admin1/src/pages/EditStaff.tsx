@@ -1,7 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import backbutton from "../assets/images/backbutton.svg";
+import { getStaffByIdAPI } from '../services/AllApi';
+
 const EditStaff: React.FC = () => {
+
+
+  const [staff, setStaff] = useState<any>(null); // Changed to any for flexibility
+  const { id } = useParams(); // Get the staff ID from the URL
+  const [value,setValue]=useState([])
+  const defaultImage =
+    "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
+
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const response = await getStaffByIdAPI(id); // Use the dynamic staff ID here
+        console.log(response);
+        setStaff(response);
+      } catch (error: any) {
+        console.error("Error fetching staff data:", error.message);
+      }
+    };
+
+    if (id) {
+      fetchStaff();
+    }
+  }, [id]);
+
+
+
+
+
+
+
   return (
     <div className="min-h-screen bg-gray-100  items-center justify-center p-10">
      
@@ -50,6 +82,7 @@ const EditStaff: React.FC = () => {
                   type="text"
                   className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                   placeholder="909085878484"
+                  value={staff?.mobileNumber}
                 />
               </div>
 
@@ -62,6 +95,7 @@ const EditStaff: React.FC = () => {
                   <input
                     type="checkbox"
                     className="form-checkbox h-4 w-4 text-red-600"
+                   
                   />
                   <span className="ml-2 text-sm text-gray-700 m-1">
                     Same as phone number
@@ -71,6 +105,7 @@ const EditStaff: React.FC = () => {
                   type="text"
                   className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
                   placeholder="Enter WhatsApp number"
+                  value={staff?.whatsAppNumber}
                 />
               </div>
 
@@ -82,7 +117,9 @@ const EditStaff: React.FC = () => {
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
                     <option value="In Process">In Process</option>
+                    
                   </select>
+                  
                 </div>
 
               {/* Visa Number (Dropdown) */}
