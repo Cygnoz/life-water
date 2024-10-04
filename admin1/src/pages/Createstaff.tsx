@@ -30,8 +30,8 @@ const CreateStaff: React.FC = () => {
     navigate(`/viewstaff/${id}`) // Pass the staff ID to the view page
   }
 
-  const handleEdit = (): void => {
-    navigate("/editstaff")
+  const handleEdit = (id): void => {
+    navigate(`/editstaff/${id}`)
   }
 
   // Fetch staff data on component mount
@@ -195,7 +195,7 @@ const CreateStaff: React.FC = () => {
                             <button onClick={() => handleView(staff._id)} className="text-blue-500">
                               <img src={eye} alt="View" />
                             </button>
-                            <button onClick={handleEdit} className="text-red-500 ml-2">
+                            <button onClick={() => handleEdit(staff._id)}  className="text-red-500 ml-2">
                               <img src={vector} alt="Edit" />
                             </button>
                             <button onClick={() => handleDelete(staff._id)} className="text-red-500 ml-2">
