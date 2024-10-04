@@ -76,44 +76,37 @@ const EditStaff: React.FC = () => {
 
               {/* Visa Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Visa Status
-                </label>
-                <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option>Approved</option>
-                  <option>Pending</option>
-                  <option>Rejected</option>
-                </select>
-              </div>
+                  <label className="block text-sm font-medium text-gray-700">Visa Status</label>
+                  <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
+                    <option value="">Enter Visa Status</option>
+                    <option value="Valid">Valid</option>
+                    <option value="Expired">Expired</option>
+                    <option value="In Process">In Process</option>
+                  </select>
+                </div>
 
               {/* Visa Number (Dropdown) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Visa Number
+                   Visa Number
                 </label>
-                <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option value="" disabled selected>
-                    Select Visa Number
-                  </option>
-                  <option value="234">234***********</option>
-                  <option value="235">235***********</option>
-                  <option value="236">236***********</option>
-                </select>
+                <input
+                  type="text"
+                  className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                 
+                />
               </div>
 
               {/* Emirates ID (Dropdown) */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Emirates ID
+                  Emirates Id
                 </label>
-                <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option value="" disabled selected>
-                    Select Emirates ID
-                  </option>
-                  <option value="Em-01">Em-01******</option>
-                  <option value="Em-02">Em-02******</option>
-                  <option value="Em-03">Em-03******</option>
-                </select>
+                <input
+                  type="text"
+                  className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                  placeholder="909085878484"
+                />
               </div>
             </div>
 
@@ -190,12 +183,13 @@ const EditStaff: React.FC = () => {
               {/* Nationality */}
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Nationality
+                   Nationality
                 </label>
-                <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full">
-                  <option>Indian</option>
-                  <option>Other</option>
-                </select>
+                <input
+                  type="text"
+                  className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                 
+                />
               </div>
             </div>
           </div>
