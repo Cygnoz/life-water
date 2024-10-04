@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { addStaffAPI } from "../services/AllApi"
-import back from '../assets/images/backbutton.svg'
-import { Link } from 'react-router-dom';
+import back from "../assets/images/backbutton.svg"
+import { Link } from "react-router-dom"
 type Props = {}
 
 function AddStaff({}: Props) {
@@ -94,17 +94,16 @@ function AddStaff({}: Props) {
   return (
     <div>
       <div className="min-h-screen bg-gray-100 items-center justify-center ">
-      <div className="flex gap-3 items-center w-full max-w-8xl mt-5 mb-6 ms-3">
-     <Link to={'/staff'}>
-     <div className="icon-placeholder">
-         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
+        <div className="flex gap-3 items-center w-full max-w-8xl mt-5 mb-6 ms-3">
+          <Link to={"/staff"}>
+            <div className="icon-placeholder">
+              <img className="bg-gray-200 rounded-full p-2" src={back} alt="" />
+            </div>
+          </Link>
+          <h2 className="text-2xl font-bold">Create New Staff</h2>
         </div>
-     </Link>
-        <h2 className="text-2xl font-bold">Create New Staff</h2>
-      </div>
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
           <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
-         
 
           {error && <p className="text-red-600">{error}</p>}
           {successMessage && <p className="text-green-600">{successMessage}</p>}
@@ -122,6 +121,7 @@ function AddStaff({}: Props) {
                       <input type="file" onChange={handleProfileChange} accept="image/*" className="hidden" />
                     </label>
                   </div>
+                    <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">At least 800 x 800 px Recommended. JPG or PNG is Allowed</p>
                 </div>
 
                 {/* Mobile Number */}
@@ -219,14 +219,14 @@ function AddStaff({}: Props) {
             </div>
 
             <div className="mt-8 flex justify-end">
-              <button type="submit" className="px-4 py-2 bg-[#820000] rounded-lg text-white" >
+              <button type="submit" className="px-4 py-2 bg-[#820000] rounded-lg text-white">
                 Submit
               </button>
-             <Link to={'/staff'}>
-             <button type="button" className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600" onClick={clearForm}>
-                Cancel
-              </button>
-             </Link>
+              <Link to={"/staff"}>
+                <button type="button" className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600" onClick={clearForm}>
+                  Cancel
+                </button>
+              </Link>
             </div>
           </form>
         </div>
