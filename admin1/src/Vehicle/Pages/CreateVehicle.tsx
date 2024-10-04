@@ -5,7 +5,7 @@ import split from "../../assets/images/list-filter.svg"
 import plus from "../../assets/circle-plus.svg"
 import eye from "../../assets/images/eye.svg"
 import dot from "../../assets/ellipsis-vertical.svg"
-import user from "../../assets/images/circle-user.svg"
+
 
 import search from "../../assets/images/search.svg"
 import vehicle from "../../assets/images/vehicle 1.svg"
@@ -17,6 +17,8 @@ import { BASEURL } from "../../services/Baseurl"
 
 const CreateVehicle: React.FC = () => {
   const [vehicleList, setVehicleList] = useState([]) // Full vehicle list
+  const [filteredVehicleList, setFilteredVehicleList] = useState([]) // Filtered vehicle list
+  const [searchQuery, setSearchQuery] = useState("") // Search query
   const navigate = useNavigate()
 
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
@@ -27,6 +29,7 @@ const CreateVehicle: React.FC = () => {
         const response = await getVehicleAPI()
         console.log("Full API Response:", response) // Check the response
         setVehicleList(response) // Store full vehicle list
+        setFilteredVehicleList(response) // Initially show the full list
       } catch (error) {
         console.error("Error fetching vehicle data:", error)
       }
@@ -35,24 +38,32 @@ const CreateVehicle: React.FC = () => {
     fetchVehicle()
   }, [])
 
+  // Filter logic based on search query
   useEffect(() => {
-    console.log("Updated vehicle list:", vehicleList)
-  }, [vehicleList])
+    const filteredVehicles = vehicleList.filter((vehicle: any) => {
+      const searchLower = searchQuery.toLowerCase()
+      return (
+        vehicle.vehicleNo.toLowerCase().includes(searchLower) ||
+        vehicle.insuranceStatus.toLowerCase().includes(searchLower) ||
+        vehicle.insuranceAmount.toString().includes(searchLower)
+      )
+    })
+    setFilteredVehicleList(filteredVehicles)
+  }, [searchQuery, vehicleList])
 
   const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this staff?")
+    const confirmDelete = window.confirm("Are you sure you want to delete this vehicle?")
     if (!confirmDelete) return
 
     try {
       const response = await deleteVehicleByIdAPI(id)
       alert(response.message) // Show success message
 
-      // Remove the deleted staff from the list
+      // Remove the deleted vehicle from the list
       setVehicleList(vehicleList.filter((vehicle: any) => vehicle._id !== id))
-      // setFilteredStaffList(filteredStaffList.filter((staff: any) => staff._id !== id));
     } catch (error) {
-      console.error("Error deleting staff:", error)
-      alert("An error occurred while deleting staff.")
+      console.error("Error deleting vehicle:", error)
+      alert("An error occurred while deleting vehicle.")
     }
   }
 
@@ -99,7 +110,7 @@ const CreateVehicle: React.FC = () => {
                 </div>
               </div>
               {/* Value */}
-              <div className="text-[#820000] font-bold text-[18px] mx-10">{vehicleList.length}</div>
+              <div className="text-[#820000] font-bold text-[18px] mx-10 p-4">{filteredVehicleList.length}</div>
             </div>
           </div>
 
@@ -117,6 +128,8 @@ const CreateVehicle: React.FC = () => {
                   boxShadow: "none",
                 }}
                 placeholder="Search Vehicle"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update the search query
               />
               <div className="flex w-[60%] justify-end">
                 <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
@@ -145,19 +158,19 @@ const CreateVehicle: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {vehicleList.map((vehicle, index) => (
+                {filteredVehicleList.map((vehicle, index) => (
                   <tr key={vehicle.id || index} className="border-b">
                     <td className="px-8 py-6">
                       <input type="checkbox" />
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                    <img 
-  className="ms-5 w-10 h-10 object-cover" 
-  src={vehicle.image ? `${BASEURL}/uploads/${vehicle.image}` : defaultImage} 
-  alt="Vehicle" 
-/>                    </td>
-
+                      <img 
+                        className="mx-auto object-cover w-11 h-11 rounded-full" 
+                        src={vehicle.image ? `${BASEURL}/uploads/${vehicle.image}` : defaultImage} 
+                        alt="Vehicle" 
+                      />
+                    </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.vehicleNo || "N/A"}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceValidity.split("T")[0]}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceAmount || "N/A"}</td>

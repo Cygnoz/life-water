@@ -20,12 +20,23 @@ const AddVehicle: React.FC<Props> = () => {
   const [vehicleImage, setVehicleImage] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setVehicleImage(e.target.files[0]);
+      const file = e.target.files[0];
+      setVehicleImage(file);
+
+      // Generate preview URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string); // Set the preview URL
+      };
+      reader.readAsDataURL(file);
     }
-  };
+  }
 
   const handleAddVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +76,7 @@ const AddVehicle: React.FC<Props> = () => {
         setStartingKilometer('');
         setExpenses('');
         setVehicleImage(null);
+        setPreview(null);
 
         // Clear success message after 3 seconds
         setTimeout(() => {
@@ -91,8 +103,8 @@ const AddVehicle: React.FC<Props> = () => {
       <div className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
         <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2>
         <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {error && <div style={{ color: 'red' }}>{error}</div>}
-          {success && <div style={{ color: 'green' }}>{success}</div>}
+        {error && <p className="text-red-600">{error}</p>}
+        {success && <p className="text-green-600">{success}</p>}
           {/* Vehicle Number */}
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Vehicle Number</label>
@@ -108,7 +120,11 @@ const AddVehicle: React.FC<Props> = () => {
           {/* Uploaded Vehicle Image */}
           <div className="flex">
             <div className="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden">
-              <img src={uploadvehicle} alt="Upload Vehicle" className="object-cover w-24" />
+              {preview ? (
+                <img src={preview} alt="Vehicle Preview" className="object-cover w-full h-full" />
+              ) : (
+                <img src={uploadvehicle} alt="Upload Vehicle" className="object-cover w-full h-full" />
+              )}
             </div>
             <div className="mx-5">
               <h2 className="font-bold mb-1 text-[#303F58]">Upload Vehicle image</h2>
@@ -123,16 +139,19 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* Insurance Status */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Insurance Status</label>
-            <input
-              type="text"
-              placeholder="Enter Insurance Status"
-              value={insuranceStatus}
-              onChange={(e) => setInsuranceStatus(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+  <label className="block text-[#303F58] font-[14px] mb-2">Insurance Status</label>
+  <select
+    value={insuranceStatus}
+    onChange={(e) => setInsuranceStatus(e.target.value)}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    required
+  >
+    <option value="" disabled>Select Insurance Status</option> {/* Placeholder option */}
+    <option value="Valid">Valid</option>
+    <option value="Expired">Expired</option>
+  </select>
+</div>
+
           {/* Registration Validity */}
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Registration Validity</label>
@@ -159,7 +178,7 @@ const AddVehicle: React.FC<Props> = () => {
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Starting Kilometer</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter Starting Kilometers"
               value={startingKilometer}
               onChange={(e) => setStartingKilometer(e.target.value)}
@@ -171,7 +190,7 @@ const AddVehicle: React.FC<Props> = () => {
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Insurance Amount</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter Insurance Amount"
               value={insuranceAmount}
               onChange={(e) => setInsuranceAmount(e.target.value)}
@@ -183,7 +202,7 @@ const AddVehicle: React.FC<Props> = () => {
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Expenses</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter Expenses"
               value={expenses}
               onChange={(e) => setExpenses(e.target.value)}
