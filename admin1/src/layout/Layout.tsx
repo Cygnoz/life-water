@@ -71,7 +71,7 @@ const App: React.FC = () => {
               <Route path='/vehicle' element={<CreateVehicle />} />
               <Route path='/vehicle/addvehicle' element={<AddVehicle />} />
               <Route path='/vehicle/editvehicle' element={<EditVehicles />} />
-              <Route path='/vehicle/viewvehicle' element={<ViewVehicle />} />
+              <Route path='/viewvehicle/:id' element={<ViewVehicle />} />
 
             </Routes>
           </div>

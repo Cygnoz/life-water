@@ -64,9 +64,9 @@ const CreateVehicle: React.FC = () => {
   const handleEdit = (vehicleId: string): void => {
     navigate(`/vehicle/editvehicle/${vehicleId}`);
   };
-  const handleView = (vehicleId: string): void => {
-    navigate(`/vehicle/viewvehicle/${vehicleId}`);
-  };
+  const handleView = (id: any) => {
+    navigate(`/viewvehicle/${id}`) 
+  }
 
   return (
     <div>
@@ -157,7 +157,7 @@ const CreateVehicle: React.FC = () => {
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceAmount || 'N/A'}</td>
                     <td className="p-2 text-[14] text-center "><span className={`bg-${vehicle.insuranceStatus === 'Expired' ? 'red' : 'green'}-100 p-2 rounded-lg`}>{vehicle.insuranceStatus}</span></td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79] ">
-                      <button onClick={() => handleView(vehicle.id)} className="text-blue-500">
+                      <button onClick={() => handleView(vehicle._id)} className="text-blue-500">
                         <img src={eye} alt="" />
                       </button>
                       <button onClick={() => handleEdit(vehicle.id)} className="text-red-500 ml-2"><img src={vector} alt="" /></button>
