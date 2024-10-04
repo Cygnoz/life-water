@@ -60,17 +60,23 @@ const CreateVehicle: React.FC = () => {
               </button>
             </div>
           </div>
-          {/* Cards Section */}
-          <div className="grid grid-cols-4 gap-4 my-6">
-            <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={vehicle} alt="" />
-              <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Total Vehicle</div>  
-              <p className='text-[#4B5C79] w-[400] text-[12]' >Lorem ipsum dolor sit amet consectetur </p>           
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">120</div>
-            </div>
 
-           
-          </div>
+          {/* Cards Section */}
+<div className="grid grid-cols-4 gap-4 my-6">
+  <div className="flex items-center justify-between p-4 bg-white shadow-md rounded-lg">
+    {/* Icon */}
+    <div className="flex items-center space-x-4">
+      <img src={vehicle} alt="Vehicle Icon" className="w-8 h-8" />
+      <div>
+        <div className="font-bold text-[#303F58] text-[17px] leading-normal">Total Vehicle</div>
+        <p className="text-[#4B5C79] text-[12px]">Lorem ipsum dolor sit amet</p>
+      </div>
+    </div>
+    {/* Value */}
+    <div className="text-[#820000] font-bold text-[18px] mx-7">10</div>
+  </div>
+</div>
+
 
           {/* Table Section */}
           <div className="bg-white shadow-md rounded-lg p-4">
