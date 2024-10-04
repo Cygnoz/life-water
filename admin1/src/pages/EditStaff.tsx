@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import backbutton from "../assets/images/backbutton.svg";
 import { getStaffByIdAPI, updateStaffAPI } from '../services/AllApi';
+import { BASEURL } from '../services/Baseurl';
 
 const EditStaff: React.FC = () => {
   const [staff, setStaff] = useState<any>(null);
@@ -85,14 +86,18 @@ const EditStaff: React.FC = () => {
                 {/* Profile Picture */}
                 <div className="flex flex-col items-start space-y-2">
                   <div className="flex items-center space-x-4">
-                    <img
-                      src={staff.profile ? staff.profile : defaultImage}
-                      alt="Profile"
-                      className="w-24 h-24 rounded-full object-cover"
-                    />
+                  <img
+                  className="ms-5  object-cover w-25 h-25 rounded-full"
+                  src={
+                    staff.profile
+                      ? `${BASEURL}/${staff.profile.replace(/\\/g, "/")}`
+                      : defaultImage
+                  }
+                  alt={`${staff.firstname} ${staff.lastname}`} // Use full name for alt text
+                />
                     <label className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
                       Upload New Photo
-                      <input type="file" accept="image/*" className="hidden" />
+                      <input   type="file" accept="image/*" className="hidden" />
                     </label>
                   </div>
                   <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">

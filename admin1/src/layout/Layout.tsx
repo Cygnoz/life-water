@@ -43,16 +43,21 @@ const App: React.FC = () => {
           <SubHeader selectedNav={selectedNav} subhead={subhead} /> {/* Pass selectedNav to SubHeader */}
           <div  className='h-screen bg-[#f6f6f6]'>
             <Routes>
+
+               {/* ORDERS */}
               <Route path='/orders' element={<CreateOrder />} />
               <Route path='/addneworder' element={<NewOrder />} />
               <Route path='/vieworder' element={<ViewOrder />} />
 
 
+               {/* STAFF */}
               <Route path='/staff' element={<CreateStaff />} />
               <Route path='/addstaff' element={<AddStaff />} />
               <Route path='/editstaff/:id' element={<EditStaff />} />
               <Route path="/viewstaff/:id" element={<StaffOverview />} />
-              
+
+
+               {/* VEHICLE */}
               <Route path='/route/createroute' element={<CreateRoute />} />
               <Route path='/route/createmainroute' element={<CreateMainRoute />} />
               <Route path='/route/viewroute' element={<ViewRoute />} />
@@ -62,7 +67,7 @@ const App: React.FC = () => {
               <Route path='/route/editsubroute' element={<EditSubRoute />} />
 
 
-              
+              {/* VEHICLE */}
               <Route path='/vehicle' element={<CreateVehicle />} />
               <Route path='/vehicle/addvehicle' element={<AddVehicle />} />
               <Route path='/vehicle/editvehicle' element={<EditVehicles />} />
