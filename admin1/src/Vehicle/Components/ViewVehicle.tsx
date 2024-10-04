@@ -17,7 +17,7 @@ const ViewVehicle: React.FC = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await getVehicleByIdAPI(id); // Use the dynamic staff ID here
+        const response = await getVehicleByIdAPI(id)
         console.log(response);
         setVehicle(response);
       } catch (error: any) {
@@ -29,7 +29,7 @@ const ViewVehicle: React.FC = () => {
       fetchStaff();
     }
   }, [id]);
-  console.log(vehicle);
+ 
   
 
   if (!vehicle) return <div>Loading...</div>; // Loading state
@@ -51,7 +51,7 @@ const ViewVehicle: React.FC = () => {
     <div className="bg-gradient-to-r from-[#E3E6D5] to-[#F7E7CE] rounded-[8px] p-[16px_18px] flex items-center space-x-[24px] mb-6 w-[1299px] h-[92px]">
       <img src={uploadedvehicle} alt="Uploaded Vehicle" className="w-19 h-12 bg-gradient-to-r from-white-100 to-gray-200 rounded-full flex items-center justify-center" />
       <span className="text-[18px] font-bold text-gray-700 leading-[21.78px] text-left font-inter">
-        {vehicle?.vehicleNumber || 'N/A'}
+        {vehicle?.vehicleNo}
       </span>
     </div>
 
@@ -86,7 +86,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={mappinned} alt="Most Visited Route" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.mostVisitedRoute || 'N/A'}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.mostVisitedRoute}</h2>
               <p className="text-gray-600">Most Visited Route</p>
             </div>
           </div>
@@ -98,7 +98,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender} alt="Insurance Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.insuranceValidity || 'N/A'}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.insuranceValidity}</h2>
               <p className="text-gray-600">Insurance Validity</p>
             </div>
           </div>
@@ -110,7 +110,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender1} alt="License Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.licenseValidity || 'N/A'}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.licenseValidity}</h2>
               <p className="text-gray-600">License Validity</p>
             </div>
           </div>
@@ -126,7 +126,7 @@ const ViewVehicle: React.FC = () => {
           {/* Cards: Today Route, Deposit Amount, Insurance Amount */}
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-end p-4 border-2 rounded-lg bg-gradient-to-r from-[#E3E6D5] to-[#F7E7CE]">
-              <h2 className="text-xl font-bold text-gray-800">{vehicle?.todayRoute || 'N/A'}</h2>
+              <h2 className="text-xl font-bold text-gray-800">{vehicle?.todayRoute}</h2>
               <p className="text-gray-700">Today Route</p>
             </div>
 
