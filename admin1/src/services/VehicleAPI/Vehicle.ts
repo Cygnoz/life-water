@@ -30,6 +30,20 @@ export const getVehicleAPI = async (): Promise<ApiResponse> => {
     }
 };
 
+export const getVehicleByIdAPI = async (id: string): Promise<ApiResponse> => {
+    try {
+      // Use `id` instead of `_id`
+      const response = await commonAPI('GET', `${BASEURL}/api/viewvehicle/${id}`, null, {
+        // No need to specify any headers for GET requests
+      });
+  
+      return response; // Ensure the response matches the expected ApiResponse structure
+    } catch (error: any) {
+      console.error("Error fetching staff data:", error); // Log the full error for debugging
+      return { message: error.message || "An unexpected error occurred." }; // Fallback error message
+    }
+  }
+
 
 export const deleteVehicleByIdAPI = async (id: string) => {
     try {
