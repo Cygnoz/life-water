@@ -65,6 +65,19 @@ export const deleteStaffByIdAPI = async (id: string) => {
   }
 };
 
+import axios from 'axios';
+
+// Update staff by ID
+export const updateStaffAPI = async (id: string, updatedStaffData: any) => {
+  try {
+    const response = await axios.put(`${BASEURL}/api/staff/${id}`, updatedStaffData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to update staff');
+  }
+};
+
+
 
 
 
