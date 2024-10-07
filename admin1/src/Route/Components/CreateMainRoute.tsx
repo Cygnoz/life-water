@@ -26,17 +26,17 @@ const EditSubRoute: React.FC = () => {
   // Handler for form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData); // Log the form data
-
-
+    console.log('Form submitted:', formData);
+  
     try {
-      const response = await addRouteAPI(formData);
+      const response = await addRouteAPI(formData);  // Send the form data as JSON
       console.log('API Response:', response);
-      // Optionally handle success (e.g., redirect or show a success message)
+      // Handle success
     } catch (error) {
       console.error('Error submitting form:', error);
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">

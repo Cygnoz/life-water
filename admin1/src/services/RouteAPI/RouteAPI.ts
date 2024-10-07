@@ -1,20 +1,16 @@
-import { BASEURL } from "../Baseurl";
-import { commonAPI } from "../CommonApi";
+import axios from 'axios';
+import { BASEURL } from '../Baseurl';
 
-interface ApiResponse {
-  message?: string;
-  data?: any;
-}
-
-export const addRouteAPI = async (routeData: FormData): Promise<ApiResponse> => {
+export const addRouteAPI = async (formData: any) => {
   try {
-    const response = await commonAPI('POST',` ${BASEURL}/api/addRoute`, routeData, {
-      // No need to specify Content-Type for FormData
+    const response = await axios.post(`${BASEURL}/api/addRoute`, formData, {
+      headers: {
+        'Content-Type': 'application/json'  // Ensure correct content type
+      }
     });
-
-    return response; // Ensure response matches the expected ApiResponse structure
-  } catch (error: any) {
-    console.error("Error adding route:", error); // Log the full error for debugging
-    return { message: error.message || "An unexpected error occurred." }; // Fallback error message
+    return response.data;
+  } catch (error) {
+    console.error('Error adding route:', error.response?.data?.message || error.message);
+    throw new Error(error.response?.data?.message || 'Error adding route');
   }
 };
