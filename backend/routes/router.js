@@ -43,7 +43,7 @@ router.delete('/deletevehicle/:id', vehicleController.deleteVehicle);
 router.post('/addRoute', routeController.addRoute);
 router.delete('/delRoute/:id', routeController.deleteRoute);    // Delete route by ObjectId
 router.put('/updateRoute/:id', routeController.updateRoute);       // Update route by ObjectId
-router.get('/viewRoutes', routeController.viewAllRoutes);         // View all routes
+router.get('/getAllRoutes' ,routeController.getAllRoutes)        // View all routes
 router.get('/viewRoute/:id', routeController.viewRouteById);     // View route by ObjectId
 
 // subroute
