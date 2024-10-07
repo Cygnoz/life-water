@@ -68,13 +68,12 @@ const updateRoute = async (req, res) => {
 };
 
 // View all routes
-const viewAllRoutes = async (req, res) => {
+ const getAllRoutes = async (req, res) => {
   try {
-    const routes = await Route.find();
-    return res.status(200).json({ routes });
+    const routes = await MainRoute.find();
+    res.status(200).json(routes);
   } catch (error) {
-    console.error('Error fetching routes:', error.message);
-    return res.status(500).json({ message: 'Error fetching routes', error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -99,6 +98,6 @@ module.exports = {
   addRoute,
   deleteRoute,
   updateRoute,
-  viewAllRoutes,
+  getAllRoutes,
   viewRouteById
 };
