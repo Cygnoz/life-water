@@ -214,7 +214,7 @@ const AddVehicle: React.FC<Props> = () => {
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">License Amount</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter License Amount"
               value={licenseAmount}
               onChange={(e) => setLicenseAmount(e.target.value)}

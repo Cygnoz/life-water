@@ -12,23 +12,24 @@ const addRoute = async (req, res) => {
       return res.status(400).json({ message: 'Route with this code already exists.' });
     }
 
-    // If no existing route is found, proceed to create a new one
+    // Create a new route
     const newRoute = new MainRoute({
       mainRoute: req.body.mainRoute,
       routeCode: req.body.routeCode,
-      description: req.body.description
+      description: req.body.description,
+      // Add additional fields here if necessary
     });
 
     // Save the new route in the database
     const savedRoute = await newRoute.save();
 
-    // Send success response with the newly created route
+    // Send success response
     res.status(201).json(savedRoute);
   } catch (error) {
-    // Handle any errors and send a failure response
     res.status(500).json({ message: 'Error creating route', error: error.message });
   }
 };
+
 
 
 // Delete a route by ObjectId
