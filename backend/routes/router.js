@@ -29,7 +29,7 @@ router.get('/viewVehicles', vehicleController.getAllVehicles);
 // view single vehicle 
 router.get('/viewvehicle/:id',vehicleController.viewVehicleById)
 // edit vehicle 
-router.put('/updatevehicle/:id', vehicleController.updateVehicle);
+router.put('/editvehicle/:id', vehicleController.updateVehicle);
 // delete vehicle 
 router.delete('/deletevehicle/:id', vehicleController.deleteVehicle);
 
