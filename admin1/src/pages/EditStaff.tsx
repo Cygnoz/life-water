@@ -32,13 +32,9 @@ const EditStaff: React.FC = () => {
   }, [id])
 
   const handleWhatsAppCheckbox = () => {
-    setIsSameAsPhone(!isSameAsPhone)
-    if (!isSameAsPhone) {
-      setWhatsAppNumber(mobileNumber)
-    } else {
-      setWhatsAppNumber("")
-    }
-  }
+    setIsSameAsPhone((prev) => !prev);
+    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "");
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

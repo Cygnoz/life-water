@@ -4,6 +4,7 @@ import navlist from '../assets/constants/index';
 
 interface SidebarProps {
   onSelect: (nav: string, subhead: any[]) => void; // Pass subhead array to the parent as well
+  className:string
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ onSelect }) => {
