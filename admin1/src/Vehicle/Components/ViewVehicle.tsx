@@ -19,7 +19,7 @@ const ViewVehicle: React.FC = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const response = await getVehicleByIdAPI(id)
+        const response = await getVehicleByIdAPI(id as string)
         console.log(response);
         setVehicle(response);
       } catch (error: any) {
