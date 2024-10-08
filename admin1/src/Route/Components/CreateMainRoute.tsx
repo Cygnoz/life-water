@@ -11,6 +11,12 @@ const EditSubRoute: React.FC = () => {
     description: ''
   });
 
+    // State for managing form errors
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    // State for managing success message
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
   // Handler to update form state
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -26,14 +32,25 @@ const EditSubRoute: React.FC = () => {
   // Handler for form submission
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!formData.mainRoute || !formData.routeCode) {
+      setErrorMessage('Main Route and Route Code are required fields.');
+      return;
+    }
+    
     console.log('Form submitted:', formData);
-  
     try {
       const response = await addRouteAPI(formData);  // Send the form data as JSON
       console.log('API Response:', response);
+      setSuccessMessage('Route created successfully!');
+      setFormData({ mainRoute: '', routeCode: '', description: ''})
       // Handle success
-    } catch (error) {
-      console.error('Error submitting form:', error);
+    } catch (error:any) {
+      console.error('Error submitting form:', error.message);
+      setErrorMessage('Failed to create route. Please try again.');
     }
   };
   
@@ -53,6 +70,26 @@ const EditSubRoute: React.FC = () => {
       {/* Second Row: Form Container */}
       <div className="w-full max-w-8xl bg-white rounded-md shadow-md p-8">
         <form onSubmit={handleSubmit}>
+
+                  {/* Display error message */}
+                  {errorMessage && (
+            <div className="mb-4 p-4 text-red-700 bg-red-100 border border-red-400 rounded">
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Display success message */}
+          {successMessage && (
+            <div className="mb-4 p-4 text-green-700 bg-green-100 border border-green-400 rounded">
+              {successMessage}
+            </div>
+          )}
+
+
+
+
+
+
           {/* Input Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
@@ -97,6 +134,7 @@ const EditSubRoute: React.FC = () => {
               placeholder="Enter description"
               className="w-full h-[36px] px-3 py-2 border border-[#CECECE] rounded-[4px] bg-[#FFFFFF] focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
               style={{ resize: 'none', overflow: 'hidden' }} // Inline styles to remove resize handles
+              required
             />
           </div>
 
@@ -105,6 +143,7 @@ const EditSubRoute: React.FC = () => {
             <button
               type="button"
               className="px-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+              onClick={() => setFormData({ mainRoute: '', routeCode: '', description: '' })} // Optional: reset on cancel
             >
               Cancel
             </button>

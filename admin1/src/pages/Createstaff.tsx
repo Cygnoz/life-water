@@ -15,9 +15,17 @@ import { deleteStaffByIdAPI, getAllStaffsAPI } from "../services/AllApi"
 import { BASEURL } from "../services/Baseurl"
 
 const CreateStaff: React.FC = () => {
+  interface Staff {
+    firstname: string
+    lastname: string
+    designation: string // Add other fields as per your staff object structure
+  }
+
   const navigate = useNavigate()
-  const [staffList, setStaffList] = useState([]) // Full staff list
-  const [filteredStaffList, setFilteredStaffList] = useState([]) // Filtered staff list
+  // const [staffList, setStaffList] = useState([]) // Full staff list
+  const [staffList, setStaffList] = useState<Staff[]>([])
+
+  const [filteredStaffList, setFilteredStaffList] = useState<Staff[]>([]) // Fix here
   const [searchQuery, setSearchQuery] = useState("") // Search query state
 
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
@@ -30,7 +38,7 @@ const CreateStaff: React.FC = () => {
     navigate(`/viewstaff/${id}`) // Pass the staff ID to the view page
   }
 
-  const handleEdit = (id): void => {
+  const handleEdit = (id: any): void => {
     navigate(`/editstaff/${id}`)
   }
 
@@ -40,8 +48,8 @@ const CreateStaff: React.FC = () => {
       try {
         const response = await getAllStaffsAPI()
         console.log("Full API Response:", response) // Check the response
-        setStaffList(response) // Store full staff list
-        setFilteredStaffList(response) // Initially, display all staff
+        setStaffList(response as any) // Store full staff list
+        setFilteredStaffList(response as any) // Initially, display all staff
       } catch (error) {
         console.error("Error fetching staff data:", error)
       }
@@ -67,26 +75,23 @@ const CreateStaff: React.FC = () => {
     setFilteredStaffList(filteredList) // Update the filtered staff list
   }
 
-
-
   ///delete
   const handleDelete = async (id: string) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this staff?");
-    if (!confirmDelete) return;
-  
+    const confirmDelete = window.confirm("Are you sure you want to delete this staff?")
+    if (!confirmDelete) return
+
     try {
-      const response = await deleteStaffByIdAPI(id);
-      alert(response.message); // Show success message
-  
+      const response = await deleteStaffByIdAPI(id)
+      alert(response.message) // Show success message
+
       // Remove the deleted staff from the list
-      setStaffList(staffList.filter((staff: any) => staff._id !== id));
-      setFilteredStaffList(filteredStaffList.filter((staff: any) => staff._id !== id));
+      setStaffList(staffList.filter((staff: any) => staff._id !== id))
+      setFilteredStaffList(filteredStaffList.filter((staff: any) => staff._id !== id))
     } catch (error) {
-      console.error('Error deleting staff:', error);
-      alert('An error occurred while deleting staff.');
+      console.error("Error deleting staff:", error)
+      alert("An error occurred while deleting staff.")
     }
-  };
-  
+  }
 
   return (
     <div className="flex min-h-screen w-full">
@@ -119,34 +124,26 @@ const CreateStaff: React.FC = () => {
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
-  <img src={salesmen} alt="" />
-  <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Salesman</div>
-  {/* <p className="text-[#4B5C79] w-[400px] text-[12px]">
+              <img src={salesmen} alt="" />
+              <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Salesman</div>
+              {/* <p className="text-[#4B5C79] w-[400px] text-[12px]">
     Lorem ipsum dolor sit amet consectetur
   </p> */}
-  <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
-    {staffList.filter((staff) => staff.designation === 'Sales').length}
-  </div>
-</div>
-
-
+              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">{staffList.filter((staff) => staff.designation === "Sales").length}</div>
+            </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={packing} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Helpers</div>
               {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
-              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
-    {staffList.filter((staff) => staff.designation === 'Helper').length}
-  </div>
+              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">{staffList.filter((staff) => staff.designation === "Helper").length}</div>
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img src={seatbelt} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Drivers</div>
               {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
-              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
-    {staffList.filter((staff) => staff.designation === 'Driver').length}
-  </div>
+              <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">{staffList.filter((staff) => staff.designation === "Driver").length}</div>
             </div>
           </div>
 
@@ -195,9 +192,7 @@ const CreateStaff: React.FC = () => {
                           <td className="p-2 text-center w-24">
                             <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/${staff.profile.replace(/\\/g, "/")}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
                           </td>
-                          <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">
-                            {staff.firstname} {staff.lastname}
-                          </td>
+                          <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.firstname}</td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-64">{staff.address}</td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.mobileNumber}</td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.designation}</td>
@@ -205,7 +200,7 @@ const CreateStaff: React.FC = () => {
                             <button onClick={() => handleView(staff._id)} className="text-blue-500">
                               <img src={eye} alt="View" />
                             </button>
-                            <button onClick={() => handleEdit(staff._id)}  className="text-red-500 ml-2">
+                            <button onClick={() => handleEdit(staff._id)} className="text-red-500 ml-2">
                               <img src={vector} alt="Edit" />
                             </button>
                             <button onClick={() => handleDelete(staff._id)} className="text-red-500 ml-2">
