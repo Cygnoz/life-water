@@ -32,9 +32,9 @@ const EditStaff: React.FC = () => {
   }, [id])
 
   const handleWhatsAppCheckbox = () => {
-    setIsSameAsPhone((prev) => !prev);
-    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "");
-  };
+    setIsSameAsPhone((prev) => !prev)
+    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "")
+  }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -46,7 +46,7 @@ const EditStaff: React.FC = () => {
     setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }))
   }
 
-  const handleProfileChange = (e:any) => {
+  const handleProfileChange = (e: any) => {
     const file = e.target.files[0] // Get the selected file
     if (file) {
       setProfile(file) // Update local state with the selected file
@@ -55,7 +55,7 @@ const EditStaff: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      await updateStaffAPI(id!, staff) // Call the update API
+      await updateStaffAPI(id!, staff, profile) // Pass the profile image
       setSuccessMessage("Staff updated successfully!")
       setErrorMessage("") // Clear any previous errors
       setTimeout(() => {
@@ -92,11 +92,7 @@ const EditStaff: React.FC = () => {
                 {/* Profile Picture */}
                 <div className="flex flex-col items-start space-y-2">
                   <div className="flex items-center space-x-4">
-                    <img
-                      className="object-cover w-24 h-24 rounded-full"
-                      src={profile ? URL.createObjectURL(profile) : `${BASEURL}/${staff.profile.replace(/\\/g, "/")}`}
-                      alt={`${staff.firstname} ${staff.lastname}`} // Use full name for alt text
-                    />
+                    <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
                     <label className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
                       Upload New Photo
                       <input

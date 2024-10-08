@@ -16,7 +16,7 @@ router.get('/getallstaffs', staffController.getAllStaff);
 // Get staff by ID
 router.get('/staff/:id', staffController.getStaffById);
 // Edit staff
-router.put('/staff/:id', staffController.editStaff);
+router.put('/staff/:id',upload.single('profile'), staffController.editStaff);
 // Delete staff
 router.delete('/staff/:id', staffController.deleteStaff);
 
