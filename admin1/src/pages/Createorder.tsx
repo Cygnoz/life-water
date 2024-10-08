@@ -40,7 +40,7 @@ const CreateOrder: React.FC = () => {
             <div className="flex justify-between">
               <button
                 onClick={handleCreate}
-                className="flex justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
+                className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
               >
                 <img src={plus} alt="" />
                 <p>New Order</p>

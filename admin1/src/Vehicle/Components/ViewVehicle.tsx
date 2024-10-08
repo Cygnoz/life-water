@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import back from '../../assets/images/backbutton.svg';
-import uploadedvehicle from '../../assets/images/uploadedvehicle.svg';
 import { Link, useParams } from 'react-router-dom';
 import list from '../../assets/images/list-todo.svg';
 import history from '../../assets/images/history.svg';
@@ -8,25 +7,28 @@ import mappinned from '../../assets/images/map-pinned.svg';
 import calender from '../../assets/images/calendar-minus-2.svg';
 import calender1 from '../../assets/images/calendar-search.svg';
 import { getVehicleByIdAPI } from '../../services/VehicleAPI/Vehicle';
+import { BASEURL } from '../../services/Baseurl';
 
 const ViewVehicle: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'information' | 'rideHistory'>('information');
   const [vehicle, setVehicle] = useState<any>(null); // Changed to any for flexibility
   const { id } = useParams(); // Get the staff ID from the URL
+  const defaultImage =
+    "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
 
   useEffect(() => {
-    const fetchStaff = async () => {
+    const fetchVehicle = async () => {
       try {
         const response = await getVehicleByIdAPI(id)
         console.log(response);
         setVehicle(response);
       } catch (error: any) {
-        console.error("Error fetching staff data:", error.message);
+        console.error("Error fetching vehicle data:", error.message);
       }
     };
 
     if (id) {
-      fetchStaff();
+      fetchVehicle();
     }
   }, [id]);
  
@@ -49,9 +51,9 @@ const ViewVehicle: React.FC = () => {
 
     {/* Row 2: Profile Picture and Vehicle Number in a rounded container */}
     <div className="bg-gradient-to-r from-[#E3E6D5] to-[#F7E7CE] rounded-[8px] p-[16px_18px] flex items-center space-x-[24px] mb-6 w-[1299px] h-[92px]">
-      <img src={uploadedvehicle} alt="Uploaded Vehicle" className="w-19 h-12 bg-gradient-to-r from-white-100 to-gray-200 rounded-full flex items-center justify-center" />
+      <img  src={vehicle.vehicle.image ? `${BASEURL}/uploads/${vehicle.vehicle.image}` : defaultImage}  alt="Uploaded Vehicle" className="w-19 h-12 bg-gradient-to-r from-white-100 to-gray-200 rounded-full flex items-center justify-center" />
       <span className="text-[18px] font-bold text-gray-700 leading-[21.78px] text-left font-inter">
-        {vehicle?.vehicleNo}
+        {vehicle?.vehicle.vehicleNo}
       </span>
     </div>
 
@@ -86,7 +88,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={mappinned} alt="Most Visited Route" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.mostVisitedRoute}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.createdAt}</h2>
               <p className="text-gray-600">Most Visited Route</p>
             </div>
           </div>
@@ -98,7 +100,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender} alt="Insurance Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.insuranceValidity}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.vehicle.insuranceValidity}</h2>
               <p className="text-gray-600">Insurance Validity</p>
             </div>
           </div>
@@ -110,7 +112,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender1} alt="License Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.licenseValidity}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.vehicle.licenseValidity}</h2>
               <p className="text-gray-600">License Validity</p>
             </div>
           </div>
@@ -136,7 +138,7 @@ const ViewVehicle: React.FC = () => {
             </div>
 
             <div className="text-end p-4 border-2 rounded-lg bg-gradient-to-r from-[#E3E6D5] to-[#F7E7CE]">
-              <h2 className="text-xl font-semibold text-gray-800">{vehicle?.insuranceAmount ? `AED ${vehicle.insuranceAmount}` : 'AED 0'}</h2>
+              <h2 className="text-xl font-semibold text-gray-800">{vehicle?.vehicle.insuranceAmount ? `AED ${vehicle?.vehicle.insuranceAmount}` : 'AED 0'}</h2>
               <p className="text-gray-700">Insurance Amount</p>
             </div>
           </div>
@@ -147,26 +149,26 @@ const ViewVehicle: React.FC = () => {
               <h3 className="font-semibold text-lg text-gray-700 mb-4">General Details</h3>
               <div className="space-y-2">
                 <p className="text-gray-700">Vehicle Number</p>
-                <p>{vehicle?.vehicleNumber || 'N/A'}</p>
+                <p>{vehicle?.vehicle.vehicleNo || 'N/A'}</p>
                 <p className="text-gray-700">Insurance Validity</p>
-                <p>{vehicle?.insuranceValidity || 'N/A'}</p>
+                <p>{vehicle?.vehicle.insuranceValidity || 'N/A'}</p>
                 <p className="text-gray-700">Insurance Amount</p>
-                <p>{vehicle?.insuranceAmount || '0'}</p>
+                <p>{vehicle?.vehicle.insuranceAmount || '0'}</p>
                 <p className="text-gray-700">License Validity</p>
-                <p>{vehicle?.licenseValidity || 'N/A'}</p>
+                <p>{vehicle?.vehicle.licenseValidity || 'N/A'}</p>
               </div>
             </div>
             <div className="bg-gray-5 p-4 rounded-lg">
               <h3 className="font-semibold text-lg text-gray-700 mb-4">Other Details</h3>
               <div className="space-y-2">
                 <p className="text-gray-700">Expense</p>
-                <p>{vehicle?.expense || '0'}</p>
+                <p>{vehicle?.vehicle.expenses || '0'}</p>
                 <p className="text-gray-700">Started Km</p>
-                <p>{vehicle?.startedKm || '0'}</p>
+                <p>{vehicle?.vehicle.startingKilometer || '0'}</p>
                 <p className="text-gray-700">Ending Km</p>
-                <p>{vehicle?.endingKm || '0'}</p>
+                <p>{vehicle?.vehicle.expense || '0'}</p>
                 <p className="text-gray-700">Total Km</p>
-                <p>{vehicle?.totalKm || '0'}</p>
+                <p>{vehicle?.vehicle.expense || '0'}</p>
               </div>
             </div>
           </div>
