@@ -52,7 +52,7 @@ const getAllVehicles = async (req, res) => {
 const updateVehicle = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = req.body;
+    const updateData = { ...req.body }; // Spread the request body
 
     // Handle image update if provided
     if (req.file) {
@@ -66,22 +66,13 @@ const updateVehicle = async (req, res) => {
       return res.status(404).json({ message: 'Vehicle not found' });
     }
 
-    return res.status(200).json({ message: 'Vehicle updated successfully', vehicle: updatedVehicle });
+    return res.status(200).json(updatedVehicle);
   } catch (error) {
-    // // Check for duplicate key error (error code 11000)
-    // if (error.code === 11000) {
-    //   const duplicateField = Object.keys(error.keyPattern)[0];
-    //   return res.status(400).json({
-    //     message: `Duplicate ${duplicateField} detected`,
-    //     error: error.message
-    //   });
-    // }
-
-    // Handle other errors
     console.error('Error updating vehicle:', error.message);
     return res.status(500).json({ message: 'Error updating vehicle', error: error.message });
   }
 };
+
 
 
 // Delete vehicle by Object ID

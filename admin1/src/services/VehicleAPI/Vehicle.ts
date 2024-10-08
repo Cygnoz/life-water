@@ -81,12 +81,14 @@ export const deleteVehicleByIdAPI = async (id: string) => {
     }
   };
 
-  // Update vehicle by ID
-  export const updateVehicleAPI = async (id: string, updatedVehicleData: any) => {
+  export const updateVehicleAPI = async (id: string, updatedVehicle: any) => {
     try {
-        const response = await axios.put(`${BASEURL}/api/vehicles/${id}`, updatedVehicleData);
-        return response.data;
-    } catch (error:any) {
-        throw new Error(error.response?.data?.message || 'Failed to update vehicle');
+      const response = await axios.put(`${BASEURL}/api/editvehicle/${id}`, updatedVehicle);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to update vehicle');
     }
-};
+
+  };
+
+
