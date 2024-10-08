@@ -10,7 +10,7 @@ export const addRouteAPI = async (formData: any) => {
       }
     });
     return response.data;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error adding route:', error.response?.data?.message || error.message);
     throw new Error(error.response?.data?.message || 'Error adding route');
   }
@@ -25,7 +25,7 @@ export const getRoutesAPI = async () => {
       }
     });
     return response.data;
-  } catch (error) {
+  } catch (error:any) {
     console.error('Error fetching routes:', error.response?.data?.message || error.message);
     throw new Error(error.response?.data?.message || 'Error fetching routes');
   }
