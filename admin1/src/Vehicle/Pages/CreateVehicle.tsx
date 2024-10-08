@@ -181,7 +181,7 @@ const CreateVehicle: React.FC = () => {
                       <button onClick={() => handleView(vehicle._id)} className="text-blue-500">
                         <img src={eye} alt="" />
                       </button>
-                      <button onClick={() => handleEdit(vehicle.id)} className="text-red-500 ml-2">
+                      <button onClick={() => handleEdit(vehicle._id)} className="text-red-500 ml-2">
                         <img src={vector} alt="" />
                       </button>
                       <button onClick={() => handleDelete(vehicle._id)} className="text-red-500 ml-2">

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { BASEURL } from "../Baseurl";
 import { commonAPI } from "../CommonApi";
 
@@ -62,3 +63,13 @@ export const deleteVehicleByIdAPI = async (id: string) => {
       throw new Error(error.message || 'An unexpected error occurred.');
     }
   };
+
+  // Update vehicle by ID
+  export const updateVehicleAPI = async (id: string, updatedVehicleData: any) => {
+    try {
+        const response = await axios.put(`${BASEURL}/api/vehicles/${id}`, updatedVehicleData);
+        return response.data;
+    } catch (error:any) {
+        throw new Error(error.response?.data?.message || 'Failed to update vehicle');
+    }
+};

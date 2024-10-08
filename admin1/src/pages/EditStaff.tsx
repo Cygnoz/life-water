@@ -19,7 +19,7 @@ const EditStaff: React.FC = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await getStaffByIdAPI(id)
+        const response = await getStaffByIdAPI(id as string)
         setStaff(response)
       } catch (error: any) {
         console.error("Error fetching staff data:", error.message)
@@ -50,7 +50,7 @@ const EditStaff: React.FC = () => {
     setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }))
   }
 
-  const handleProfileChange = (e) => {
+  const handleProfileChange = (e:any) => {
     const file = e.target.files[0] // Get the selected file
     if (file) {
       setProfile(file) // Update local state with the selected file
