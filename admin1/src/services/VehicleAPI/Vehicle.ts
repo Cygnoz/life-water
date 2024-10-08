@@ -8,6 +8,23 @@ interface ApiResponse {
     data?: any;
   }
 
+
+  export interface Vehicle {
+    _id: string; // Use _id to match the API response
+    vehicleNo: string;
+    image: string;
+    insuranceValidity: string;
+    insuranceStatus: string;
+    registrationValidity: string;
+    insuranceAmount: number;
+    licenseAmount: number;
+    licenseValidity: string;
+    startingKilometer: number;
+    expenses: number;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export const addVehicleAPI = async (vehicleData: FormData): Promise<ApiResponse> => {
     try {
       const response = await commonAPI('POST', `${BASEURL}/api/addVehicle`, vehicleData, {
@@ -71,5 +88,7 @@ export const deleteVehicleByIdAPI = async (id: string) => {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to update vehicle');
     }
+
   };
+
 

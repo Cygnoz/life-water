@@ -13,10 +13,20 @@ import { useNavigate } from "react-router-dom";
 import { getRoutesAPI } from "../../services/RouteAPI/RouteAPI";
 import { useEffect, useState } from "react";
 
+
+interface Route {
+  id: string;
+  mainRoute: string;
+  routeCode: string;
+  subRoute: string;
+  description: string;
+}
+
 const CreateRoute: React.FC = () => {
-  const [routesList, setRouteList] = useState([]); // Full staff list
-  const [filteredRouteList, setFilteredRouteList] = useState([]) // Filtered staff list
-  const [searchQuery, setSearchQuery] = useState("") // Search query state
+
+  const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
+  const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
+  const [searchQuery, setSearchQuery] = useState(""); // Search query state
   // Fetch staff data on component mount
   useEffect(() => {
     const fetchStaff = async () => {
@@ -43,8 +53,8 @@ const CreateRoute: React.FC = () => {
     navigate("/route/createmainroute");
   };
 
-  const handleView = (): void => {
-    navigate("/route/viewroute");
+  const handleView = (routeId: string): void => {
+    navigate(`/route/viewroute/${routeId}`);
   };
 
   

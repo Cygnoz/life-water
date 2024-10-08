@@ -11,14 +11,16 @@ import search from "../../assets/images/search.svg"
 import vehicle from "../../assets/images/vehicle 1.svg"
 
 import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
-import { deleteVehicleByIdAPI, getVehicleAPI } from "../../services/VehicleAPI/Vehicle"
+import React, { useEffect, useState } from "react"
+import { deleteVehicleByIdAPI, getVehicleAPI, Vehicle } from "../../services/VehicleAPI/Vehicle"
 import { BASEURL } from "../../services/Baseurl"
 
+
+
 const CreateVehicle: React.FC = () => {
-  const [vehicleList, setVehicleList] = useState([]) // Full vehicle list
-  const [filteredVehicleList, setFilteredVehicleList] = useState([]) // Filtered vehicle list
-  const [searchQuery, setSearchQuery] = useState("") // Search query
+  const [vehicleList, setVehicleList] = useState<Vehicle[]>([])
+  const [filteredVehicleList, setFilteredVehicleList] = useState<Vehicle[]>([])
+  const [searchQuery, setSearchQuery] = useState<string>("")
   const navigate = useNavigate()
 
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
@@ -26,21 +28,29 @@ const CreateVehicle: React.FC = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const response = await getVehicleAPI()
-        console.log("Full API Response:", response) // Check the response
-        setVehicleList(response) // Store full vehicle list
-        setFilteredVehicleList(response) // Initially show the full list
+        const apiResponse = await getVehicleAPI()
+        console.log("API Response:", apiResponse)
+
+        if (Array.isArray(apiResponse)) {
+          setVehicleList(apiResponse)
+          setFilteredVehicleList(apiResponse)
+        } else {
+          console.error("Invalid API response structure:", apiResponse)
+          setVehicleList([])
+          setFilteredVehicleList([])
+        }
       } catch (error) {
         console.error("Error fetching vehicle data:", error)
+        setVehicleList([])
+        setFilteredVehicleList([])
       }
     }
 
     fetchVehicle()
   }, [])
 
-  // Filter logic based on search query
   useEffect(() => {
-    const filteredVehicles = vehicleList.filter((vehicle: any) => {
+    const filteredVehicles = vehicleList.filter((vehicle) => {
       const searchLower = searchQuery.toLowerCase()
       return (
         vehicle.vehicleNo.toLowerCase().includes(searchLower) ||
@@ -57,10 +67,8 @@ const CreateVehicle: React.FC = () => {
 
     try {
       const response = await deleteVehicleByIdAPI(id)
-      alert(response.message) // Show success message
-
-      // Remove the deleted vehicle from the list
-      setVehicleList(vehicleList.filter((vehicle: any) => vehicle._id !== id))
+      alert(response.message)
+      setVehicleList(vehicleList.filter((vehicle) => vehicle._id !== id))
     } catch (error) {
       console.error("Error deleting vehicle:", error)
       alert("An error occurred while deleting vehicle.")
@@ -73,7 +81,7 @@ const CreateVehicle: React.FC = () => {
   const handleEdit = (vehicleId: string): void => {
     navigate(`/vehicle/editvehicle/${vehicleId}`)
   }
-  const handleView = (id: any) => {
+  const handleView = (id: string) => {
     navigate(`/viewvehicle/${id}`)
   }
 
@@ -101,7 +109,6 @@ const CreateVehicle: React.FC = () => {
           {/* Cards Section */}
           <div className="grid grid-cols-4 gap-4 my-6">
             <div className="flex items-center justify-between p-4 bg-white shadow-md rounded-lg">
-              {/* Icon */}
               <div className="flex items-center space-x-4">
                 <img src={vehicle} alt="Vehicle Icon" className="w-8 h-8" />
                 <div>
@@ -109,7 +116,6 @@ const CreateVehicle: React.FC = () => {
                   <p className="text-[#4B5C79] text-[12px]">Lorem ipsum dolor sit amet</p>
                 </div>
               </div>
-              {/* Value */}
               <div className="text-[#820000] font-bold text-[18px] mx-10 p-4">{filteredVehicleList.length}</div>
             </div>
           </div>
@@ -129,7 +135,7 @@ const CreateVehicle: React.FC = () => {
                 }}
                 placeholder="Search Vehicle"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // Update the search query
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <div className="flex w-[60%] justify-end">
                 <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
@@ -159,7 +165,7 @@ const CreateVehicle: React.FC = () => {
               </thead>
               <tbody>
                 {filteredVehicleList.map((vehicle, index) => (
-                  <tr key={vehicle.id || index} className="border-b">
+                  <tr key={vehicle._id || index} className="border-b">
                     <td className="px-8 py-6">
                       <input type="checkbox" />
                     </td>
@@ -172,7 +178,7 @@ const CreateVehicle: React.FC = () => {
                       />
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.vehicleNo || "N/A"}</td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceValidity.split("T")[0]}</td>
+                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceValidity ? new Date(vehicle.insuranceValidity).toLocaleDateString() : "N/A"}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceAmount || "N/A"}</td>
                     <td className="p-2 text-[14] text-center ">
                       <span className={`bg-${vehicle.insuranceStatus === "Expired" ? "red" : "green"}-100 p-2 rounded-lg`}>{vehicle.insuranceStatus}</span>
