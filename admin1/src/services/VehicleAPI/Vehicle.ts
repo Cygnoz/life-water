@@ -6,6 +6,7 @@ import { commonAPI } from "../CommonApi";
 interface ApiResponse {
     message?: string;
     data?: any;
+    vehicle?: Vehicle;
   }
 
 
@@ -85,7 +86,7 @@ export const deleteVehicleByIdAPI = async (id: string) => {
     try {
       const response = await axios.put(`${BASEURL}/api/editvehicle/${id}`, updatedVehicle);
       return response.data;
-    } catch (error) {
+    } catch (error:any) {
       throw new Error(error.response?.data?.message || 'Failed to update vehicle');
     }
 
