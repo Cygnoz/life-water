@@ -12,7 +12,11 @@ const subrouteRoute = require('./routes/router.js');
 const vehicleRoute = require('./routes/router.js');
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: 'http://3.110.171.51:4173', // Your frontend origin
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use('/uploads', express.static('uploads')); // Ensure the path is correct
