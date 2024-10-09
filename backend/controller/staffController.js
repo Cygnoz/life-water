@@ -1,6 +1,8 @@
-const Staff = require('../models/StaffSchema'); // Adjust the path based on your file structure
+const Staff = require("../models/StaffSchema");
+
 
 // Add new staff
+
 
 
 // Get all staff members
