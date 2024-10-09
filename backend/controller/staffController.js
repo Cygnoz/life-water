@@ -3,7 +3,7 @@
 
 // Add new staff
 
-const Staff = require("../models/StaffSchema"); // Ensure the path matches the casing
+const Staff = require("../Models/StaffSchema"); // Ensure the path matches the casing
 
 // Get all staff members
 const getAllStaff = async (req, res) => {
