@@ -192,7 +192,8 @@ const CreateStaff: React.FC = () => {
                           <td className="p-2 text-center w-24">
                             <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
                           </td>
-                          <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.firstname}</td>
+                          <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.firstname } {staff.lastname}
+                          </td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-64">{staff.address}</td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.mobileNumber}</td>
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-36">{staff.designation}</td>
