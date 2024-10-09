@@ -33,7 +33,7 @@ const StaffOverview: React.FC = () => {
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await getStaffByIdAPI(id); // Use the dynamic staff ID here
+        const response = await getStaffByIdAPI(id as string); // Use the dynamic staff ID here
         console.log(response);
         setStaff(response);
       } catch (error: any) {

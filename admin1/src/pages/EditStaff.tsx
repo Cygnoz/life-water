@@ -16,6 +16,9 @@ const EditStaff: React.FC = () => {
   const navigate = useNavigate() // Used for redirecting after saving
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
 
+  console.log(whatsAppNumber);
+  
+
   useEffect(() => {
     const fetchStaff = async () => {
       try {
@@ -29,7 +32,7 @@ const EditStaff: React.FC = () => {
     if (id) {
       fetchStaff()
     }
-  }, [id])
+  }, [id]) 
 
   const handleWhatsAppCheckbox = () => {
     setIsSameAsPhone((prev) => !prev)

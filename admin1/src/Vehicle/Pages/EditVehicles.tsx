@@ -2,64 +2,94 @@ import React, { useEffect, useState } from 'react';
 import uploadedvehicle from '../../assets/images/uploadedvehicle.svg';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
-import { getVehicleByIdAPI, updateVehicleAPI } from '../../services/VehicleAPI/Vehicle';
+import { getVehicleByIdAPI, updateVehicleAPI, Vehicle } from '../../services/VehicleAPI/Vehicle';
 
 type Props = {};
 
 function EditVehicles({}: Props) {
     const { id } = useParams<{ id: string }>();
     const navigate=useNavigate()
-    const [vehicleData, setVehicleData] = useState({
+    const [successMessage,setSuccessMessage]= useState("")
+    const [errorMessage,setErrorMessage]= useState("")
+    
+
+   
+    console.log(successMessage);
+    console.log(errorMessage);
+    
+    
+    const [vehicleData, setVehicleData] = useState<Vehicle>({
+        _id: '', // Initialize with default value
         vehicleNo: '',
+        image: '', // Initialize with default value
+        insuranceValidity: '',
         insuranceStatus: '',
         registrationValidity: '',
-        insuranceValidity: '',
-        startingKilometer: '',
-        insuranceAmount: '',
-        expenses: '',
-        licenseAmount: '',
+        startingKilometer: 0, // Number
+        insuranceAmount: 0, // Number
+        expenses: 0, // Number
+        licenseAmount: 0, // Number
         licenseValidity: '',
+        createdAt: '', // Initialize with default value
+        updatedAt: '' // Initialize with default value
     });
-   
-
+    
     useEffect(() => {
         const fetchVehicle = async () => {
             try {
                 const response = await getVehicleByIdAPI(id as string);
-                setVehicleData(response.vehicle);
-
-                // Initialize FormData with vehicle data
-                const initialFormData = new FormData();
-                Object.keys(response.vehicle).forEach(key => {
-                    initialFormData.set(key, response.vehicle[key]);
-                });
+                if (response.vehicle) {
+                    // Ensure to include all properties from the response
+                    setVehicleData({
+                        _id: response.vehicle._id,
+                        vehicleNo: response.vehicle.vehicleNo,
+                        image: response.vehicle.image,
+                        insuranceValidity: response.vehicle.insuranceValidity,
+                        insuranceStatus: response.vehicle.insuranceStatus,
+                        registrationValidity: response.vehicle.registrationValidity,
+                        startingKilometer: response.vehicle.startingKilometer, // Assuming this is a number
+                        insuranceAmount: response.vehicle.insuranceAmount, // Assuming this is a number
+                        expenses: response.vehicle.expenses, // Assuming this is a number
+                        licenseAmount: response.vehicle.licenseAmount, // Assuming this is a number
+                        licenseValidity: response.vehicle.licenseValidity,
+                        createdAt: response.vehicle.createdAt, // Ensure to include this
+                        updatedAt: response.vehicle.updatedAt, // Ensure to include this
+                    });
+                } else {
+                    // Handle case where vehicle is not found
+                    setErrorMessage("Vehicle data not found");
+                }
             } catch (error: any) {
                 console.error("Error fetching vehicle data:", error.message);
+                setErrorMessage(error.message || "Failed to fetch vehicle data.");
             }
         };
-
+    
         if (id) {
             fetchVehicle();
         }
     }, [id]);
+    
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target
-      setVehicleData((prevStaff: any) => ({ ...prevStaff, [name]: value }))
-    }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+      
+        setVehicleData((prevStaff: any) => ({ ...prevStaff, [name]: value }));
+      };
+      
   
 
-    const handleSave = async () => {
+    const handleSubmit = async () => {
       try {
-        await updateVehicleAPI(id!, vehicleData) // Call the update API
-        // setSuccessMessage("Staff updated successfully!")
-        // setErrorMessage("") // Clear any previous errors
-        // setTimeout(() => {
-          navigate("/vehicle") // Redirect back to staff list after success
-        // }, 2000) // Redirect after 2 seconds
+        await updateVehicleAPI(id!,vehicleData) // Call the update API
+        setSuccessMessage("vehicle updated successfully!")
+        navigate("/vehicle") // Redirect back to staff list after success
+        setErrorMessage("") // Clear any previous errors
+       
+         // Redirect after 2 seconds
       } catch (error: any) {
-        // setErrorMessage(error.message || "Failed to update staff.")
-        // setSuccessMessage("") // Clear any previous success messages
+        setErrorMessage(error.message || "Failed to update staff.")
+        setSuccessMessage("") // Clear any previous success messages
       }
     }
 
@@ -76,7 +106,7 @@ function EditVehicles({}: Props) {
 
             <div>
                 {vehicleData && (
-                    <form onSubmit={handleSave} className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
+                    <form  className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
                         <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Edit Vehicle</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -204,6 +234,7 @@ function EditVehicles({}: Props) {
                             <button
                                 className="px-3 py-1 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]"
                                 type="submit"
+                                onClick={handleSubmit}
                             >
                                 Update
                             </button>

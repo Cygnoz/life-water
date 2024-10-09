@@ -68,11 +68,25 @@ export const deleteStaffByIdAPI = async (id: string) => {
 
 
 // Update staff by ID
-export const updateStaffAPI = async (id: string, updatedStaffData: any) => {
+export const updateStaffAPI = async (id: string, updatedStaffData: any, profileImage: File | null) => {
   try {
-    const response = await axios.put(`${BASEURL}/api/staff/${id}`, updatedStaffData);
+    const formData = new FormData();
+    // Append staff data
+    for (const key in updatedStaffData) {
+      formData.append(key, updatedStaffData[key]);
+    }
+    // Append the profile image if it exists
+    if (profileImage) {
+      formData.append('profile', profileImage);
+    }
+
+    const response = await axios.put(`${BASEURL}/api/staff/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the correct content type
+      },
+    });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error.response?.data?.message || 'Failed to update staff');
   }
 };

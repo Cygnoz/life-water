@@ -26,7 +26,10 @@ const CreateRoute: React.FC = () => {
 
   const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
   const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
-  const [searchQuery, setSearchQuery] = useState(""); // Search query state
+
+  console.log(filteredRouteList);
+  
+
   // Fetch staff data on component mount
   useEffect(() => {
     const fetchStaff = async () => {

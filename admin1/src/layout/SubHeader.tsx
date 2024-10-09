@@ -4,7 +4,7 @@ import Home from '../assets/images/home.svg';
 import frame from '../assets/images/frame.svg';
 
 interface SubHeaderProps {
-  selectedNav: string;
+  selectedNav: string; // Declare selectedNav as a prop
   subhead: { headName: string; subRoute: string }[]; // Receive subhead data
 }
 
@@ -28,11 +28,11 @@ const SubHeader: React.FC<SubHeaderProps> = ({ selectedNav, subhead }) => {
       <div className="flex items-center gap-4">
         <div className="px-4 py-2 rounded-[30px] flex items-center gap-2.5">
           <div className="text-[#585953] text-base font-bold">
-            Dashboard {/* Display selected nav */}
+            {selectedNav} {/* Display selected navigation */}
           </div>
         </div>
 
-        {/* Render subhead items next to Dashboard */}
+        {/* Render subhead items next to selected navigation */}
         {subhead.length > 0 && (
           <div className="flex gap-2">
             {subhead.map((subItem, index) => (
