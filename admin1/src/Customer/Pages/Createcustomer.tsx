@@ -11,8 +11,7 @@ import trash from "../../assets/images/trash.svg"
 import split from "../../assets/images/list-filter.svg"
 import user from "../../assets/images/circle-user.svg"
 import { Link, useNavigate } from "react-router-dom"
-
-
+import search from "../../assets/images/search.svg"
 
 const CreateCustomer: React.FC = () => {
   const navigate =useNavigate()
@@ -114,21 +113,26 @@ const CreateCustomer: React.FC = () => {
 
           {/* Table Section */}
           <div className="bg-white shadow-md rounded-lg p-4">
-            <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4">
+              <div className="absolute ml-3 ">
+                <img src={search} alt="search" className="h-5 w-5" />
+              </div>
               <input
-                type="text"
-                className="p-2 border  bg-[#fdf8f0] rounded-lg w-3/4"
-                placeholder="Search Customer"
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(28, 28, 28, 0.04)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Order"
+                 
               />
-
-              <div className="flex">
-                <button className="flex border text-[14] w-[500]  text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
-                  {" "}
+              <div className="flex w-[60%] justify-end">
+                <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
                   <img className="mt-1 me-1" src={split} alt="" />
                   Sort By
                 </button>
-                <button className="flex border text-[14] w-[500]  text-[#565148] border-[#565148]  px-4 py-2 rounded-lg">
-                  {" "}
+                <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
                   <img className="mt-1 me-1" src={printer} alt="" />
                   Print
                 </button>
@@ -137,6 +141,8 @@ const CreateCustomer: React.FC = () => {
             <table className="w-full text-left">
               <thead className="bg-[#fdf8f0]">
                 <tr className="border-b">
+                <th className="p-2 text-[12px] text-center text-[#303F58] w-16"> <input type="checkbox" /></th>
+
                   <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Sl No
                   </th>
@@ -166,6 +172,7 @@ const CreateCustomer: React.FC = () => {
               <tbody>
                 
                  <tr className="border-b" >
+                 <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       1
                     </td>

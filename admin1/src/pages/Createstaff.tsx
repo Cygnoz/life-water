@@ -9,6 +9,8 @@ import split from "../assets/images/list-filter.svg"
 import plus from "../assets/circle-plus.svg"
 import eye from "../assets/images/eye.svg"
 import dot from "../assets/ellipsis-vertical.svg"
+import search from "../assets/images/search.svg"
+
 import { useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { deleteStaffByIdAPI, getAllStaffsAPI } from "../services/AllApi"
@@ -148,11 +150,23 @@ const CreateStaff: React.FC = () => {
           </div>
 
           {/* Table Section */}
-          <div className="bg-white shadow-md rounded-lg p-4">
+          <div className="bg-white shadow-md rounded-lg p-4">           
             <div className="flex justify-between items-center mb-4">
-              <input type="text" className="p-2 border bg-[#fdf8f0] rounded-lg w-3/4" placeholder="Search Staff" value={searchQuery} onChange={handleSearch} />
-
-              <div className="flex">
+              <div className="absolute ml-3 ">
+                <img src={search} alt="search" className="h-5 w-5" />
+              </div>
+              <input
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(28, 28, 28, 0.04)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Staff"
+                 value={searchQuery}
+                  onChange={handleSearch}
+              />
+              <div className="flex w-[60%] justify-end">
                 <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
                   <img className="mt-1 me-1" src={split} alt="" />
                   Sort By
@@ -170,6 +184,7 @@ const CreateStaff: React.FC = () => {
                 <table className="min-w-full table-fixed">
                   <thead className="bg-[#fdf8f0] sticky top-0">
                     <tr className="border-b">
+                    <th className="p-2 text-[12px] text-center text-[#303F58] w-16"> <input type="checkbox" /></th>
                       <th className="p-2 text-[12px] text-center text-[#303F58] w-16">Sl No</th>
                       <th className="p-2 text-[12px] text-center text-[#303F58] w-24">Photo</th>
                       <th className="p-2 text-[12px] text-center text-[#303F58] w-36">Name</th>
@@ -188,6 +203,8 @@ const CreateStaff: React.FC = () => {
                     {filteredStaffList.length > 0 ? (
                       filteredStaffList.map((staff: any, index: number) => (
                         <tr className="border-b" key={staff._id}>
+                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
+
                           <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16">{index + 1}</td>
                           <td className="p-2 text-center w-24">
                             <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
