@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import back from '../../../assets/images/backbutton.svg';
-import list from '../../../assets/images/list-todo.svg';
-import history from '../../../assets/images/history.svg';
-import mappinned from '../../../assets/images/map-pinned.svg';
-import calender from '../../../assets/images/calendar-minus-2.svg';
+import back from '../../assets/images/backbutton.svg';
+import list from '../../assets/images/list-todo.svg'
+import history from '../../assets/images/history.svg';
+import mappinned from '../../assets/images/map-pinned.svg';
+import calender from '../../assets/images/calendar-minus-2.svg';
 // import calender1 from '../../../assets/images/calendar-search.svg';
-import wtsp from '../../../assets/images/whatsapp.svg';
-import call from '../../../assets/images/call.svg';
-import mail from '../../../assets/images/mail-check.svg';
-import dot from '../../../assets/images/threedot.svg';
-import profile from '../../../assets/images/profile.svg';
-import bottle from '../../../assets/images/bottle.svg';
+import wtsp from '../../assets/images/whatsapp.svg';
+import call from '../../assets/images/call.svg';
+import mail from '../../assets/images/mail-check.svg';
+import dot from '../../assets/images/threedot.svg';
+import profile from '../../assets/images/profile.svg';
+import bottle from '../../assets/images/bottle.svg';
 
 
 
