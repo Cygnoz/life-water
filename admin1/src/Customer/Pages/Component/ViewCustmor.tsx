@@ -39,7 +39,7 @@ const ViewCustmor: React.FC = () => {
       {/* Header: View Customer Profile */}
       <div className="flex items-center space-x-2 mb-6">
         <button className="text-gray-600">
-          <Link to={'/vehicle'}>
+          <Link to={'/customer'}>
             <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
           </Link>
         </button>

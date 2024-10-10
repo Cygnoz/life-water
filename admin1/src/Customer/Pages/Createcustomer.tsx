@@ -10,10 +10,20 @@ import vector from "../../assets/images/Vector.svg"
 import trash from "../../assets/images/trash.svg"
 import split from "../../assets/images/list-filter.svg"
 import user from "../../assets/images/circle-user.svg"
+import { Link, useNavigate } from "react-router-dom"
 
 
 
 const CreateCustomer: React.FC = () => {
+  const navigate =useNavigate()
+
+  const handleView =()=>{
+    navigate('/viewcustomer')
+  }
+  const handleEdit =()=>{
+    navigate('/editcustomer')
+  }
+  
     return (
   <div>
 <div className="flex min-h-screen w-full">
@@ -30,6 +40,7 @@ const CreateCustomer: React.FC = () => {
               </p>
             </div>
             <div className="flex justify-between">
+              <Link to={'/addcustomer'}>
               <button
                 
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white  px-5 py-2 rounded-md"
@@ -37,6 +48,9 @@ const CreateCustomer: React.FC = () => {
                 <img src={plus} alt="" />
                 <p>Add New Customer</p>
               </button>
+              
+              </Link>
+              
 
               <button className="ms-2 me-4">
                 <img src={dot} alt="" />
@@ -176,15 +190,18 @@ const CreateCustomer: React.FC = () => {
                     
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       <button
+                      onClick={handleView}
                         
                         className="text-blue-500"
                       >
                         <img src={eye} alt="View" />
                       </button>
-                      <button className="text-red-500 ml-2">
+                      <button className="text-red-500 ml-2"    onClick={handleEdit}>
+                   
                         <img src={vector} alt="Edit" />
                       </button>
                       <button className="text-red-500 ml-2">
+            
                         <img src={trash} alt="Delete" />
                       </button>
                     </td>

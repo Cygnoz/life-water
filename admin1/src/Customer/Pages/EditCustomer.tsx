@@ -40,9 +40,11 @@ function EditCustomer({}: Props) {
     <div className="">
 
 <div className="flex gap-3 items-center w-full max-w-8xl mb-4 ms-3 p-3">
-     <div className="icon-placeholder">
+<Link to={'/customer'}>
+    
+    <div className="icon-placeholder">
          <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
-        </div>
+        </div></Link>
         <h2 className="text-[20px] text-[#303F58] font-bold">Edit Customer</h2>
       </div>
 
@@ -65,7 +67,7 @@ function EditCustomer({}: Props) {
               Business
             </label>
             <label className="flex items-center">
-            <Link to='/customer/editindividual'>
+            <Link to='/editindividual'>
             <input 
                 type="radio" 
                 value="Individual" 
