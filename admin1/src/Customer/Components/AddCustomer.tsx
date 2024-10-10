@@ -35,9 +35,11 @@ const AddCustomer: React.FC = () => {
     return (
   <div>
     <div className="flex gap-3 items-center w-full max-w-8xl mb-4 ms-3 p-3">
-     <div className="icon-placeholder">
+    <Link to={'/customer'}>
+    
+    <div className="icon-placeholder">
          <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
-        </div>
+        </div></Link>
         <h2 className="text-[20px] text-[#303F58] font-bold">Create New Customer</h2>
       </div>
 
@@ -49,6 +51,7 @@ const AddCustomer: React.FC = () => {
         <label className="block text-sm font-medium text-gray-700 mb-2">Customer Type</label>
           <div className="flex space-x-4">
             <label className="flex items-center">
+              <Link to={'/addcustomer'}>
               <input 
                 type="radio" 
                 value="Business" 
@@ -57,9 +60,13 @@ const AddCustomer: React.FC = () => {
                 className="mr-2" 
               />
               Business
-            </label>
+          
+              
+              
+              </Link>
+              </label>
             <label className="flex items-center">
-            <Link to='/customer/addindividual'>
+            <Link to='/addindividual'>
             <input 
                 type="radio" 
                 value="Individual" 
