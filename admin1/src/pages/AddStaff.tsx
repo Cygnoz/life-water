@@ -79,7 +79,8 @@ function AddStaff({}: Props) {
   }
 
   const clearForm = () => {
-    setFullname("")
+    setFirstName("")
+    setLastName("")
     setDateOfBirth("")
     setMobileNumber("")
     setWhatsAppNumber("")
