@@ -6,7 +6,6 @@ import plus from "../../assets/circle-plus.svg"
 import eye from "../../assets/images/eye.svg"
 import dot from "../../assets/ellipsis-vertical.svg"
 
-
 import search from "../../assets/images/search.svg"
 import vehicle from "../../assets/images/vehicle 1.svg"
 
@@ -14,8 +13,6 @@ import { useNavigate } from "react-router-dom"
 import React, { useEffect, useState } from "react"
 import { deleteVehicleByIdAPI, getVehicleAPI, Vehicle } from "../../services/VehicleAPI/Vehicle"
 import { BASEURL } from "../../services/Baseurl"
-
-
 
 const CreateVehicle: React.FC = () => {
   const [vehicleList, setVehicleList] = useState<Vehicle[]>([])
@@ -52,11 +49,7 @@ const CreateVehicle: React.FC = () => {
   useEffect(() => {
     const filteredVehicles = vehicleList.filter((vehicle) => {
       const searchLower = searchQuery.toLowerCase()
-      return (
-        vehicle.vehicleNo.toLowerCase().includes(searchLower) ||
-        vehicle.insuranceStatus.toLowerCase().includes(searchLower) ||
-        vehicle.insuranceAmount.toString().includes(searchLower)
-      )
+      return vehicle.vehicleNo.toLowerCase().includes(searchLower) || vehicle.insuranceStatus.toLowerCase().includes(searchLower) || vehicle.insuranceAmount.toString().includes(searchLower)
     })
     setFilteredVehicleList(filteredVehicles)
   }, [searchQuery, vehicleList])
@@ -171,11 +164,7 @@ const CreateVehicle: React.FC = () => {
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      <img 
-                        className="mx-auto object-cover w-11 h-11 rounded-full" 
-                        src={vehicle.image ? `${BASEURL}/uploads/${vehicle.image}` : defaultImage} 
-                        alt="Vehicle" 
-                      />
+                      <img className="mx-auto object-cover w-11 h-11 rounded-full" src={vehicle.image ? `${BASEURL}/uploads/${vehicle.image}` : defaultImage} alt="Vehicle" />
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.vehicleNo || "N/A"}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceValidity ? new Date(vehicle.insuranceValidity).toLocaleDateString() : "N/A"}</td>

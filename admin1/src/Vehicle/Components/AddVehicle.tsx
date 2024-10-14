@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import uploadvehicle from '../../assets/images/uploadvehicle.svg';
 import { Link } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { addVehicleAPI } from '../../services/VehicleAPI/Vehicle';
 
 
@@ -18,8 +20,6 @@ const AddVehicle: React.FC<Props> = () => {
   const [startingKilometer, setStartingKilometer] = useState('');
   const [expenses, setExpenses] = useState('');
   const [vehicleImage, setVehicleImage] = useState<File | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
 
@@ -38,11 +38,10 @@ const AddVehicle: React.FC<Props> = () => {
     }
   }
 
+  
   const handleAddVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-
+  
     const formData = new FormData();
     formData.append('vehicleNo', vehicleNo);
     formData.append('insuranceValidity', insuranceValidity);
@@ -56,16 +55,16 @@ const AddVehicle: React.FC<Props> = () => {
     if (vehicleImage) {
       formData.append('vehicleImage', vehicleImage);
     }
-
+  
     try {
       const response = await addVehicleAPI(formData);
       if (response.message) {
-        setError(response.message);
+        toast.error(response.message);
       } else {
-        setSuccess('Vehicle added successfully');
+        toast.success('Vehicle added successfully');
         console.log('Vehicle added successfully:', response.data);
-
-        // Reset form fields
+  
+        // Reset form fields after successful addition
         setVehicleNo('');
         setInsuranceValidity('');
         setInsuranceStatus('');
@@ -77,20 +76,17 @@ const AddVehicle: React.FC<Props> = () => {
         setExpenses('');
         setVehicleImage(null);
         setPreview(null);
-
-        // Clear success message after 3 seconds
-        setTimeout(() => {
-          setSuccess(null);
-        }, 3000);
       }
     } catch (error: any) {
-      setError(error.message || 'An unexpected error occurred.');
+      toast.error(error.message || 'An unexpected error occurred.');
       console.error('Error adding vehicle:', error);
     }
   };
+  
 
   return (
     <div className='p-6'>
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={true} />
       <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
         <Link to={'/vehicle'}>
           <div className="icon-placeholder">
@@ -103,8 +99,7 @@ const AddVehicle: React.FC<Props> = () => {
       <div className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
         <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2>
         <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {error && <p className="text-red-600">{error}</p>}
-        {success && <p className="text-green-600">{success}</p>}
+
           {/* Vehicle Number */}
           <div>
             <label className="block text-[#303F58] font-[14px] mb-2">Vehicle Number</label>

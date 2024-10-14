@@ -82,14 +82,17 @@ export const deleteVehicleByIdAPI = async (id: string) => {
     }
   };
 
-  export const updateVehicleAPI = async (id: string, updatedVehicle: any) => {
+
+  export const updateVehicleAPI = async (id: string, formData: FormData) => {
     try {
-      const response = await axios.put(`${BASEURL}/api/editvehicle/${id}`, updatedVehicle);
+      const response = await axios.put(`${BASEURL}/api/editvehicle/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set the correct content type for form data
+        },
+      });
       return response.data;
-    } catch (error:any) {
+    } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Failed to update vehicle');
     }
-
   };
-
-
+  

@@ -21,6 +21,14 @@ import CreateVehicle from '../Vehicle/Pages/CreateVehicle';
 import EditVehicles from '../Vehicle/Pages/EditVehicles';
 import ViewVehicle from '../Vehicle/Components/ViewVehicle';
 import StaffOverview from '../components/Staffoverview';
+import CreateCustomer from '../Customer/Pages/Createcustomer';
+import AddCustomer from '../Customer/Components/AddCustomer';
+import EditCustomer from '../Customer/Pages/EditCustomer';
+import AddIndividual from '../Customer/Components/AddIndividual';
+import EditIndividual from '../Customer/Pages/EditIndividual';
+import ViewCustmor from '../Customer/Components/ViewCustmor';
+
+
 
 const App: React.FC = () => {
   const [selectedNav, setSelectedNav] = useState<string>(''); // Store selected nav
