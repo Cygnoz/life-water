@@ -8,14 +8,17 @@ import "react-toastify/dist/ReactToastify.css"
 type Props = {}
 
 function AddStaff({}: Props) {
-  const [mobileNumber, setMobileNumber] = useState<string>("")
+
+  
+
+  const [mobileNumber, setMobileNumber] = useState("")
   const [whatsAppNumber, setWhatsAppNumber] = useState("")
   const [isSameAsPhone, setIsSameAsPhone] = useState(false)
   const [visaStatus, setVisaStatus] = useState("")
-  const [visaNumber, setVisaNumber] = useState<string>("")
-  const [emiratesId, setEmiratesId] = useState<string>("")
-  const [fullname, setFullname] = useState("")
-  const [lastname, setLastname] = useState("")
+  const [visaNumber, setVisaNumber] = useState("")
+  const [emiratesId, setEmiratesId] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("")
   const [address, setAddress] = useState("")
   const [designation, setDesignation] = useState("")
@@ -46,8 +49,8 @@ function AddStaff({}: Props) {
     e.preventDefault()
 
     const staffData = new FormData()
-    staffData.append("firstname", fullname)
-    staffData.append("lastname", lastname)
+    staffData.append("firstname", firstName);
+    staffData.append("lastname", lastName);
     if (profile) {
       staffData.append("profile", profile)
     }
@@ -65,10 +68,7 @@ function AddStaff({}: Props) {
     try {
       const response = await addStaffAPI(staffData)
       if (response.message) {
-        setError(response.message)
-        console.log(response.message);
-        
-
+        toast.error(response.message)
       } else {
         clearForm()
         toast.success("Staff added successfully!")
@@ -118,7 +118,7 @@ function AddStaff({}: Props) {
           </Link>
           <h2 className="text-2xl font-bold">Create New Staff</h2>
         </div>
-        <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4 ">
+        <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
           <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
 
           <form onSubmit={handleSubmit}>
@@ -129,9 +129,9 @@ function AddStaff({}: Props) {
                 <div className="flex flex-col items-start space-y-2">
                   <div className="flex items-center space-x-4">
                     <img src={profile ? URL.createObjectURL(profile) : "https://via.placeholder.com/100"} alt={profile ? profile.name : "Profile"} className="w-24 h-24 rounded-full object-cover" />
-                    <label  className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
+                    <label className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
                       Upload New Photo
-                      <input   type="file" onChange={handleProfileChange} accept="image/*" className="hidden" />
+                      <input type="file" onChange={handleProfileChange} accept="image/*" className="hidden" />
                     </label>
                   </div>
                   <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">At least 800 x 800 px Recommended. JPG or PNG is Allowed</p>
@@ -139,26 +139,24 @@ function AddStaff({}: Props) {
 
                 {/* Mobile Number */}
                 <div>
-
-      <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
-      <input
-        required
-        type="tel"
-        value={mobileNumber}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value.replace(/\D/g, ""); // Remove non-digit characters
-          if (value.length <= 10) {
-            setMobileNumber(value); // Set only if it's 10 digits or less
-          }
-        }}
-        className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-        maxLength={10}
-        pattern="\d{10}" // Regex pattern to enforce exactly 10 digits
-        placeholder="Enter Mobile"
-        title="Please enter exactly 10 digits"
-      />
-               </div>
-
+                  <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
+                  <input
+                    required
+                    type="tel"
+                    value={mobileNumber}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length <= 10) {
+                        setMobileNumber(value);
+                      }
+                    }}
+                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    maxLength={10}
+                    pattern="\d{10}"
+                    placeholder="Enter Mobile"
+                    title="Please enter exactly 10 digits"
+                  />
+                </div>
 
                 {/* WhatsApp Number with Checkbox */}
                 <div>
@@ -173,7 +171,7 @@ function AddStaff({}: Props) {
                 {/* Visa Status (Dropdown) */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Visa Status</label>
-                  <select required className="mt-1 p-2 border border-gray-300 rounded-lg w-full" value={visaStatus} onChange={(e) => setVisaStatus(e.target.value)}>
+                  <select className="mt-1 p-2 border border-gray-300 rounded-lg w-full" value={visaStatus} onChange={(e) => setVisaStatus(e.target.value)}>
                     <option value="">Enter Visa Status</option>
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
@@ -183,71 +181,71 @@ function AddStaff({}: Props) {
 
                 {/* Visa Number */}
                 <div>
+                  <label className="block text-sm font-medium text-gray-700">Visa Number</label>
+                  <input
+                    required
+                    type="tel"
+                    value={visaNumber}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length <= 10) {
+                        setVisaNumber(value);
+                      }
+                    }}
+                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    maxLength={10}
+                    pattern="\d{10}"
+                    placeholder="Enter Visa Number"
+                    title="Please enter exactly 10 digits"
+                  />
+                </div>
 
-      <label className="block text-sm font-medium text-gray-700">Visa Number</label>
-      <input
-        required
-        type="tel" // Use "tel" to allow numeric input
-        value={visaNumber}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value.replace(/\D/g, ""); // Remove non-digit characters
-          if (value.length <= 10) {
-            setVisaNumber(value); // Set only if it's 10 digits or less
-          }
-        }}
-        className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-        maxLength={10} // Limits the number of characters to 10
-        pattern="\d{10}" // Ensures that exactly 10 digits are entered
-        placeholder="Enter Visa Number"
-        title="Please enter exactly 10 digits"
-      />
-    </div>
-           
                 {/* Emirates ID */}
                 <div>
-      <label className="block text-sm font-medium text-gray-700">Emirates ID</label>
-      <input
-        required
-        type="tel" // Use "tel" to allow numeric input
-        value={emiratesId}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          const value = e.target.value.replace(/\D/g, ""); // Remove non-digit characters
-          if (value.length <= 15) {
-            setEmiratesId(value); // Set only if it's 15 digits or less
-          }
-        }}
-        className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-        maxLength={15} // Limits the number of characters to 15
-        pattern="\d{15}" // Ensures that exactly 15 digits are entered
-        placeholder="Enter Emirates ID"
-        title="Please enter exactly 15 digits"
-      />
-    </div>
+                  <label className="block text-sm font-medium text-gray-700">Emirates ID</label>
+                  <input
+                    required
+                    type="tel"
+                    value={emiratesId}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const value = e.target.value.replace(/\D/g, "");
+                      if (value.length <= 15) {
+                        setEmiratesId(value);
+                      }
+                    }}
+                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    maxLength={15}
+                    pattern="\d{15}"
+                    placeholder="Enter Emirates ID"
+                    title="Please enter exactly 15 digits"
+                  />
+                </div>
               </div>
 
               {/* Right Column */}
               <div className="space-y-6">
                 {/* Full Name */}
                 <div className="">
-                  <div>  <label className="block text-sm font-medium text-gray-700">First Name</label>
-                  <input required type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter First Name" />
-                </div>
+                  <div>  
+                    <label className="block text-sm font-medium text-gray-700">First Name</label>
+                    <input required type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter First Name" />
+                  </div>
                   <div className="mt-4">  
-                     <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                  <input required type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Last Name" />
-               </div>
+                    <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input required type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Last Name" />
+                  </div>
                 </div>
 
                 {/* Date of Birth */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                  <input required type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" />
+                  <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" />
                 </div>
 
                 {/* Address */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <input required type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Address" />
+                  <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Address" />
                 </div>
 
                 {/* designation */}
@@ -255,15 +253,15 @@ function AddStaff({}: Props) {
                   <label className="block text-sm font-medium text-gray-700">Designation</label>
                   <div className="flex flex-col space-y-2 mt-2">
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Sales" checked={designation === "Sales"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
+                      <input type="radio" name="designation" value="Sales" checked={designation === "Sales"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
                       <span className="ml-2">Salesman</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Driver" checked={designation === "Driver"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
+                      <input type="radio" name="designation" value="Driver" checked={designation === "Driver"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
                       <span className="ml-2">Driver</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Helper" checked={designation === "Helper"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
+                      <input type="radio" name="designation" value="Helper" checked={designation === "Helper"} onChange={(e) => setDesignation(e.target.value)} className="form-radio" />
                       <span className="ml-2">Helper</span>
                     </label>
                   </div>
@@ -272,13 +270,13 @@ function AddStaff({}: Props) {
                 {/* Visa Validity */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Visa Validity</label>
-                  <input required type="date" value={visaValidity} onChange={(e) => setVisaValidity(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" />
+                  <input type="date" value={visaValidity} onChange={(e) => setVisaValidity(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" />
                 </div>
 
                 {/* Nationality */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Nationality</label>
-                  <input required type="text" value={nationality} onChange={(e) => setNationality(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Nationality" />
+                  <input type="text" value={nationality} onChange={(e) => setNationality(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Nationality" />
                 </div>
               </div>
             </div>
