@@ -2,6 +2,9 @@ import { useState } from "react"
 import { addStaffAPI } from "../services/AllApi"
 import back from "../assets/images/backbutton.svg"
 import { Link } from "react-router-dom"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 type Props = {}
 
 function AddStaff({}: Props) {
@@ -19,8 +22,6 @@ function AddStaff({}: Props) {
   const [visaValidity, setVisaValidity] = useState("")
   const [profile, setProfile] = useState<File | null>(null)
   const [nationality, setNationality] = useState("")
-  const [error, setError] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
 
   console.log(profile)
 
@@ -36,8 +37,8 @@ function AddStaff({}: Props) {
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      setProfile(file) // Set the selected file to state
-      console.log(file) // Log the file for inspection
+      setProfile(file)
+      console.log(file)
     }
   }
 
@@ -67,12 +68,13 @@ function AddStaff({}: Props) {
         setError(response.message)
         console.log(response.message);
         
+
       } else {
         clearForm()
-        setSuccessMessage("Staff added successfully!")
+        toast.success("Staff added successfully!")
       }
     } catch (error) {
-      setError("An error occurred while adding the staff member.")
+      toast.error("An error occurred while adding the staff member.")
     }
   }
 
@@ -88,14 +90,24 @@ function AddStaff({}: Props) {
     setAddress("")
     setEmiratesId("")
     setDesignation("")
-    setError("")
-    setSuccessMessage("")
     setProfile(null)
     setIsSameAsPhone(false)
   }
 
   return (
     <div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       <div className="min-h-screen bg-gray-100 items-center justify-center ">
         <div className="flex gap-3 items-center w-full max-w-8xl mt-5 mb-6 ms-3">
           <Link to={"/staff"}>
@@ -107,9 +119,6 @@ function AddStaff({}: Props) {
         </div>
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4 ">
           <h2 className="text-2xl font-bold mb-4">Add Staff</h2>
-
-          {error && <p className="text-red-600">{error}</p>}
-          {successMessage && <p className="text-green-600">{successMessage}</p>}
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -124,11 +133,12 @@ function AddStaff({}: Props) {
                       <input   type="file" onChange={handleProfileChange} accept="image/*" className="hidden" />
                     </label>
                   </div>
-                    <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">At least 800 x 800 px Recommended. JPG or PNG is Allowed</p>
+                  <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">At least 800 x 800 px Recommended. JPG or PNG is Allowed</p>
                 </div>
 
                 {/* Mobile Number */}
                 <div>
+
       <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
       <input
         required
@@ -172,6 +182,7 @@ function AddStaff({}: Props) {
 
                 {/* Visa Number */}
                 <div>
+
       <label className="block text-sm font-medium text-gray-700">Visa Number</label>
       <input
         required
@@ -191,7 +202,6 @@ function AddStaff({}: Props) {
       />
     </div>
            
-
                 {/* Emirates ID */}
                 <div>
       <label className="block text-sm font-medium text-gray-700">Emirates ID</label>
@@ -240,7 +250,6 @@ function AddStaff({}: Props) {
                 </div>
 
                 {/* designation */}
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Designation</label>
                   <div className="flex flex-col space-y-2 mt-2">

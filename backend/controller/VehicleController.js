@@ -56,7 +56,7 @@ const updateVehicle = async (req, res) => {
 
     // Handle image update if provided
     if (req.file) {
-      updateData.image = req.file.filename;
+      updateData.image = req.file.filename; // Store the image filename
     }
 
     // Update vehicle by Object ID

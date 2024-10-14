@@ -122,7 +122,7 @@ const StaffOverview: React.FC = () => {
           {activeTab === "personalDetails" && (
             <div className="p-4">
               <div className="flex items-center bg-gradient-to-l from-[#cead7c] to-[#a8b18c] rounded-lg h-[82px] space-x-4">
-              <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
+              <img className="mx-5 object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
 
                 <div className="flex gap-3">
                   <div>
