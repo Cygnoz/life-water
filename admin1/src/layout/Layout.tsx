@@ -26,7 +26,8 @@ import AddCustomer from '../Customer/Components/AddCustomer';
 import EditCustomer from '../Customer/Pages/EditCustomer';
 import AddIndividual from '../Customer/Components/AddIndividual';
 import EditIndividual from '../Customer/Pages/EditIndividual';
-import ViewCustmor from '../Customer/Components/ViewCustmor';
+
+import ViewCustmor from '../Customer/Pages/Component/ViewCustmor';
 
 
 
@@ -80,6 +81,17 @@ const App: React.FC = () => {
               <Route path='/vehicle/addvehicle' element={<AddVehicle />} />
               <Route path='/vehicle/editvehicle/:id' element={<EditVehicles />} />
               <Route path='/viewvehicle/:id' element={<ViewVehicle />} />
+
+
+
+              {/* CUSTOMER */}
+              <Route path='/customer' element={<CreateCustomer/>}/>
+              <Route path='/editcustomer' element={<EditCustomer/>}/>
+              <Route path='/addcustomer' element={<AddCustomer/>}/>
+              <Route path='/addindividual' element={<AddIndividual/>}/>
+              <Route path='/editindividual' element={<EditIndividual/>}/>
+              <Route path='/viewcustomer' element={<ViewCustmor/>}/>
+
 
             </Routes>
           </div>

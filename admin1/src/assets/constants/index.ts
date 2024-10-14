@@ -5,15 +5,12 @@ import staff from '../images/staff.svg'
 import supply from '../images/supply.svg';
 import customer from '../images/customer.svg';
 import sale from '../images/sale.svg';
-import expense from '../images/expense.svg';
-import payroll from '../images/payroll.svg';
 import purchase from '../images/purchase.svg';
-import service1 from '../images/service1.svg';
 import reports from '../images/reports.svg';
-import contract from '../images/contract.svg';
 import accountant from '../images/sale.svg';
 import vehicle from '../images/vehicle.svg';
-
+import ride from '../images/ride.png'
+import stock from '../images/stock.png'
 
 
 
@@ -28,13 +25,11 @@ const navlist = [
     nav: "Orders",
     icon:order,
     route: "/orders",
-   
     subhead: [
       {
-        headName: "",
+        headName: "Orders",
         subRoute: "/",
       },
-     
     ],
   },
   {
@@ -45,8 +40,7 @@ const navlist = [
       {
         headName: "Dashboard",
         subRoute: "/customer",
-      },
-     
+      }, 
     ],
   },
   {
@@ -54,10 +48,6 @@ const navlist = [
     icon:supply,
     route: "/route/createroute",
     subhead: [
-      // {
-      //   subhead: "Route",
-      //   subRoute: "/staff",
-      // },
       {
         headName: "Main Route",
         subRoute: "/route/createroute",
@@ -74,18 +64,6 @@ const navlist = [
     ],
   },
   {
-    nav: "Customer",
-    icon:customer,
-    route: "/",
-    subhead: [
-      {
-        headName: "Dashboard",
-        subRoute: "accountant",
-      },
-      
-    ],
-  },
-  {
     nav: "Vehicle",
     icon:vehicle,
     route: "/vehicle",
@@ -94,6 +72,45 @@ const navlist = [
       {
         headName: "Vehicle",
         subRoute: "/vehicle",
+      },
+      
+    ],
+  }, 
+
+ 
+  {
+    nav: "Stock",
+    icon:stock,
+    route: "/stock",
+    subhead: [
+      
+      {
+        headName: "Stock",
+        subRoute: "/stock",
+      },
+      
+    ],
+  },  {
+    nav: "Ride",
+    icon:ride,
+    route: "/ride",
+    subhead: [
+      
+      {
+        headName: "Ride",
+        subRoute: "/ride",
+      },
+      
+    ],
+  },
+  {
+    nav: "Customer",
+    icon:customer,
+    route: "/customer",
+    subhead: [
+      {
+        headName: "Customer",
+        subRoute: "/customer"
       },
       
     ],
@@ -114,15 +131,6 @@ const navlist = [
     ],
   },
   {
-    nav: "Accountant",
-    icon:accountant,
-    route: "/",
-    subhead: [
-      { headName: "Dashbord", subRoute: "/" },
-      { headName: "Expense", subRoute: "/expense/home" },
-    ],
-  },
-  {
     nav: "Purchase",
     icon:purchase,
     route: "/",
@@ -135,42 +143,21 @@ const navlist = [
     ],
   },
   {
-    nav: "Expense",
-    icon:expense,
+    nav: "Accountant",
+    icon:accountant,
     route: "/",
     subhead: [
-      {
-        headName: "Dashboard",
-        subRoute: "/purchase",
-      },
-    
+      { headName: "Dashbord", subRoute: "/" },
+      { headName: "Expense", subRoute: "/expense/home" },
     ],
-  },
-  {
-    nav: "Teams",
-    icon:staff,
-    route: "/teams",
-  },
-  {
-    nav: "Contract",
-    icon:contract,
-    route: "/contract",
-  },
-  {
-    nav: "Payroll",
-    icon:payroll,
-    route: "/payroll",
   },
   {
     nav: "Reports",
     icon:reports,
     route: "/reports",
   },
-  {
-    nav: "Service",
-    icon:service1,
-    route: "/service",
-  },
+
+ 
 ];
  
 export default navlist;
