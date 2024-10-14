@@ -2,8 +2,9 @@
 
 
 // Add new staff
-
+const bcrypt = require('bcrypt');
 const Staff = require("../Models/StaffSchema"); // Ensure the path matches the casing
+const Login = require('../Models/LoginSchema');
 
 // Get all staff members
 const getAllStaff = async (req, res) => {
@@ -40,9 +41,23 @@ const addStaff = async (req, res) => {
       return res.status(400).json({ message: 'Staff member with this emiratesId number already exists.' });
     }
 
+    const existingLogin = await Login.findOne({ username: req.body.username });
+
+    if (existingLogin) {
+      return res.status(400).json({ message: 'User with this username already exists.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const newLogin = new Login({
+      username: req.body.username,
+      password: hashedPassword
+    });
+
     const newStaff = new Staff({
       firstname: req.body.firstname,
       lastname: req.body.lastname,
+      username: req.body.username,
       profile: req.file ? normalizeFilePath(req.file.path) : null,
       address: req.body.address,
       visaStatus: req.body.visaStatus,
@@ -56,7 +71,9 @@ const addStaff = async (req, res) => {
       emiratesId: req.body.emiratesId,
     });
 
+    const savedLogin = await newLogin.save();
     const savedStaff = await newStaff.save();
+    
     res.status(201).json(savedStaff);
   } catch (error) {
     res.status(400).json({ message: error.message });

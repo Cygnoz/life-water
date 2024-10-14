@@ -8,25 +8,25 @@ const staffSchema = new mongoose.Schema({
   },
   lastname: {
     type: String,
+  },
+  username:{
+    type: String,
     required: true,
-    trim: true
   },
   profile: {
     type: String,
-    required: true,
+    
   },
   address: {
     type: String,
-    required: true,
   },
   visaStatus: {
     type: String,
     enum: ['Valid', 'Expired', 'In Process'],
-    required: true
+
   },
   visaValidity: {
     type: Date,
-    required: true
   },
   mobileNumber: {
     type: String,
@@ -38,15 +38,12 @@ const staffSchema = new mongoose.Schema({
   },
   visaNumber:{
     type: String,
-    required: true,
   },
   dateofBirth:{
     type: Date,
-    required:true,
   },
   nationality:{
     type: String,
-    required:true,
   },
   designation:{
     type:String,
@@ -55,7 +52,7 @@ const staffSchema = new mongoose.Schema({
   },
   emiratesId:{
     type:String,
-    required:true
+  
   }
 });
 
