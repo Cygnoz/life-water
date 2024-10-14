@@ -8,13 +8,17 @@ import "react-toastify/dist/ReactToastify.css"
 type Props = {}
 
 function AddStaff({}: Props) {
+
+  
+
   const [mobileNumber, setMobileNumber] = useState("")
   const [whatsAppNumber, setWhatsAppNumber] = useState("")
   const [isSameAsPhone, setIsSameAsPhone] = useState(false)
   const [visaStatus, setVisaStatus] = useState("")
   const [visaNumber, setVisaNumber] = useState("")
   const [emiratesId, setEmiratesId] = useState("")
-  const [fullname, setFullname] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("")
   const [address, setAddress] = useState("")
   const [designation, setDesignation] = useState("")
@@ -45,8 +49,8 @@ function AddStaff({}: Props) {
     e.preventDefault()
 
     const staffData = new FormData()
-    staffData.append("firstname", fullname.split(" ")[0])
-    staffData.append("lastname", fullname.split(" ")[1] || "")
+    staffData.append("firstname", firstName);
+    staffData.append("lastname", lastName);
     if (profile) {
       staffData.append("profile", profile)
     }
@@ -75,7 +79,8 @@ function AddStaff({}: Props) {
   }
 
   const clearForm = () => {
-    setFullname("")
+    setFirstName("")
+    setLastName("")
     setDateOfBirth("")
     setMobileNumber("")
     setWhatsAppNumber("")
@@ -223,11 +228,11 @@ function AddStaff({}: Props) {
                 <div className="">
                   <div>  
                     <label className="block text-sm font-medium text-gray-700">First Name</label>
-                    <input required type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter First Name" />
+                    <input required type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter First Name" />
                   </div>
                   <div className="mt-4">  
                     <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                    <input required type="text" value={lastname} onChange={(e) => setLastname(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Last Name" />
+                    <input required type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-lg w-full" placeholder="Enter Last Name" />
                   </div>
                 </div>
 
