@@ -35,29 +35,49 @@ const normalizeFilePath = (filePath) => {
 
 const addStaff = async (req, res) => {
   try {
-    const existingStaff = await Staff.findOne({ emiratesId: req.body.emiratesId });
+    const { firstname, lastname, username, designation, password, emiratesId } = req.body;
 
+    // Check for existing staff with the same emiratesId
+    const existingStaff = await Staff.findOne({ emiratesId });
     if (existingStaff) {
       return res.status(400).json({ message: 'Staff member with this emiratesId number already exists.' });
     }
 
-    const existingLogin = await Login.findOne({ username: req.body.username });
+    // Handle logic specific to "Salesman"
+    if (designation === 'Sales') {
+      // Ensure username and password are provided
+      if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required for Salesman.' });
+      }
 
-    if (existingLogin) {
-      return res.status(400).json({ message: 'User with this username already exists.' });
+      // Check for existing login with the same username
+      const existingLogin = await Login.findOne({ username });
+      if (existingLogin) {
+        return res.status(400).json({ message: 'User with this username already exists.' });
+      }
+
+      // Hash password for "Salesman"
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Create new login record for "Salesman"
+      const newLogin = new Login({
+        username,
+        password: hashedPassword,
+      });
+
+      try {
+        // Save login record for Salesman only
+        await newLogin.save();
+      } catch (error) {
+        return res.status(500).json({ message: 'Failed to save login for Salesman', error: error.message });
+      }
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-
-    const newLogin = new Login({
-      username: req.body.username,
-      password: hashedPassword
-    });
-
+    // Create the new staff record for both "Salesman", "Driver", or "Helper"
     const newStaff = new Staff({
-      firstname: req.body.firstname,
-      lastname: req.body.lastname,
-      username: req.body.username,
+      firstname,
+      lastname,
+      username: designation === 'Sales' ? username : null, // Only assign username for Salesman
       profile: req.file ? normalizeFilePath(req.file.path) : null,
       address: req.body.address,
       visaStatus: req.body.visaStatus,
@@ -67,18 +87,20 @@ const addStaff = async (req, res) => {
       visaNumber: req.body.visaNumber,
       dateofBirth: req.body.dateofBirth,
       nationality: req.body.nationality,
-      designation: req.body.designation,
-      emiratesId: req.body.emiratesId,
+      designation,
+      emiratesId,
     });
 
-    const savedLogin = await newLogin.save();
+    // Save the staff record
     const savedStaff = await newStaff.save();
-    
     res.status(201).json(savedStaff);
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+
 
 const editStaff = async (req, res) => {
   try {
