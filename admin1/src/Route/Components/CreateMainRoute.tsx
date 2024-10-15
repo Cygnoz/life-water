@@ -2,7 +2,9 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import back from '../../assets/images/backbutton.svg';
 import { Link } from 'react-router-dom';
 import { addRouteAPI } from '../../services/RouteAPI/RouteAPI'; // Ensure this path is correct
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+ 
 const EditSubRoute: React.FC = () => {
   // State to manage form values
   const [formData, setFormData] = useState({
@@ -11,11 +13,6 @@ const EditSubRoute: React.FC = () => {
     description: ''
   });
 
-    // State for managing form errors
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    // State for managing success message
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Handler to update form state
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,11 +30,10 @@ const EditSubRoute: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     
-    setErrorMessage(null);
-    setSuccessMessage(null);
+    
 
     if (!formData.mainRoute || !formData.routeCode) {
-      setErrorMessage('Main Route and Route Code are required fields.');
+      toast.warning('Main Route and Route Code are required fields.');
       return;
     }
     
@@ -45,18 +41,31 @@ const EditSubRoute: React.FC = () => {
     try {
       const response = await addRouteAPI(formData);  // Send the form data as JSON
       console.log('API Response:', response);
-      setSuccessMessage('Route created successfully!');
+      toast.success('Route created successfully!');
       setFormData({ mainRoute: '', routeCode: '', description: ''})
       // Handle success
     } catch (error:any) {
       console.error('Error submitting form:', error.message);
-      setErrorMessage('Failed to create route. Please try again.');
+      toast.error('Failed to create route. Please try again.');
     }
   };
   
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
       {/* First Row: Heading and Icon */}
       <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
         <Link to={'/route/createroute'}>
@@ -71,26 +80,6 @@ const EditSubRoute: React.FC = () => {
       <div className="w-full max-w-8xl bg-white rounded-md shadow-md p-8">
         <form onSubmit={handleSubmit}>
 
-                  {/* Display error message */}
-                  {errorMessage && (
-            <div className="mb-4 p-4 text-red-700 bg-red-100 border border-red-400 rounded">
-              {errorMessage}
-            </div>
-          )}
-
-          {/* Display success message */}
-          {successMessage && (
-            <div className="mb-4 p-4 text-green-700 bg-green-100 border border-green-400 rounded">
-              {successMessage}
-            </div>
-          )}
-
-
-
-
-
-
-          {/* Input Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">

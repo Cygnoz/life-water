@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { deleteRouteAPI, getRoutesAPI } from "../../services/RouteAPI/RouteAPI";
 import { useEffect, useState } from "react";
 import search from "../../assets/images/search.svg"
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; 
 
 
 interface Route {
@@ -61,7 +62,7 @@ const CreateRoute: React.FC = () => {
   
     try {
       const response = await deleteRouteAPI(id);  // Pass the _id to the API function
-      alert(response.message);  // Show success message
+      toast.success(response.message);  // Show success message
       setRouteList(routesList.filter((route) => route._id !== id));  // Update the UI
     } catch (error) {
       console.error("Error deleting route:", error);
@@ -86,6 +87,21 @@ const CreateRoute: React.FC = () => {
   
 
   return (
+    
+    <>
+    <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
     <div className="flex min-h-screen w-full">
       <div>
         <div className="p-6">
@@ -262,6 +278,8 @@ const CreateRoute: React.FC = () => {
         </div>
       </div>
     </div>
+    
+    </>
   );
 };
 
