@@ -8,16 +8,18 @@ import users from '../assets/images/headerassets/users.svg';
 
 const Header: React.FC = () => {
   return (
-    <div className="w-[1380px] h-20 px-7 py-5 border-b border-[#1c1c1c]/10 justify-start items-center gap-6 inline-flex">
+    <div className="w-[1380px] py-1 border-b border-[#1c1c1c]/10 justify-start items-center gap-6 inline-flex">
       {/* Search Input */}
       <div className="grow shrink basis-0 h-[39px]  rounded-lg justify-start items-center gap-2 flex">
-        <div className="grow shrink basis-0 h-5 rounded-lg justify-start items-center gap-1 flex relative">
+        <div className="grow shrink basis-0 h-5 rounded-lg items-center gap-2 flex relative">
           {/* Input with Icon */}
           <input
-            className="grow shrink basis-0 rounded-lg flex-col justify-center  items-start inline-flex w-full h-full px-8 py-4 bg-[#1c1c1c]/5 text-[#585953] placeholder-[#585953] focus:outline-none"
-            type="text"
-            placeholder="Search"
-          />
+  className="grow shrink basis-0 rounded-lg flex-col justify-center items-start inline-flex w-full h-full px-8 py-4 bg-[#1c1c1c]/5 text-[#585953] placeholder-gray-300 focus:outline-none"
+  type="text"
+  placeholder="Search"
+/>
+
+
           <img
             src={search}
             alt="Search"
