@@ -36,8 +36,9 @@ const addRoute = async (req, res) => {
 const deleteRoute = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("ID received for deletion:", id);  // Log the ID to verify it's being passed correctly
 
-    const deletedRoute = await Route.findByIdAndDelete(id);
+    const deletedRoute = await MainRoute.findByIdAndDelete(id);
     if (!deletedRoute) {
       return res.status(404).json({ message: 'Route not found' });
     }
@@ -48,6 +49,7 @@ const deleteRoute = async (req, res) => {
     return res.status(500).json({ message: 'Error deleting route', error: error.message });
   }
 };
+
 
 // Update a route by ObjectId
 const updateRoute = async (req, res) => {

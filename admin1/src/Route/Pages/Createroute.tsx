@@ -10,7 +10,7 @@ import plus from "../../assets/circle-plus.svg";
 import eye from "../../assets/images/eye.svg";
 import dot from "../../assets/ellipsis-vertical.svg";
 import { useNavigate } from "react-router-dom";
-import { getRoutesAPI } from "../../services/RouteAPI/RouteAPI";
+import { deleteRouteAPI, getRoutesAPI } from "../../services/RouteAPI/RouteAPI";
 import { useEffect, useState } from "react";
 import search from "../../assets/images/search.svg"
 
@@ -18,6 +18,7 @@ import search from "../../assets/images/search.svg"
 
 interface Route {
   id: string;
+  _id: string;
   mainRoute: string;
   routeCode: string;
   subRoute: string;
@@ -51,6 +52,26 @@ const CreateRoute: React.FC = () => {
   useEffect(() => {
     console.log("Updated route list:", routesList);
   }, [routesList]);
+  
+
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this route?");
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await deleteRouteAPI(id);  // Pass the _id to the API function
+      alert(response.message);  // Show success message
+      setRouteList(routesList.filter((route) => route._id !== id));  // Update the UI
+    } catch (error) {
+      console.error("Error deleting route:", error);
+      alert("An error occurred while deleting the route.");
+    }
+  };
+  
+  
+  
+  
 
   const navigate = useNavigate();
 
@@ -228,9 +249,10 @@ const CreateRoute: React.FC = () => {
                       <button className="text-red-500 ml-2">
                         <img src={vector} alt="Edit" />
                       </button>
-                      <button className="text-red-500 ml-2">
-                        <img src={trash} alt="Delete" />
-                      </button>
+                      <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2">
+                          <img src={trash} alt="Delete" />
+                        </button>
+
                     </td>
                   </tr>
                 ))}

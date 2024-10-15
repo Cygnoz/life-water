@@ -30,18 +30,23 @@ export const getRoutesAPI = async () => {
     throw new Error(error.response?.data?.message || 'Error fetching routes');
   }
 };
-
-
-export const deleteRouteAPI = async () => {
+export const deleteRouteAPI = async (id: string) => {
   try {
-    const response = await axios.delete(`${BASEURL}/api/deleteRoute`, {
+    const response = await fetch(`${BASEURL}/api/delRoute/${id}`, {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'  // Ensure correct content type
-      }
-  });
-  return response.data
-}catch(error:any) {
-  console.error('Error fetching routes:', error.response?.data?.message || error.message);
-    throw new Error(error.response?.data?.message || 'Error fetching routes');
-}
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to delete Route');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    console.error('Error deleting Route:', error);
+    throw new Error(error.message || 'An unexpected error occurred.');
+  }
 };
