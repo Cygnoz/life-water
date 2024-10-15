@@ -24,7 +24,7 @@ import StaffOverview from '../components/Staffoverview';
 import CreateCustomer from '../Customer/Pages/Createcustomer';
 import AddCustomer from '../Customer/Components/AddCustomer';
 import EditCustomer from '../Customer/Pages/EditCustomer';
-import AddIndividual from '../Customer/Components/AddIndividual';
+
 import EditIndividual from '../Customer/Pages/EditIndividual';
 
 import ViewCustmor from '../Customer/Components/ViewCustmor';
@@ -88,7 +88,7 @@ const App: React.FC = () => {
               <Route path='/customer' element={<CreateCustomer/>}/>
               <Route path='/editcustomer' element={<EditCustomer/>}/>
               <Route path='/addcustomer' element={<AddCustomer/>}/>
-              <Route path='/addindividual' element={<AddIndividual/>}/>
+              
               <Route path='/editindividual' element={<EditIndividual/>}/>
               <Route path='/viewcustomer' element={<ViewCustmor/>}/>
 
