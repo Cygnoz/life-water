@@ -4,6 +4,7 @@ const staffController = require('../controller/staffController');
 const vehicleController = require('../controller/VehicleController');
 const routeController = require('../controller/RouteController');
 const subrouteController = require('../controller/SubRouteController');
+const CustomerController = require('../controller/CustomerController');
 
 const upload = require('../middleware/Multermiddleware')
 
@@ -52,5 +53,20 @@ router.put('/updateSRoute/:id', subrouteController.editSubroute);
 router.delete('/delSRoute/:id', subrouteController.deleteSubroute);
 router.get('/viewSRoute', subrouteController.viewAllSubroutes);
 router.get('/viewSRoute/:id', subrouteController.viewSubroute);
+
+//customer
+// Bussiness customer
+router.post('/business-customer',CustomerController.createBusinessCustomer);
+router.get('/business-customer', CustomerController.getAllBusinessCustomers);
+router.get('/business-customer/:id', CustomerController.getBusinessCustomerById);
+router.put('/business-customer/:id', CustomerController.updateBusinessCustomerById);
+router.delete('/business-customer/:id', CustomerController.deleteBusinessCustomerById);
+
+// Individual customer
+router.post('/customer', CustomerController.createCustomer);
+router.get('/customer', CustomerController.getAllCustomers);
+router.get('/customer/:id', CustomerController.getCustomerById);
+router.put('/customer/:id', CustomerController.updateCustomerById);
+router.delete('/customer/:id', CustomerController.deleteCustomerById);
 
 module.exports = router;
