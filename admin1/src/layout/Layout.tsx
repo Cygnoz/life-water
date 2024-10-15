@@ -27,7 +27,7 @@ import EditCustomer from '../Customer/Pages/EditCustomer';
 import AddIndividual from '../Customer/Components/AddIndividual';
 import EditIndividual from '../Customer/Pages/EditIndividual';
 
-import ViewCustmor from '../Customer/Pages/Component/ViewCustmor';
+import ViewCustmor from '../Customer/Components/ViewCustmor';
 
 
 
