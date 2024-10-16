@@ -6,7 +6,6 @@ const createBusinessCustomer = async (req, res) => {
     try {
       const {
         companyName,
-        logo,
         companyWebsite,
         firstName,
         lastName,
@@ -34,7 +33,9 @@ const createBusinessCustomer = async (req, res) => {
         depositAmount,
         paymentMode
       } = req.body;
-  
+      
+      const logo = req.file ? req.file.filename : null;
+
       // Validate required fields
       if (!companyName || !firstName) {
         return res.status(400).json({ message: 'Company name and first name are required.' });
@@ -43,7 +44,7 @@ const createBusinessCustomer = async (req, res) => {
       // Create a new business customer
       const newCustomer = new BusinessCustomer({
         companyName,
-        logo,
+        logo:logo,
         companyWebsite,
         firstName,
         lastName,
