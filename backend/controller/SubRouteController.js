@@ -4,27 +4,36 @@ const Route = require('../Models/RouteSchema'); // Adjust the path as necessary
 // Add a new subroute
 exports.addSubroute = async (req, res) => {
     try {
-        const { subrouteName, subrouteCode, description, routeCode } = req.body;
-
-        // Check if the main route with the provided routeCode exists
-        const routeExists = await Route.findOne({ routeCode });
-        if (!routeExists) {
-            return res.status(400).json({ message: 'Main route not found' });
-        }
-
-        const newSubroute = new Subroute({
-            subrouteName,
-            subrouteCode,
-            description,
-            routeCode // Reference to the main route code
-        });
-
-        const savedSubroute = await newSubroute.save();
-        res.status(201).json(savedSubroute);
+      // Validate the subrouteCode
+      if (!req.body.subrouteCode) {
+        return res.status(400).json({ message: 'Subroute code is required' });
+      }
+  
+      // Check if a subroute with the same subrouteCode already exists
+      const existingSubroute = await Subroute.findOne({ subrouteCode: req.body.subrouteCode });
+      if (existingSubroute) {
+        return res.status(400).json({ message: 'Subroute with this code already exists.' });
+      }
+  
+      // Create a new subroute
+      const newSubroute = new Subroute({
+        subrouteCode: req.body.subrouteCode,  // ensure correct casing
+  subRoute: req.body.subRoute,
+  mainRoute: req.body.mainRoute,
+  description: req.body.description,
+        // Add other fields as needed
+      });
+  
+      // Save the new subroute in the database
+      const savedSubroute = await newSubroute.save();
+  
+      // Send success response
+      res.status(201).json(savedSubroute);
     } catch (error) {
-        res.status(500).json({ message: 'Error adding subroute', error });
+      res.status(500).json({ message: 'Error adding subroute', error: error.message });
     }
-};
+  };
+  
 
 // Edit an existing subroute by ID
 exports.editSubroute = async (req, res) => {
