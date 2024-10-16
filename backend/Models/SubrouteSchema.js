@@ -3,19 +3,19 @@ const Schema = mongoose.Schema;
 const Route = require('./RouteSchema'); // Importing the Route schema
 
 const subRouteSchema = new Schema({
-  subrouteName: {
+  subRoute: {
     type: String,
     required: true
   },
   subrouteCode: {
     type: String,
-    required: true,
-    unique: true
+    unique: true,
+    sparse: true, // Allows multiple null values
   },
   description: {
     type: String
   },
-  routeCode: {
+  mainRoute: {
     type: String,
     required: true,
     ref: 'Route'  // Reference to Route schema's routeCode
