@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const staffSchema = new mongoose.Schema({
   firstname: {
@@ -9,13 +10,21 @@ const staffSchema = new mongoose.Schema({
   lastname: {
     type: String,
   },
-  username:{
+  username: {
     type: String,
-    // required: true,
+    unique: true,  // Ensure unique username for login
+    required: function() {
+      return this.designation === 'Sales';  // Only required for Sales
+    }
+  },
+  password: {
+    type: String,
+    required: function() {
+      return this.designation === 'Sales';  // Only required for Sales
+    }
   },
   profile: {
     type: String,
-    
   },
   address: {
     type: String,
@@ -23,7 +32,6 @@ const staffSchema = new mongoose.Schema({
   visaStatus: {
     type: String,
     enum: ['Valid', 'Expired', 'In Process'],
-
   },
   visaValidity: {
     type: Date,
@@ -32,29 +40,42 @@ const staffSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  whatsAppNumber:{
+  whatsAppNumber: {
     type: String,
     required: true,
   },
-  visaNumber:{
+  visaNumber: {
     type: String,
   },
-  dateofBirth:{
+  dateofBirth: {
     type: Date,
   },
-  nationality:{
+  nationality: {
     type: String,
   },
-  designation:{
-    type:String,
+  designation: {
+    type: String,
     enum: ['Sales', 'Driver', 'Helper'],
-    required: true
+    required: true,
   },
-  emiratesId:{
-    type:String,
-  
+  emiratesId: {
+    type: String,
   }
 });
+
+// Pre-save hook to hash the password before saving
+staffSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+  next();
+});
+
+// Method to compare password for login
+staffSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 const Staff = mongoose.model('Staff', staffSchema);
 
