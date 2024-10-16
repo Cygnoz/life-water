@@ -43,41 +43,50 @@ const addStaff = async (req, res) => {
       return res.status(400).json({ message: 'Staff member with this emiratesId number already exists.' });
     }
 
-    // Handle logic specific to "Salesman"
+    // Handle logic specific to "Sales"
     if (designation === 'Sales') {
       // Ensure username and password are provided
       if (!username || !password) {
-        return res.status(400).json({ message: 'Username and password are required for Salesman.' });
+        return res.status(400).json({ message: 'Username and password are required for Sales staff.' });
       }
 
-      // Check for existing login with the same username
-      const existingLogin = await Login.findOne({ username });
-      if (existingLogin) {
+      // Check for existing staff with the same username
+      const existingSalesStaff = await Staff.findOne({ username });
+      if (existingSalesStaff) {
         return res.status(400).json({ message: 'User with this username already exists.' });
       }
 
-      // Hash password for "Salesman"
+      // Hash the password before saving
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create new login record for "Salesman"
-      const newLogin = new Login({
+      // Create the new staff record for "Sales"
+      const newStaff = new Staff({
+        firstname,
+        lastname,
         username,
-        password: hashedPassword,
+        password: hashedPassword,  // Save hashed password for Sales
+        profile: req.file ? normalizeFilePath(req.file.path) : null,
+        address: req.body.address,
+        visaStatus: req.body.visaStatus,
+        visaValidity: req.body.visaValidity,
+        mobileNumber: req.body.mobileNumber,
+        whatsAppNumber: req.body.whatsAppNumber,
+        visaNumber: req.body.visaNumber,
+        dateofBirth: req.body.dateofBirth,
+        nationality: req.body.nationality,
+        designation,
+        emiratesId,
       });
 
-      try {
-        // Save login record for Salesman only
-        await newLogin.save();
-      } catch (error) {
-        return res.status(500).json({ message: 'Failed to save login for Salesman', error: error.message });
-      }
+      // Save the staff record
+      const savedStaff = await newStaff.save();
+      return res.status(201).json(savedStaff);
     }
 
-    // Create the new staff record for both "Salesman", "Driver", or "Helper"
+    // For other designations (Driver, Helper)
     const newStaff = new Staff({
       firstname,
       lastname,
-      username: designation === 'Sales' ? username : null, // Only assign username for Salesman
       profile: req.file ? normalizeFilePath(req.file.path) : null,
       address: req.body.address,
       visaStatus: req.body.visaStatus,
@@ -96,9 +105,10 @@ const addStaff = async (req, res) => {
     res.status(201).json(savedStaff);
 
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 
 
