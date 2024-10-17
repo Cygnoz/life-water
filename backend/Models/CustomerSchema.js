@@ -1,95 +1,113 @@
+const mongoose = require('mongoose');
+
 const customerSchema = new mongoose.Schema({
+    customerName: {
+      type: String,
+      required: true,
+      trim: true
+    },
     firstName: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
     lastName: {
       type: String,
-      required: true
+      trim: true
     },
-    flatNumber: {
+    taxPreference: {
       type: String,
-      required: true
+      enum: ['inclusive', 'exclusive']
     },
-    streetNumber: {
+    mobileNo: {
       type: String,
-      required: true
+      trim: true
     },
-    mobileNumber: {
+    workPhone: {
       type: String,
-      required: true,
-      unique: true // Ensures no duplicate mobile numbers
+      trim: true
     },
-    buildingNumber: {
+    workPhone2: {
       type: String,
-      required: true
+      trim: true
     },
-    whatsappNumber: {
+    whatsappNo: {
       type: String,
-      required: true
+      trim: true
     },
-    salesMan: {
-        type: String,
-        required: true
-      },
-    address: {
+    currency: {
       type: String,
-      required: true
+      trim: true
+    },
+    placeOfSupply: {
+      type: String,
+      trim: true
+    },
+    state: {
+      type: String,
+      trim: true
+    },
+    city: {
+      type: String,
+      trim: true
+    },
+    area: {
+      type: String,
+      trim: true
+    },
+    zipPostalCode: {
+      type: String,
+      trim: true
+    },
+    billingAddress: {
+      type: String,
+      trim: true
     },
     email: {
       type: String,
-      required: true,
-      unique: true, // Ensures no duplicate emails
+      unique: true,
+      lowercase: true,
+      trim: true
     },
     landmark: {
       type: String,
-      required: true
+      trim: true
     },
-    numberOfBottles: {
-      type: Number,
-      min: 0,
-      required: true
-    },
-    customerType: {
+    buildingNo: {
       type: String,
-      required: true,
-      enum:['Family','Business','other']
+      trim: true
     },
-    ratePerBottle: {
-      type: Number,
-      min: 0,
-      required: true
+    street: {
+      type: String,
+      trim: true
+    },
+    salesman: {
+      type: String,
+      trim: true
     },
     nationality: {
       type: String,
-      required: true,
-      default: 'Unknown'
-    },
-    depositAmount: {
-      type: Number,
-      min: 0,
-      required: true
+      trim: true
     },
     mainRoute: {
       type: String,
-      required: true
+      trim: true
     },
     subRoute: {
       type: String,
-      required: true
+      trim: true
+    },
+    noOfBottles: {
+      type: Number
+    },
+    depositAmount: {
+      type: Number
     },
     paymentMode: {
       type: String,
-      enum: ['Cash', 'Credit'],
-      required: true
-    },
-    coupon: {
-      type: String,
-      default: 'NO'
+      enum: ['cash', 'credit']
     }
-  }, {
-    timestamps: true  // Enable timestamps for createdAt and updatedAt fields
-  });
+  })
   
   module.exports = mongoose.model('Customer', customerSchema);
   
