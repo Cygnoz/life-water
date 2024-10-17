@@ -114,19 +114,60 @@ const addStaff = async (req, res) => {
 
 const editStaff = async (req, res) => {
   try {
+    const { designation, username, password, emiratesId } = req.body;
     const updatedData = { ...req.body };
 
+    // Check if a new profile image is uploaded
     if (req.file) {
-      updatedData.profile = normalizeFilePath(req.file.path); // normalize path on update
+      updatedData.profile = normalizeFilePath(req.file.path); // Normalize path on update
     }
 
+    // If the designation is "Sales", handle username and password logic
+    if (designation === 'Sales') {
+      // Ensure username and password are provided
+      if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required for Sales staff.' });
+      }
+
+      // Trim username and password to avoid accidental spaces
+      const trimmedUsername = username.trim();
+      const trimmedPassword = password.trim();
+
+      // Check if the username already exists for another staff (excluding the current one)
+      const existingSalesStaff = await Staff.findOne({
+        username: trimmedUsername,
+        _id: { $ne: req.params.id } // Exclude the current staff from the check
+      });
+
+      if (existingSalesStaff) {
+        return res.status(400).json({ message: 'Username already taken by another user.' });
+      }
+
+      // If the password is updated, hash the new password
+      if (trimmedPassword) {
+        const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
+        updatedData.password = hashedPassword;
+      }
+
+      // Ensure the updatedData includes the trimmed username
+      updatedData.username = trimmedUsername;
+    }
+
+    // Proceed with updating the staff record
     const updatedStaff = await Staff.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-    if (!updatedStaff) return res.status(404).json({ message: 'Staff not found' });
+    
+    // If staff not found
+    if (!updatedStaff) {
+      return res.status(404).json({ message: 'Staff not found' });
+    }
+
     res.status(200).json(updatedStaff);
+    
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
 
 
 
