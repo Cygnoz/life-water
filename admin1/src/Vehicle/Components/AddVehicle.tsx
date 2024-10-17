@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import uploadvehicle from '../../assets/images/uploadvehicle.svg';
 import { Link } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { addVehicleAPI } from '../../services/VehicleAPI/Vehicle';
 
 
@@ -20,6 +18,8 @@ const AddVehicle: React.FC<Props> = () => {
   const [startingKilometer, setStartingKilometer] = useState('');
   const [expenses, setExpenses] = useState('');
   const [vehicleImage, setVehicleImage] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
 
@@ -38,10 +38,11 @@ const AddVehicle: React.FC<Props> = () => {
     }
   }
 
-  
   const handleAddVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+    setError(null);
+    setSuccess(null);
+
     const formData = new FormData();
     formData.append('vehicleNo', vehicleNo);
     formData.append('insuranceValidity', insuranceValidity);
@@ -55,16 +56,16 @@ const AddVehicle: React.FC<Props> = () => {
     if (vehicleImage) {
       formData.append('vehicleImage', vehicleImage);
     }
-  
+
     try {
       const response = await addVehicleAPI(formData);
       if (response.message) {
-        toast.error(response.message);
+        setError(response.message);
       } else {
-        toast.success('Vehicle added successfully');
+        setSuccess('Vehicle added successfully');
         console.log('Vehicle added successfully:', response.data);
-  
-        // Reset form fields after successful addition
+
+        // Reset form fields
         setVehicleNo('');
         setInsuranceValidity('');
         setInsuranceStatus('');
@@ -76,17 +77,20 @@ const AddVehicle: React.FC<Props> = () => {
         setExpenses('');
         setVehicleImage(null);
         setPreview(null);
+
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          setSuccess(null);
+        }, 3000);
       }
     } catch (error: any) {
-      toast.error(error.message || 'An unexpected error occurred.');
+      setError(error.message || 'An unexpected error occurred.');
       console.error('Error adding vehicle:', error);
     }
   };
-  
 
   return (
     <div className='p-6'>
-      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={true} />
       <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
         <Link to={'/vehicle'}>
           <div className="icon-placeholder">
@@ -96,22 +100,40 @@ const AddVehicle: React.FC<Props> = () => {
         <h2 className="text-[20px] text-[#303F58] font-bold">Create New Vehicle</h2>
       </div>
 
-      <div className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
-        <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2>
-        <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="w-full mx-auto p-8 bg-white rounded-lg shadow-md">
+        {/* <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2> */}
+        <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-5">
+        {error && <p className="text-red-600">{error}</p>}
+        {success && <p className="text-green-600">{success}</p>}
 
           {/* Vehicle Number */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Vehicle Number</label>
-            <input
-              type="text"
-              placeholder="Enter Vehicle Number"
-              value={vehicleNo}
-              onChange={(e) => setVehicleNo(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+  <label className="block text-[#303F58] font-[14px] mb-2">
+    Vehicle Number <span className="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+     placeholder="Enter Vehicle Number (e.g., KL07AB1234)"
+    value={vehicleNo}
+    onChange={(e) => {
+      const inputValue = e.target.value.toUpperCase(); // Convert to uppercase
+      
+      // Remove any spaces and only allow alphanumeric characters
+      const formattedValue = inputValue.replace(/[^A-Z0-9]/g, '');
+
+      setVehicleNo(formattedValue); // Update state with the formatted value
+    }}
+    className={`w-full px-3 py-2 border rounded-md 
+                ${vehicleNo && !/^[A-Z0-9]+$/.test(vehicleNo) ? 'border-red-500' : 'border-gray-300'} 
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
+    required
+  />
+  <p className="text-red-500 mt-1">
+    {vehicleNo && !/^[A-Z0-9]+$/.test(vehicleNo) && "Only uppercase letters and numbers are allowed"}
+  </p>
+</div>
+
+
           {/* Uploaded Vehicle Image */}
           <div className="flex">
             <div className="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden">
@@ -128,7 +150,7 @@ const AddVehicle: React.FC<Props> = () => {
                 type="file"
                 onChange={handleImageChange}
                 className="mt-2"
-                required
+                
               />
             </div>
           </div>
@@ -155,7 +177,7 @@ const AddVehicle: React.FC<Props> = () => {
               value={registrationValidity}
               onChange={(e) => setRegistrationValidity(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* Insurance Validity */}
@@ -166,12 +188,12 @@ const AddVehicle: React.FC<Props> = () => {
               value={insuranceValidity}
               onChange={(e) => setInsuranceValidity(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* Starting Kilometer */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Starting Kilometer</label>
+            <label className="block text-[#303F58] font-[14px] mb-2">Starting Kilometer <span className="text-red-500">*</span></label>
             <input
               type="number"
               placeholder="Enter Starting Kilometers"
@@ -190,7 +212,7 @@ const AddVehicle: React.FC<Props> = () => {
               value={insuranceAmount}
               onChange={(e) => setInsuranceAmount(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* Expenses */}
@@ -202,7 +224,7 @@ const AddVehicle: React.FC<Props> = () => {
               value={expenses}
               onChange={(e) => setExpenses(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* License Amount */}
@@ -214,7 +236,7 @@ const AddVehicle: React.FC<Props> = () => {
               value={licenseAmount}
               onChange={(e) => setLicenseAmount(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* License Validity */}
@@ -225,7 +247,7 @@ const AddVehicle: React.FC<Props> = () => {
               value={licenseValidity}
               onChange={(e) => setLicenseValidity(e.target.value)}
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              
             />
           </div>
           {/* Buttons */}
