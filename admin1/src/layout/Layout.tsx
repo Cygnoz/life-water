@@ -74,7 +74,7 @@ const App: React.FC = () => {
               <Route path='/route/activeroute' element={<ActiveRoute />} />
               <Route path='/route/subroute' element={<SubRoute />} />
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
-              <Route path='/route/editsubroute' element={<EditSubRoute />} />
+              <Route path='/route/editsubroute/:id' element={<EditSubRoute />} />
 
 
               {/* VEHICLE */}

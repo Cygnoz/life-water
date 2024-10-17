@@ -72,9 +72,9 @@ function SubRoute({}: Props) {
     navigate('/route/newsubroute');
   };
 
-  const handleEdit = (): void => {
-    navigate('/route/editsubroute');
-  };
+  const handleEdit = (id: string): void => {
+    navigate(`/route/editsubroute/${id}`);
+};
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value); // Update search query state
@@ -172,7 +172,7 @@ function SubRoute({}: Props) {
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                  <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
+                  <button onClick={() => handleEdit(route._id)} className="text-blue-500 mx-2 items-center">
                     <img src={pen} alt="" />
                   </button>
                   <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2">

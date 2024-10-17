@@ -61,17 +61,16 @@ export const deleteSubRouteAPI = async (id: string) => {
 
 
 // update an existing subRoute 
-export const editSubRouteAPI= async(id:string)=>{
-  try{
-    const response = await axios.put(`${BASEURL}/api/updateSRoute/${id}`, {
+export const editSubRouteAPI = async (id: string,formData:string) => {
+  try {
+    const response = await axios.put(`${BASEURL}/api/updateSRoute/${id}`,formData, {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-    return response.data
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating route', error.response?.data?.message || error.message);
+    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
   }
-  catch(error:any){
-    console.error('Error updating route',error.response?.data?.message || error.message)
-    throw new Error(error.response?.data?.message || 'An unexpected error occured')
-  }
-}
+};
