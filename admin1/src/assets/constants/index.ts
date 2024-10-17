@@ -39,7 +39,7 @@ const navlist = [
     subhead: [
       {
         headName: "Dashboard",
-        subRoute: "/customer",
+        subRoute: "/",
       }, 
     ],
   },
@@ -83,10 +83,25 @@ const navlist = [
     icon:stock,
     route: "/stock",
     subhead: [
-      
       {
-        headName: "Stock",
-        subRoute: "/stock",
+        headName: "Stock Loaded",
+        subRoute: "/",
+      },
+      {
+        headName: "Internal Transfer",
+        subRoute: "/",
+      },
+      {
+        headName: "Unload Stock",
+        subRoute: "/",
+      },
+      {
+        headName: "Items",
+        subRoute: "/",
+      },
+      {
+        headName: "W Stock",
+        subRoute: "/",
       },
       
     ],

@@ -1,5 +1,5 @@
 const BusinessCustomer = require('../Models/BussinessCustomerSchema');
-const Customer = require('../Models/CustomerSchema');
+
 
 // Create a new business customer
 const createBusinessCustomer = async (req, res) => {

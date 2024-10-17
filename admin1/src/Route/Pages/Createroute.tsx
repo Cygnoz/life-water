@@ -11,11 +11,11 @@ import eye from "../../assets/images/eye.svg";
 import dot from "../../assets/ellipsis-vertical.svg";
 import { useNavigate } from "react-router-dom";
 import { deleteRouteAPI, getRoutesAPI } from "../../services/RouteAPI/RouteAPI";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useRef} from "react";
 import search from "../../assets/images/search.svg"
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'; 
-import { getSubRoutesAPI } from "../../services/RouteAPI/subRouteAPI";
+
 
 
 interface Route {
@@ -31,7 +31,8 @@ const CreateRoute: React.FC = () => {
 
   const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
   const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
-
+ 
+  const [searchQuery, setSearchQuery] = useState<string>(''); // Search query
   console.log(filteredRouteList);
   
 
@@ -52,8 +53,13 @@ const CreateRoute: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Updated route list:", routesList);
-  }, [routesList]);
+    const filtered = routesList.filter(route => 
+      route.mainRoute.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.routeCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRouteList(filtered);
+  }, [searchQuery, routesList]);
   
   
 
@@ -84,6 +90,16 @@ const CreateRoute: React.FC = () => {
   const handleView = (routeId: string): void => {
     navigate(`/route/viewroute/${routeId}`);
   };
+  const tableRef = useRef<HTMLDivElement>(null);
+  const handlePrint = () => {
+    const printContent = tableRef.current;
+    const originalContent = document.body.innerHTML;
+    if (printContent) {
+      document.body.innerHTML = printContent.innerHTML;
+      window.print();
+      document.body.innerHTML = originalContent;
+    }
+  };
 
   
 
@@ -103,7 +119,9 @@ const CreateRoute: React.FC = () => {
         theme="colored"
          // optional CSS class for further styling
       />
+      
     <div className="flex min-h-screen w-full">
+   
       <div>
         <div className="p-6">
           {/* Header Section */}
@@ -199,6 +217,8 @@ const CreateRoute: React.FC = () => {
                   boxShadow: "none",
                 }}
                 placeholder="Search Route"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // Update search query
                  
               />
               <div className="flex w-[60%] justify-end">
@@ -206,16 +226,18 @@ const CreateRoute: React.FC = () => {
                   <img className="mt-1 me-1" src={split} alt="" />
                   Sort By
                 </button>
-                <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
+                <button onClick={handlePrint} className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
                   <img className="mt-1 me-1" src={printer} alt="" />
                   Print
                 </button>
               </div>
             </div>
-            <table className="w-full text-left">
+           <div ref={tableRef}>
+        
+           <table className="print-table w-full text-left">
               <thead className="bg-[#fdf8f0]">
                 <tr className="border-b">
-                <th className="p-2 text-[12px] text-center text-[#303F58] w-16"> <input type="checkbox" /></th>
+                <th className="no-print p-2 text-[12px] text-center text-[#303F58] w-16"> <input type="checkbox" /></th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Sl No
                   </th>
@@ -231,16 +253,16 @@ const CreateRoute: React.FC = () => {
                   <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Description
                   </th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                  <th className="no-print p-2 text-[12px] text-center text-[#303F58]">
                     Action
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {routesList.map((route, index) => (
+                {filteredRouteList.map((route, index) => (
                   <tr className="border-b" key={route.id}>
                     
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
+                    <td className="no-print p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       {index + 1}
                     </td>
@@ -256,7 +278,7 @@ const CreateRoute: React.FC = () => {
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       {route.description}
                     </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                    <td className="no-print p-2 text-[14px] text-center text-[#4B5C79]">
                       <button
                         onClick={() => handleView(route.id)}
                         className="text-blue-500"
@@ -275,6 +297,7 @@ const CreateRoute: React.FC = () => {
                 ))}
               </tbody>
             </table>
+           </div>
           </div>
         </div>
       </div>
