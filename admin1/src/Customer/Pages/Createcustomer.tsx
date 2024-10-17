@@ -124,7 +124,7 @@ const CreateCustomer: React.FC = () => {
                   outline: "none",
                   boxShadow: "none",
                 }}
-                placeholder="Search Order"
+                placeholder="Search Customer"
                  
               />
               <div className="flex w-[60%] justify-end">
