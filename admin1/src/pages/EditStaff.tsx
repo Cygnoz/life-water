@@ -3,23 +3,21 @@ import { Link, useParams, useNavigate } from "react-router-dom"
 import backbutton from "../assets/images/backbutton.svg"
 import { getStaffByIdAPI, updateStaffAPI } from "../services/AllApi"
 import { BASEURL } from "../services/Baseurl"
+import { ToastContainer, toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css' // Import the styles
 
 const EditStaff: React.FC = () => {
   const [staff, setStaff] = useState<any>(null)
-  const [profile, setProfile] = useState(null) // Local state for profile image
+  const [profile, setProfile] = useState(null)
   const [userName, setUserName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [confirmPassword, setConfirmPassword] = useState<string>("")
-  const [err, setErr] = useState<string>("")
   const [whatsAppNumber, setWhatsAppNumber] = useState("")
   const [isSameAsPhone, setIsSameAsPhone] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const { id } = useParams() // Get the staff ID from the URL
-  const navigate = useNavigate() // Used for redirecting after saving
+  const [err,setErr] = useState("")
+  const { id } = useParams()
+  const navigate = useNavigate()
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
-
-  console.log(whatsAppNumber)
 
   useEffect(() => {
     const fetchStaff = async () => {
@@ -37,25 +35,30 @@ const EditStaff: React.FC = () => {
   }, [id])
 
   const handleWhatsAppCheckbox = () => {
-    setIsSameAsPhone((prev) => !prev)
-    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "")
+    const newIsSameAsPhone = !isSameAsPhone
+    setIsSameAsPhone(newIsSameAsPhone)
+    if (newIsSameAsPhone) {
+      setWhatsAppNumber(staff?.mobileNumber || "")
+    } else {
+      setWhatsAppNumber("")
+    }
   }
 
-
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-  
-    // If designation is changed, handle clearing of fields
+    const { name, value } = e.target
+
     if (name === 'designation' && value !== 'Sales') {
-      setUserName(''); // Clear username if not Sales
-      setPassword(''); // Clear password if not Sales
-      setConfirmPassword(''); // Clear confirm password if not Sales
+      setUserName('')
+      setPassword('')
+      setConfirmPassword('')
     }
-  
-    setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }));
-  };
-  
+
+    if (name === "whatsAppNumber") {
+      setWhatsAppNumber(value)
+    }
+
+    setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }))
+  }
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -63,16 +66,14 @@ const EditStaff: React.FC = () => {
   }
 
   const handleProfileChange = (e: any) => {
-    const file = e.target.files[0] // Get the selected file
+    const file = e.target.files[0]
     if (file) {
-      setProfile(file) // Update local state with the selected file
-      console.log(file)
+      setProfile(file)
     }
   }
 
   const handleSave = async () => {
     try {
-      // Check if any required field is empty
       if (
         staff.firstname === "" ||
         staff.lastname === "" ||
@@ -85,48 +86,52 @@ const EditStaff: React.FC = () => {
         staff.visaNumber === "" ||
         staff.visaStatus === "" ||
         staff.visaValidity === "" ||
-        (staff.designation === "Sales" && (userName === "" || password === "")) // For Sales, ensure username and password are filled
+        (staff.designation === "Sales" && (userName === "" || password === ""))
       ) {
-        alert("Please fill in the missing field");
-      }
-      // Validate mobile number length
-      else if (
+        toast.error("Please fill in the missing field")
+      } else if (
         staff.mobileNumber.length < 10 ||
         staff.emiratesId.length < 15 ||
         staff.visaNumber.length < 10
       ) {
-        alert("Either the Mobile No, Visa No, or Emirates ID is incorrect.");
-      }
-      // Validate password matching for Sales
-      else if (staff.designation === "Sales" && password !== confirmPassword) {
-        alert("Passwords do not match.");
+        toast.error("Either the Mobile No, Visa No, or Emirates ID is incorrect.")
+      } else if (staff.designation === "Sales" && password !== confirmPassword) {
+        toast.error("Passwords do not match.")
       } else {
-        // Construct payload
         const payload = {
           ...staff,
-          username: staff.designation === "Sales" ? userName : undefined, // Add username if Sales
-          password: staff.designation === "Sales" ? password : undefined, // Add password if Sales
-        };
-  
-        // Update staff details
-        await updateStaffAPI(id!, payload, profile); // Pass profile image and data
-        setSuccessMessage("Staff updated successfully!");
-        setErrorMessage(""); // Clear any previous errors
-  
-        // Redirect to staff list after success
+          whatsAppNumber: isSameAsPhone ? staff.mobileNumber : whatsAppNumber,
+          username: staff.designation === "Sales" ? userName : undefined,
+          password: staff.designation === "Sales" ? password : undefined,
+        }
+
+        await updateStaffAPI(id!, payload, profile)
+        toast.success("Staff updated successfully!")
+
         setTimeout(() => {
-          navigate("/staff");
-        }, 2000); // Redirect after 2 seconds
+          navigate("/staff")
+        }, 2000)
       }
     } catch (error: any) {
-      setErrorMessage(error.message || "Failed to update staff.");
-      setSuccessMessage(""); // Clear any previous success messages
+      toast.error(error.message || "Failed to update staff.")
     }
-  };
-  
+  }
   
   return (
     <div className="min-h-screen bg-gray-100  items-center justify-center my-2">
+            <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
       <div className="flex">
         <Link to={"/staff"}>
           <button className="w-[40px] h-[40px] px-2.5 ms-2 bg-[#FFFFFF] rounded-[56px]">
@@ -138,8 +143,7 @@ const EditStaff: React.FC = () => {
 
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full  ">
 
-        {successMessage && <p className="bg-green-100 text-green-700 p-2 rounded-lg mb-4">{successMessage}</p>}
-        {errorMessage && <p className="bg-red-100 text-red-700 p-2 rounded-lg mb-4">{errorMessage}</p>}
+
 
         {staff && (
           <form>
