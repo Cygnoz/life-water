@@ -35,12 +35,12 @@ const normalizeFilePath = (filePath) => {
 
 const addStaff = async (req, res) => {
   try {
-    const { firstname, lastname, username, designation, password, emiratesId } = req.body;
+    const { firstname, lastname, username, designation, password, emiratesId, mobileNumber } = req.body;
 
     // Check for existing staff with the same emiratesId
-    const existingStaff = await Staff.findOne({ emiratesId });
+    const existingStaff = await Staff.findOne({ mobileNumber });
     if (existingStaff) {
-      return res.status(400).json({ message: 'Staff member with this emiratesId number already exists.' });
+      return res.status(400).json({ message: 'Staff member with this mobile number already exists.' });
     }
 
     // Handle logic specific to "Sales"

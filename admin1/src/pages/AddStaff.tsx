@@ -294,6 +294,7 @@ function AddStaff({}: Props) {
                   <div className="mt-1 flex items-center">
                     <input
                       type="checkbox"
+                      
                       checked={isSameAsPhone}
                       onChange={handleWhatsAppCheckbox}
                       className="form-checkbox h-4 w-4 text-red-600"
@@ -304,6 +305,7 @@ function AddStaff({}: Props) {
                   </div>
                   <input
                     type="number"
+                    required
                     value={whatsAppNumber}
                     onChange={(e) => setWhatsAppNumber(e.target.value)}
                     className="mt-1 p-2 h-[36px] border border-gray-300 rounded-lg w-full"
@@ -323,7 +325,7 @@ function AddStaff({}: Props) {
                     value={visaStatus}
                     onChange={(e) => setVisaStatus(e.target.value)}
                   >
-                    <option value="">Enter Visa Status</option>
+                    <option  value="">Enter Visa Status</option>
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
                     <option value="In Process">In Process</option>
@@ -336,7 +338,7 @@ function AddStaff({}: Props) {
                     Visa Number
                   </label>
                   <input
-                    required
+                    
                     type="tel" // Use "tel" to allow numeric input
                     value={visaNumber}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -359,7 +361,7 @@ function AddStaff({}: Props) {
                     Emirates ID
                   </label>
                   <input
-                    required
+                    
                     type="tel" // Use "tel" to allow numeric input
                     value={emiratesId}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -400,7 +402,7 @@ function AddStaff({}: Props) {
                       Last Name
                     </label>
                     <input
-                      required
+                      
                       type="text"
                       value={lastname}
                       onChange={(e) => setLastname(e.target.value)}
@@ -416,7 +418,7 @@ function AddStaff({}: Props) {
                     Date of Birth
                   </label>
                   <input
-                    required
+                    
                     type="date"
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
@@ -430,7 +432,7 @@ function AddStaff({}: Props) {
                     Address
                   </label>
                   <input
-                    required
+                    
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
@@ -552,7 +554,7 @@ function AddStaff({}: Props) {
                     Visa Validity
                   </label>
                   <input
-                    required
+                    
                     type="date"
                     value={visaValidity}
                     onChange={(e) => setVisaValidity(e.target.value)}
@@ -566,7 +568,7 @@ function AddStaff({}: Props) {
                     Nationality
                   </label>
                   <input
-                    required
+                    
                     type="text"
                     value={nationality}
                     onChange={(e) => setNationality(e.target.value)}
