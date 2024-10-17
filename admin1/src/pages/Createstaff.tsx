@@ -1,7 +1,7 @@
-import shopping from "../assets//images/shopping-bag_staff.svg"
-import salesmen from "../assets/images/salesman.svg"
-import packing from "../assets/images/packing_.svg"
-import seatbelt from "../assets/images/seatbelt.svg"
+import shopping from "../assets//images/Group 2505.png"
+import salesmen from "../assets/images/Group 2504.png"
+import packing from "../assets/images/Group 2505.png"
+import seatbelt from "../assets/images/Group 2503.png"
 import printer from "../assets/images/printer.svg"
 import vector from "../assets/images/Vector.svg"
 import trash from "../assets/images/trash.svg"
@@ -117,16 +117,16 @@ const CreateStaff: React.FC = () => {
             </div>
           </div>
           {/* Cards Section */}
-          <div className="grid grid-cols-4 gap-4 my-6">
+          <div className="grid grid-cols-4 gap-4 my-3">
             <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={shopping} alt="" />
+              <img src={shopping} className="h-[45px] w-[45px] " alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Total Staff</div>
               {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">{staffList.length}</div>
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={salesmen} alt="" />
+              <img src={salesmen}  className="h-[41px] w-[45px] " alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Salesman</div>
               {/* <p className="text-[#4B5C79] w-[400px] text-[12px]">
     Lorem ipsum dolor sit amet consectetur
@@ -135,14 +135,14 @@ const CreateStaff: React.FC = () => {
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={packing} alt="" />
+              <img src={packing}  className="h-[45px] w-[45px] "alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Helpers</div>
               {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
               <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">{staffList.filter((staff) => staff.designation === "Helper").length}</div>
             </div>
 
             <div className="p-4 bg-white shadow-md rounded-lg">
-              <img src={seatbelt} alt="" />
+              <img src={seatbelt}  className="h-[40px] w-[45px] "alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">Drivers</div>
               {/* <p className="text-[#4B5C79] w-[400] text-[12]">Lorem ipsum dolor sit amet consectetur </p> */}
               <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">{staffList.filter((staff) => staff.designation === "Driver").length}</div>
