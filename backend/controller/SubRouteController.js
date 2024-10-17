@@ -38,24 +38,26 @@ exports.addSubroute = async (req, res) => {
 // Edit an existing subroute by ID
 exports.editSubroute = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { subrouteName, subrouteCode, description, routeCode } = req.body;
-
-        const updatedSubroute = await Subroute.findByIdAndUpdate(
-            id,
-            { subrouteName, subrouteCode, description, routeCode },
-            { new: true } // Return the updated document
-        );
-
-        if (!updatedSubroute) {
-            return res.status(404).json({ message: 'Subroute not found' });
-        }
-
-        res.status(200).json(updatedSubroute);
+      const { id } = req.params;
+      const { subRoute, subrouteCode, description, routeCode } = req.body;
+  
+      const updatedSubroute = await Subroute.findByIdAndUpdate(
+        id,
+        { subRoute, subrouteCode, description, routeCode },
+        { new: true } // Return the updated document
+      );
+  
+      if (!updatedSubroute) {
+        return res.status(404).json({ message: 'Subroute not found' });
+      }
+  
+      res.status(200).json(updatedSubroute);
     } catch (error) {
-        res.status(500).json({ message: 'Error updating subroute', error });
+      res.status(500).json({ message: 'Error updating subroute', error });
     }
-};
+  };
+  
+
 
 // Delete a subroute by ID
 exports.deleteSubroute = async (req, res) => {
@@ -103,5 +105,24 @@ exports.viewAllSubroutes = async (req, res) => {
         res.status(200).json(subroutes);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching subroutes', error });
+    }
+};
+exports.getSubroutebyID = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from request parameters
+
+        // Find the subroute by ID
+        const subroute = await Subroute.findById(id);
+
+        // If subroute not found, return a 404 response
+        if (!subroute) {
+            return res.status(404).json({ message: 'Subroute not found' });
+        }
+
+        // Return the found subroute
+        res.status(200).json(subroute);
+    } catch (error) {
+        // Handle any errors
+        res.status(500).json({ message: 'Error fetching subroute', error: error.message });
     }
 };

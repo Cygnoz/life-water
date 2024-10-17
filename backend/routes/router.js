@@ -53,6 +53,7 @@ router.put('/updateSRoute/:id', subrouteController.editSubroute);
 router.delete('/delSRoute/:id', subrouteController.deleteSubroute);
 router.get('/viewSRoute', subrouteController.viewAllSubroutes);
 router.get('/viewSRoute/:id', subrouteController.viewSubroute);
+router.get('/getSRoute/:id', subrouteController.getSubroutebyID);
 
 //customer
 // Bussiness customer
