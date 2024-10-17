@@ -6,12 +6,67 @@ import trash from '../../assets/images/trash.svg'
 import { useNavigate } from 'react-router-dom'
 import dot from '../../assets/ellipsis-vertical.svg'
 import plus from '../../assets/circle-plus.svg'
+import { useEffect, useState } from "react";
+import { deleteSubRouteAPI, getSubRoutesAPI } from '../../services/RouteAPI/subRouteAPI'
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; 
 
+
+interface Route {
+  id: string;
+  _id: string;
+  mainRoute: string;
+  subrouteCode: string;
+  subRoute: string;
+  description: string;
+}
 
 
 type Props = {}
 
 function SubRoute({}: Props) {
+
+  const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
+  const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
+
+  console.log(filteredRouteList);
+  
+
+  // Fetch staff data on component mount
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const response = await getSubRoutesAPI();
+        console.log("Full API Response:", response); // Check the response
+        setRouteList(response); // Store full staff list
+        setFilteredRouteList(response) // Initially, display all route
+      } catch (error) {
+        console.error("Error fetching staff data:", error);
+      }
+    };
+
+    fetchStaff();
+  }, []);
+
+  useEffect(() => {
+    console.log("Updated route list:", routesList);
+  }, [routesList]);
+  
+
+
+  const handleDelete = async (id: string) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this subroute?");
+    if (!confirmDelete) return;
+  
+    try {
+      const response = await deleteSubRouteAPI(id);  // Pass the _id to the API function
+      toast.success(response.message);  // Show success message
+      setRouteList(routesList.filter((route) => route._id !== id));  // Update the UI
+    } catch (error) {
+      console.error("Error deleting route:", error);
+      alert("An error occurred while deleting the route.");
+    }
+  };
 
 
     const navigate = useNavigate()
@@ -26,6 +81,19 @@ function SubRoute({}: Props) {
   
   return (
     <div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
 
 <div className="flex justify-between items-center my-3">
             <div>
@@ -90,23 +158,27 @@ function SubRoute({}: Props) {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                <td className="px-6 py-4">
-                  <input type="checkbox" />
-                </td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">1</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">RC-9090</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">Lorem ipsum dolor sit amet</td>
-                  <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                  <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
-                      <img src={pen} alt="" />
-                    </button>
-                    <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
 
-                  </td>
-                </tr>
+                {routesList.map((route,index)=>(
+                                  <tr className="border-b" key={route.id}>
+                                  <td className="px-6 py-4">
+                                    <input type="checkbox" />
+                                  </td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subRoute}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subrouteCode}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                                    <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
+                                        <img src={pen} alt="" />
+                                      </button>
+                                      <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2"><img src={trash} alt="" /></button>
+                  
+                                    </td>
+                                  </tr>
+                ))}
+
               </tbody>
             </table>
           </div>
