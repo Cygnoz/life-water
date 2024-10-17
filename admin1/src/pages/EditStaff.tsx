@@ -126,18 +126,17 @@ const EditStaff: React.FC = () => {
   
   
   return (
-    <div className="min-h-screen bg-gray-100  items-center justify-center p-10">
-      <div className="flex mt-3">
+    <div className="min-h-screen bg-gray-100  items-center justify-center my-2">
+      <div className="flex">
         <Link to={"/staff"}>
-          <button className="w-[40px] h-[40px] px-2.5 bg-[#FFFFFF] rounded-[56px]">
+          <button className="w-[40px] h-[40px] px-2.5 ms-2 bg-[#FFFFFF] rounded-[56px]">
             <img src={backbutton} alt="" />
           </button>
         </Link>
         <h3 className="text-[#303F58] mt-1 ms-3 text-[20px] font-bold">Edit Staff</h3>
       </div>
 
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
-        <h2 className="text-2xl font-bold mb-4">Edit Staff</h2>
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full  ">
 
         {successMessage && <p className="bg-green-100 text-green-700 p-2 rounded-lg mb-4">{successMessage}</p>}
         {errorMessage && <p className="bg-red-100 text-red-700 p-2 rounded-lg mb-4">{errorMessage}</p>}
@@ -146,7 +145,7 @@ const EditStaff: React.FC = () => {
           <form>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left Column */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Profile Picture */}
                 <div className="flex flex-col items-start space-y-2">
                   <div className="flex items-center space-x-4">
@@ -171,7 +170,7 @@ const EditStaff: React.FC = () => {
                   <input
                     required
                     type="text"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    className="mt-1 p-2 h-[36px] border border-gray-300 rounded-lg w-full"
                     name="mobileNumber"
                     value={staff?.mobileNumber || ""}
                     onChange={(e) => {
@@ -195,13 +194,13 @@ const EditStaff: React.FC = () => {
                     <input type="checkbox" checked={isSameAsPhone} onChange={handleWhatsAppCheckbox} className="form-checkbox h-4 w-4 text-red-600" />
                     <span className="ml-2 text-sm text-gray-700">Same as phone number</span>
                   </div>
-                  <input type="Number" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="whatsAppNumber" value={isSameAsPhone ? staff.mobileNumber : staff.whatsAppNumber || ""} onChange={handleInputChange} disabled={isSameAsPhone} />
+                  <input type="Number" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="whatsAppNumber" value={isSameAsPhone ? staff.mobileNumber : staff.whatsAppNumber || ""} onChange={handleInputChange} disabled={isSameAsPhone} />
                 </div>
 
                 {/* Visa Status */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Visa Status</label>
-                  <select required className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="visaStatus" value={staff?.visaStatus || ""} onChange={handleSelectChange}>
+                  <select required className="mt-1 p-2 border  h-[36px] border-gray-300 rounded-lg w-full" name="visaStatus" value={staff?.visaStatus || ""} onChange={handleSelectChange}>
                     <option value="">Enter Visa Status</option>
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
@@ -215,7 +214,7 @@ const EditStaff: React.FC = () => {
                   <input
                     required
                     type="tel" // Use "tel" to ensure numeric input
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    className="mt-1  h-[36px] p-2 border border-gray-300 rounded-lg w-full"
                     name="visaNumber"
                     value={staff.visaNumber || ""}
                     onChange={handleInputChange}
@@ -232,7 +231,7 @@ const EditStaff: React.FC = () => {
                   <input
                     required
                     type="tel"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full"
                     name="emiratesId"
                     value={staff.emiratesId || ""}
                     onChange={handleInputChange}
@@ -245,28 +244,28 @@ const EditStaff: React.FC = () => {
               </div>
 
               {/* Right Column */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Full Name and Date of Birth */}
                 <div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">First Name</label>
-                    <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="firstname" value={`${staff.firstname}`} onChange={handleInputChange} />
+                    <input required type="text" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="firstname" value={`${staff.firstname}`} onChange={handleInputChange} />
                   </div>
                   <div className="mt-4">
                     <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                    <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="lastname" value={`${staff.lastname}`} onChange={handleInputChange} />
+                    <input required type="text" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="lastname" value={`${staff.lastname}`} onChange={handleInputChange} />
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                  <input required type="date" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="dateofBirth" value={staff?.dateofBirth?.substring(0, 10) || ""} onChange={handleInputChange} />
+                  <input required type="date" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="dateofBirth" value={staff?.dateofBirth?.substring(0, 10) || ""} onChange={handleInputChange} />
                 </div>
 
                 {/* Address */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Address</label>
-                  <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="address" value={staff?.address || ""} onChange={handleInputChange} />
+                  <input required type="text" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="address" value={staff?.address || ""} onChange={handleInputChange} />
                 </div>
 
                 {/* designation */}
@@ -274,7 +273,7 @@ const EditStaff: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700">Designation</label>
                   <div className="flex flex-col space-y-1 mt-2">
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Sales" checked={staff?.designation === "Sales"} onChange={handleInputChange} className="form-radio" />
+                      <input required type="radio" name="designation" value="Sales" checked={staff?.designation === "Sales"} onChange={handleInputChange} className="form-radio  h-[36px]" />
                       <span className="ml-2">Salesman</span>
                     </label>
                     <label className="inline-flex items-center">
@@ -332,14 +331,14 @@ const EditStaff: React.FC = () => {
                     name="visaValidity" // Add name attribute
                     value={staff?.visaValidity?.substring(0, 10) || ""} // Format to 'YYYY-MM-DD'
                     onChange={handleInputChange} // Use the unified change handler
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
+                    className="mt-1 p-2 border h-[36px] border-gray-300 rounded-lg w-full"
                   />
                 </div>
 
                 {/* Nationality */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Nationality</label>
-                  <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="nationality" value={staff?.nationality || ""} onChange={handleInputChange} />
+                  <input required type="text" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" name="nationality" value={staff?.nationality || ""} onChange={handleInputChange} />
                 </div>
               </div>
             </div>
@@ -348,7 +347,7 @@ const EditStaff: React.FC = () => {
       </div>
 
       {/* Buttons Section */}
-      <div className="flex justify-end w-full max-w-8xl mx-4 mt-6 space-x-4">
+      <div className="flex justify-end w-full max-w-8xl me-5 mt-6 space-x-4">
         <Link to={"/staff"}>
           <button type="button" className="bg-gray-400 text-white p-2 rounded-lg">
             Cancel

@@ -50,7 +50,7 @@ const StaffOverview: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full">
-      <div className="flex mt-3">
+      <div className="flex mt-2">
         <Link to={'/staff'}>
         <button className="w-[40px] h-[40px] px-2.5 bg-[#FFFFFF] rounded-[56px]">
           <img src={backbutton} alt="" />
@@ -62,7 +62,7 @@ const StaffOverview: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex justify-between w-ful mt-3 mx-auto mb-5 pt-2 h-[52px] ps-5 pe-5 bg-white shadow-md rounded-lg ">
+      <div className="flex justify-between w-ful mt-1 mx-auto mb-5 pt-2 h-[52px] ps-5 pe-5 bg-white shadow-md rounded-lg ">
         <button
           className={`flex px-9 py-2 h-[36px] rounded-lg text-center text-[14px] w-[221px] font-bold text-[#495160] ${
             activeTab === "personalDetails"
@@ -213,7 +213,7 @@ const StaffOverview: React.FC = () => {
           {activeTab === 'orderHistory' && (
             <div className="p-4 text-center grid grid-cols-2 gap-4">
                 <div>      
-                            <img src={order} alt="No Orders" className="w-[690px] h-[420px] mt-10 mb-10  rounded-md mx-auto" />
+                            <img src={order} alt="No Orders" className="w-[690px] h-[420px]  mb-10  rounded-md mx-auto" />
                 </div>
                 <div className='justify-center  mt-40'>
                     <p className="text-[32px] text-[#303F58]  font-[400]">No Order History Found</p>
@@ -230,7 +230,7 @@ const StaffOverview: React.FC = () => {
           {activeTab === 'commissionHistory' && (
              <div className="p-4 text-center grid grid-cols-2 gap-4">
              <div>      
-                         <img src={commission} alt="No Orders" className="w-[690px] h-[420px] mt-10 mb-10  rounded-md mx-auto" />
+                         <img src={commission} alt="No Orders" className="w-[690px] h-[420px]  mb-10  rounded-md mx-auto" />
              </div>
              <div className='justify-center  mt-40'>
                  <p className="text-[32px] text-[#303F58]  font-[400]">No Commission History Found</p>
@@ -247,7 +247,7 @@ const StaffOverview: React.FC = () => {
         {activeTab === 'paymentHistory' && (
              <div className="p-4 text-center grid grid-cols-2 gap-4">
              <div>      
-                         <img src={payment} alt="No Orders" className="w-[690px] h-[420px] mt-10 mb-10  rounded-md mx-auto" />
+                         <img src={payment} alt="No Orders" className="w-[690px] h-[420px]  mb-10  rounded-md mx-auto" />
              </div>
              <div className='justify-center  mt-40'>
                  <p className="text-[32px] text-[#303F58]  font-[400]">No Payment History Found</p>
@@ -264,7 +264,7 @@ const StaffOverview: React.FC = () => {
         {activeTab === 'summary' && (
              <div className="p-4 text-center grid grid-cols-2 gap-4">
              <div>      
-                         <img src={summary} alt="No Orders" className="w-[690px] h-[420px] mt-10 mb-10  rounded-md mx-auto" />
+                         <img src={summary} alt="No Orders" className="w-[690px] h-[420px]  mb-10  rounded-md mx-auto" />
              </div>
              <div className='justify-center  mt-40'>
                  <p className="text-[32px] text-[#303F58]  font-[400]">No Summary Found</p>
