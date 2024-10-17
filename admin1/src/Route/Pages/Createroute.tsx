@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import search from "../../assets/images/search.svg"
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'; 
+import { getSubRoutesAPI } from "../../services/RouteAPI/subRouteAPI";
 
 
 interface Route {
@@ -54,7 +55,7 @@ const CreateRoute: React.FC = () => {
     console.log("Updated route list:", routesList);
   }, [routesList]);
   
-
+  
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this route?");
@@ -224,9 +225,9 @@ const CreateRoute: React.FC = () => {
                   <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Route Code
                   </th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                  {/* <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Sub Route
-                  </th>
+                  </th> */}
                   <th className="p-2 text-[12px] text-center text-[#303F58]">
                     Description
                   </th>
@@ -249,9 +250,9 @@ const CreateRoute: React.FC = () => {
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       {route.routeCode}
                     </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                    {/* <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       {route.subRoute}
-                    </td>
+                    </td> */}
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                       {route.description}
                     </td>
