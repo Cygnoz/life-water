@@ -1,61 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import backbutton from "../assets/images/backbutton.svg";
-import { getStaffByIdAPI, updateStaffAPI } from "../services/AllApi";
-import { BASEURL } from "../services/Baseurl";
+import React, { useEffect, useState } from "react"
+import { Link, useParams, useNavigate } from "react-router-dom"
+import backbutton from "../assets/images/backbutton.svg"
+import { getStaffByIdAPI, updateStaffAPI } from "../services/AllApi"
+import { BASEURL } from "../services/Baseurl"
 
 const EditStaff: React.FC = () => {
-  const [staff, setStaff] = useState<any>(null);
-  const [profile, setProfile] = useState(null); // Local state for profile image
+  const [staff, setStaff] = useState<any>(null)
+  const [profile, setProfile] = useState(null) // Local state for profile image
+  const [userName, setUserName] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [confirmPassword, setConfirmPassword] = useState<string>("")
+  const [err, setErr] = useState<string>("")
+  const [whatsAppNumber, setWhatsAppNumber] = useState("")
+  const [isSameAsPhone, setIsSameAsPhone] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
+  const { id } = useParams() // Get the staff ID from the URL
+  const navigate = useNavigate() // Used for redirecting after saving
+  const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
 
-  const [whatsAppNumber, setWhatsAppNumber] = useState("");
-  const [isSameAsPhone, setIsSameAsPhone] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const { id } = useParams(); // Get the staff ID from the URL
-  const navigate = useNavigate(); // Used for redirecting after saving
-  const defaultImage =
-    "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
-
-  console.log(whatsAppNumber);
+  console.log(whatsAppNumber)
 
   useEffect(() => {
     const fetchStaff = async () => {
       try {
-        const response = await getStaffByIdAPI(id as string);
-        setStaff(response);
+        const response = await getStaffByIdAPI(id as string)
+        setStaff(response)
       } catch (error: any) {
-        console.error("Error fetching staff data:", error.message);
+        console.error("Error fetching staff data:", error.message)
       }
-    };
+    }
 
     if (id) {
-      fetchStaff();
+      fetchStaff()
     }
-  }, [id]);
+  }, [id])
 
   const handleWhatsAppCheckbox = () => {
-    setIsSameAsPhone((prev) => !prev);
-    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "");
-  };
+    setIsSameAsPhone((prev) => !prev)
+    setWhatsAppNumber(isSameAsPhone ? "" : staff?.mobileNumber || "")
+  }
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+  
+    // If designation is changed, handle clearing of fields
+    if (name === 'designation' && value !== 'Sales') {
+      setUserName(''); // Clear username if not Sales
+      setPassword(''); // Clear password if not Sales
+      setConfirmPassword(''); // Clear confirm password if not Sales
+    }
+  
     setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }));
   };
+  
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }));
-  };
+    const { name, value } = e.target
+    setStaff((prevStaff: any) => ({ ...prevStaff, [name]: value }))
+  }
 
   const handleProfileChange = (e: any) => {
-    const file = e.target.files[0]; // Get the selected file
+    const file = e.target.files[0] // Get the selected file
     if (file) {
-      setProfile(file); // Update local state with the selected file
-      console.log(file);
+      setProfile(file) // Update local state with the selected file
+      console.log(file)
     }
-  };
+  }
 
   const handleSave = async () => {
     try {
@@ -71,7 +84,8 @@ const EditStaff: React.FC = () => {
         staff.nationality === "" ||
         staff.visaNumber === "" ||
         staff.visaStatus === "" ||
-        staff.visaValidity === ""
+        staff.visaValidity === "" ||
+        (staff.designation === "Sales" && (userName === "" || password === "")) // For Sales, ensure username and password are filled
       ) {
         alert("Please fill in the missing field");
       }
@@ -82,13 +96,23 @@ const EditStaff: React.FC = () => {
         staff.visaNumber.length < 10
       ) {
         alert("Either the Mobile No, Visa No, or Emirates ID is incorrect.");
+      }
+      // Validate password matching for Sales
+      else if (staff.designation === "Sales" && password !== confirmPassword) {
+        alert("Passwords do not match.");
       } else {
+        // Construct payload
+        const payload = {
+          ...staff,
+          username: staff.designation === "Sales" ? userName : undefined, // Add username if Sales
+          password: staff.designation === "Sales" ? password : undefined, // Add password if Sales
+        };
+  
         // Update staff details
-        await updateStaffAPI(id!, staff, profile); // Pass the profile image
+        await updateStaffAPI(id!, payload, profile); // Pass profile image and data
         setSuccessMessage("Staff updated successfully!");
-        console.log(staff);
         setErrorMessage(""); // Clear any previous errors
-
+  
         // Redirect to staff list after success
         setTimeout(() => {
           navigate("/staff");
@@ -99,7 +123,8 @@ const EditStaff: React.FC = () => {
       setSuccessMessage(""); // Clear any previous success messages
     }
   };
-
+  
+  
   return (
     <div className="min-h-screen bg-gray-100  items-center justify-center p-10">
       <div className="flex mt-3">
@@ -108,24 +133,14 @@ const EditStaff: React.FC = () => {
             <img src={backbutton} alt="" />
           </button>
         </Link>
-        <h3 className="text-[#303F58] mt-1 ms-3 text-[20px] font-bold">
-          Edit Staff
-        </h3>
+        <h3 className="text-[#303F58] mt-1 ms-3 text-[20px] font-bold">Edit Staff</h3>
       </div>
 
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-8xl w-full mx-4">
         <h2 className="text-2xl font-bold mb-4">Edit Staff</h2>
 
-        {successMessage && (
-          <p className="bg-green-100 text-green-700 p-2 rounded-lg mb-4">
-            {successMessage}
-          </p>
-        )}
-        {errorMessage && (
-          <p className="bg-red-100 text-red-700 p-2 rounded-lg mb-4">
-            {errorMessage}
-          </p>
-        )}
+        {successMessage && <p className="bg-green-100 text-green-700 p-2 rounded-lg mb-4">{successMessage}</p>}
+        {errorMessage && <p className="bg-red-100 text-red-700 p-2 rounded-lg mb-4">{errorMessage}</p>}
 
         {staff && (
           <form>
@@ -135,15 +150,7 @@ const EditStaff: React.FC = () => {
                 {/* Profile Picture */}
                 <div className="flex flex-col items-start space-y-2">
                   <div className="flex items-center space-x-4">
-                    <img
-                      className="mx-auto object-cover w-11 h-11 rounded-full"
-                      src={
-                        staff.profile
-                          ? `${BASEURL}/uploads/${staff.profile}`
-                          : defaultImage
-                      }
-                      alt={`${staff.firstname} ${staff.lastname}`}
-                    />
+                    <img className="mx-auto object-cover w-11 h-11 rounded-full" src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
                     <label className="ml-4 p-2 border border-gray-300 rounded-lg cursor-pointer text-gray-700">
                       Upload New Photo
                       <input
@@ -155,16 +162,12 @@ const EditStaff: React.FC = () => {
                     </label>
                   </div>
 
-                  <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">
-                    At least 800 x 800 px Recommended. JPG or PNG is Allowed
-                  </p>
+                  <p className="mt-1 text-sm text-gray-600 text-center ml-1 mx-20">At least 800 x 800 px Recommended. JPG or PNG is Allowed</p>
                 </div>
 
                 {/* Mobile Number */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Mobile Number
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
                   <input
                     required
                     type="text"
@@ -173,10 +176,10 @@ const EditStaff: React.FC = () => {
                     value={staff?.mobileNumber || ""}
                     onChange={(e) => {
                       // Allow only numbers
-                      const value = e.target.value.replace(/\D/g, "");
+                      const value = e.target.value.replace(/\D/g, "")
                       // Limit to 10 digits
                       if (value.length <= 10) {
-                        handleInputChange(e);
+                        handleInputChange(e)
                       }
                     }}
                     maxLength={10}
@@ -187,46 +190,18 @@ const EditStaff: React.FC = () => {
 
                 {/* WhatsApp Number with Checkbox */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    WhatsApp Number
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">WhatsApp Number</label>
                   <div className="mt-2 flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={isSameAsPhone}
-                      onChange={handleWhatsAppCheckbox}
-                      className="form-checkbox h-4 w-4 text-red-600"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">
-                      Same as phone number
-                    </span>
+                    <input type="checkbox" checked={isSameAsPhone} onChange={handleWhatsAppCheckbox} className="form-checkbox h-4 w-4 text-red-600" />
+                    <span className="ml-2 text-sm text-gray-700">Same as phone number</span>
                   </div>
-                  <input
-                    type="Number"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                    name="whatsAppNumber"
-                    value={
-                      isSameAsPhone
-                        ? staff.mobileNumber
-                        : staff.whatsAppNumber || ""
-                    }
-                    onChange={handleInputChange}
-                    disabled={isSameAsPhone}
-                  />
+                  <input type="Number" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="whatsAppNumber" value={isSameAsPhone ? staff.mobileNumber : staff.whatsAppNumber || ""} onChange={handleInputChange} disabled={isSameAsPhone} />
                 </div>
 
                 {/* Visa Status */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Visa Status
-                  </label>
-                  <select
-                    required
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                    name="visaStatus"
-                    value={staff?.visaStatus || ""}
-                    onChange={handleSelectChange}
-                  >
+                  <label className="block text-sm font-medium text-gray-700">Visa Status</label>
+                  <select required className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="visaStatus" value={staff?.visaStatus || ""} onChange={handleSelectChange}>
                     <option value="">Enter Visa Status</option>
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
@@ -236,9 +211,7 @@ const EditStaff: React.FC = () => {
 
                 {/* Visa Number */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Visa Number
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Visa Number</label>
                   <input
                     required
                     type="tel" // Use "tel" to ensure numeric input
@@ -255,9 +228,7 @@ const EditStaff: React.FC = () => {
 
                 {/* Emirates ID */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Emirates ID
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Emirates ID</label>
                   <input
                     required
                     type="tel"
@@ -278,113 +249,83 @@ const EditStaff: React.FC = () => {
                 {/* Full Name and Date of Birth */}
                 <div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      First Name
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                      name="firstname"
-                      value={`${staff.firstname}`}
-                      onChange={handleInputChange}
-                    />
+                    <label className="block text-sm font-medium text-gray-700">First Name</label>
+                    <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="firstname" value={`${staff.firstname}`} onChange={handleInputChange} />
                   </div>
                   <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <input
-                      required
-                      type="text"
-                      className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                      name="lastname"
-                      value={`${staff.lastname}`}
-                      onChange={handleInputChange}
-                    />
+                    <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="lastname" value={`${staff.lastname}`} onChange={handleInputChange} />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Date of Birth
-                  </label>
-                  <input
-                    required
-                    type="date"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                    name="dateofBirth"
-                    value={staff?.dateofBirth?.substring(0, 10) || ""}
-                    onChange={handleInputChange}
-                  />
+                  <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+                  <input required type="date" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="dateofBirth" value={staff?.dateofBirth?.substring(0, 10) || ""} onChange={handleInputChange} />
                 </div>
 
                 {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Address
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                    name="address"
-                    value={staff?.address || ""}
-                    onChange={handleInputChange}
-                  />
+                  <label className="block text-sm font-medium text-gray-700">Address</label>
+                  <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="address" value={staff?.address || ""} onChange={handleInputChange} />
                 </div>
 
                 {/* designation */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Designation
-                  </label>
-                  <div className="flex flex-col space-y-2 mt-2">
+                  <label className="block text-sm font-medium text-gray-700">Designation</label>
+                  <div className="flex flex-col space-y-1 mt-2">
                     <label className="inline-flex items-center">
-                      <input
-                        required
-                        type="radio"
-                        name="designation" // Add name attribute
-                        value="Sales"
-                        checked={staff.designation === "Sales"} // Use staff state object
-                        onChange={handleInputChange} // Use the unified change handler
-                        className="form-radio"
-                      />
+                      <input required type="radio" name="designation" value="Sales" checked={staff?.designation === "Sales"} onChange={handleInputChange} className="form-radio" />
                       <span className="ml-2">Salesman</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input
-                        required
-                        type="radio"
-                        name="designation" // Add name attribute
-                        value="Driver"
-                        checked={staff.designation === "Driver"} // Use staff state object
-                        onChange={handleInputChange} // Use the unified change handler
-                        className="form-radio"
-                      />
+                      <input required type="radio" name="designation" value="Driver" checked={staff?.designation === "Driver"} onChange={handleInputChange} className="form-radio" />
                       <span className="ml-2">Driver</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input
-                        required
-                        type="radio"
-                        name="designation" // Add name attribute
-                        value="Helper"
-                        checked={staff.designation === "Helper"} // Use staff state object
-                        onChange={handleInputChange} // Use the unified change handler
-                        className="form-radio"
-                      />
+                      <input required type="radio" name="designation" value="Helper" checked={staff?.designation === "Helper"} onChange={handleInputChange} className="form-radio" />
                       <span className="ml-2">Helper</span>
                     </label>
                   </div>
+
+                  {/* Conditionally render input fields based on the selected designation */}
+                  {staff?.designation === "Sales" && (
+                    <div className="mt-2">
+                      <label className="block text-sm font-medium text-gray-700">Username</label>
+                      <input required type="text" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" placeholder=" Username" value={userName} onChange={(e) => setUserName(e.target.value)} />
+                      <div className="grid grid-cols-2 gap-1">
+                        <div className="mt-1">
+                          <label className="block text-sm font-medium text-gray-700">Password</label>
+                          <input required type="password" className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </div>
+
+                        <div className="mt-1">
+                          <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                          <input
+                            required
+                            type="password"
+                            className="mt-1 h-[36px] p-2 border border-gray-300 rounded-lg w-full"
+                            placeholder="Confirm Password"
+                            value={confirmPassword}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
+                            onBlur={() => {
+                              if (confirmPassword !== password) {
+                                setErr("Passwords do not match")
+                              } else {
+                                setErr("")
+                              }
+                            }}
+                          />
+                          {err && <p className="text-red-500 text-sm mt-1">{err}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* visa validity */}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Visa Validity
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700">Visa Validity</label>
                   <input
                     required
                     type="date"
@@ -397,17 +338,8 @@ const EditStaff: React.FC = () => {
 
                 {/* Nationality */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Nationality
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    className="mt-1 p-2 border border-gray-300 rounded-lg w-full"
-                    name="nationality"
-                    value={staff?.nationality || ""}
-                    onChange={handleInputChange}
-                  />
+                  <label className="block text-sm font-medium text-gray-700">Nationality</label>
+                  <input required type="text" className="mt-1 p-2 border border-gray-300 rounded-lg w-full" name="nationality" value={staff?.nationality || ""} onChange={handleInputChange} />
                 </div>
               </div>
             </div>
@@ -418,23 +350,16 @@ const EditStaff: React.FC = () => {
       {/* Buttons Section */}
       <div className="flex justify-end w-full max-w-8xl mx-4 mt-6 space-x-4">
         <Link to={"/staff"}>
-          <button
-            type="button"
-            className="bg-gray-400 text-white p-2 rounded-lg"
-          >
+          <button type="button" className="bg-gray-400 text-white p-2 rounded-lg">
             Cancel
           </button>
         </Link>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="bg-[#820000] rounded-lg text-white py-2 px-4"
-        >
+        <button type="button" onClick={handleSave} className="bg-[#820000] rounded-lg text-white py-2 px-4">
           Update
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditStaff;
+export default EditStaff
