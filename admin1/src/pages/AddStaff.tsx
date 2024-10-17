@@ -266,7 +266,7 @@ function AddStaff({}: Props) {
                 {/* Mobile Number */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Mobile Number
+                    Mobile Number *
                   </label>
                   <input
                     required
@@ -289,7 +289,7 @@ function AddStaff({}: Props) {
                 {/* WhatsApp Number with Checkbox */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    WhatsApp Number
+                    WhatsApp Number *
                   </label>
                   <div className="mt-1 flex items-center">
                     <input
@@ -317,7 +317,7 @@ function AddStaff({}: Props) {
                 {/* Visa Status (Dropdown) */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Visa Status
+                    Visa Status *
                   </label>
                   <select
                     required
@@ -382,11 +382,11 @@ function AddStaff({}: Props) {
               {/* Right Column */}
               <div className="space-y-4">
                 {/* Full Name */}
-                <div className="">
+                <div className="grid grid-cols-2 gap-2">
                   <div>
-                    {" "}
+                    
                     <label className="block text-sm font-medium text-gray-700">
-                      First Name
+                      First Name *
                     </label>
                     <input
                       required
@@ -397,7 +397,7 @@ function AddStaff({}: Props) {
                       placeholder="Enter First Name"
                     />
                   </div>
-                  <div className="mt-2">
+                  <div className="">
                     <label className="block text-sm font-medium text-gray-700">
                       Last Name
                     </label>
@@ -431,21 +431,22 @@ function AddStaff({}: Props) {
                   <label className="block text-sm font-medium text-gray-700">
                     Address
                   </label>
-                  <input
+                  
+                  <textarea
                     
-                    type="text"
+                    
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="mt-1 p-2 h-[36px] border border-gray-300 rounded-lg w-full"
+                    className="mt-1 p-2  border border-gray-300 rounded-lg w-full"
                     placeholder="Enter Address"
-                  />
+                  ></textarea>
                 </div>
 
                 {/* designation */}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Designation
+                    Designation *
                   </label>
                   <div className="flex flex-col space-y-1 mt-2">
                     <label className="inline-flex items-center">
@@ -580,6 +581,13 @@ function AddStaff({}: Props) {
             </div>
 
             <div className="mt-6 flex justify-end">
+            <button
+                  type="button"
+                  className="me-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                  onClick={clearForm}
+                >
+                  Cancel
+                </button>
               <button
                 type="submit"
                 className="px-4 py-2 bg-[#820000] rounded-lg text-white"
@@ -587,13 +595,7 @@ function AddStaff({}: Props) {
                 Submit
               </button>
               <Link to={"/staff"}>
-                <button
-                  type="button"
-                  className="ml-4 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                  onClick={clearForm}
-                >
-                  Cancel
-                </button>
+                
               </Link>
             </div>
           </form>
