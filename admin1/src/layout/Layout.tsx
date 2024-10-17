@@ -28,6 +28,7 @@ import EditCustomer from '../Customer/Pages/EditCustomer';
 import EditIndividual from '../Customer/Pages/EditIndividual';
 
 import ViewCustmor from '../Customer/Components/ViewCustmor';
+import Ride from '../Ride/Pages/Ride';
 
 
 
@@ -66,10 +67,10 @@ const App: React.FC = () => {
               <Route path="/viewstaff/:id" element={<StaffOverview />} />
 
 
-               {/* VEHICLE */}
+               {/* ROUTE */}
               <Route path='/route/createroute' element={<CreateRoute />} />
               <Route path='/route/createmainroute' element={<CreateMainRoute />} />
-              <Route path='/route/viewroute' element={<ViewRoute />} />
+              <Route path='/route/viewroute/:id' element={<ViewRoute />} />
               <Route path='/route/activeroute' element={<ActiveRoute />} />
               <Route path='/route/subroute' element={<SubRoute />} />
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
@@ -88,9 +89,12 @@ const App: React.FC = () => {
               <Route path='/customer' element={<CreateCustomer/>}/>
               <Route path='/editcustomer' element={<EditCustomer/>}/>
               <Route path='/addcustomer' element={<AddCustomer/>}/>
-              
               <Route path='/editindividual' element={<EditIndividual/>}/>
               <Route path='/viewcustomer' element={<ViewCustmor/>}/>
+
+              {/* RIDE */}
+              <Route path='/ride' element={<Ride/>}/>
+
 
 
             </Routes>

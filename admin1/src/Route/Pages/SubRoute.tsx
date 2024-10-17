@@ -1,16 +1,15 @@
-import printer from '../../assets/images/printer.svg'
-import split from '../../assets/images/list-filter.svg'
-import search from '../../assets/images/search.svg'
-import pen from '../../assets/images/pen.svg'
-import trash from '../../assets/images/trash.svg'
-import { useNavigate } from 'react-router-dom'
-import dot from '../../assets/ellipsis-vertical.svg'
-import plus from '../../assets/circle-plus.svg'
-import { useEffect, useState } from "react";
-import { deleteSubRouteAPI, getSubRoutesAPI } from '../../services/RouteAPI/subRouteAPI'
-import { ToastContainer, toast } from "react-toastify";
+import printer from '../../assets/images/printer.svg';
+import split from '../../assets/images/list-filter.svg';
+import search from '../../assets/images/search.svg';
+import pen from '../../assets/images/pen.svg';
+import trash from '../../assets/images/trash.svg';
+import { useNavigate } from 'react-router-dom';
+import dot from '../../assets/ellipsis-vertical.svg';
+import plus from '../../assets/circle-plus.svg';
+import { useEffect, useState } from 'react';
+import { deleteSubRouteAPI, getSubRoutesAPI } from '../../services/RouteAPI/subRouteAPI';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-
 
 interface Route {
   id: string;
@@ -21,38 +20,37 @@ interface Route {
   description: string;
 }
 
-
-type Props = {}
+type Props = {};
 
 function SubRoute({}: Props) {
-
   const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
   const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
-
-  console.log(filteredRouteList);
-  
+  const [searchQuery, setSearchQuery] = useState<string>(''); // State for search query
 
   // Fetch staff data on component mount
   useEffect(() => {
-    const fetchStaff = async () => {
+    const fetchRoutes = async () => {
       try {
         const response = await getSubRoutesAPI();
-        console.log("Full API Response:", response); // Check the response
-        setRouteList(response); // Store full staff list
-        setFilteredRouteList(response) // Initially, display all route
+        setRouteList(response); // Store full route list
+        setFilteredRouteList(response); // Initially display all routes
       } catch (error) {
-        console.error("Error fetching staff data:", error);
+        console.error("Error fetching route data:", error);
       }
     };
 
-    fetchStaff();
+    fetchRoutes();
   }, []);
 
+  // Filter the route list whenever searchQuery changes
   useEffect(() => {
-    console.log("Updated route list:", routesList);
-  }, [routesList]);
-  
-
+    const filtered = routesList.filter(route =>
+      route.subRoute.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.subrouteCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      route.mainRoute.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredRouteList(filtered);
+  }, [searchQuery, routesList]);
 
   const handleDelete = async (id: string) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this subroute?");
@@ -68,17 +66,20 @@ function SubRoute({}: Props) {
     }
   };
 
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
+  const handleCreate = (): void => {
+    navigate('/route/newsubroute');
+  };
 
-    const handleCreate = (): void => {
-      navigate('/route/newsubroute')
-    }
-    const handleEdit = (): void => {
-      navigate('/route/editsubroute')
-    }
-  
-  
+  const handleEdit = (): void => {
+    navigate('/route/editsubroute');
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value); // Update search query state
+  };
+
   return (
     <div>
       <ToastContainer
@@ -92,102 +93,99 @@ function SubRoute({}: Props) {
         draggable
         pauseOnHover
         theme="colored"
-         // optional CSS class for further styling
       />
 
-<div className="flex justify-between items-center my-3">
-            <div>
-              <h1 className="text-xl font-bold">Create New Route</h1>
-              <p className='text-gray-500 ms-2 my-2'>Lorem ipsum dolor sit amet</p>
-            </div>
-            <div className="flex justify-between">
-              <button
-                onClick={handleCreate}
-                className="flex justify-between items-center gap-2 bg-[#820000] text-white px-5 py-2 rounded-md"
-              >
-                <img src={plus} alt="" />
-                <p>Add New Sub Route</p>
-              </button>
+      <div className="flex justify-between items-center my-3">
+        <div>
+          <h1 className="text-xl font-bold">Create New Route</h1>
+          <p className='text-gray-500 ms-2 my-2'>Lorem ipsum dolor sit amet</p>
+        </div>
+        <div className="flex justify-between">
+          <button
+            onClick={handleCreate}
+            className="flex justify-between items-center gap-2 bg-[#820000] text-white px-5 py-2 rounded-md"
+          >
+            <img src={plus} alt="" />
+            <p>Add New Sub Route</p>
+          </button>
+          <button className="ms-2 me-4">
+            <img src={dot} alt="" />
+          </button>
+        </div>
+      </div>
 
-              
-              <button className="ms-2 me-4">
-                <img src={dot} alt="" />
-              </button>
+      {/* Table Section */}
+      <div className="bg-white shadow-md rounded-lg p-4 mt-5">
+        <div className="flex justify-between items-center mb-4">
+          {/* Search Input */}
+          <div className="relative w-full flex items-center">
+            <div className="absolute left-2">
+              <img src={search} alt="search" className="h-5 w-5" />
             </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+              style={{
+                backgroundColor: "rgba(28, 28, 28, 0.04)",
+                outline: "none",
+                boxShadow: "none",
+              }}
+              placeholder="Search Route"
+            />
           </div>
 
+          <div className="flex w-[60%] justify-end">
+            <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
+              <img src={split} className="mt-1 me-1" alt="" />Sort By
+            </button>
+            <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
+              <img src={printer} className="mt-1 me-1" alt="" />Print
+            </button>
+          </div>
+        </div>
 
-
-    {/* Table Section */}
-    <div className="bg-white shadow-md rounded-lg p-4 mt-5">
-            <div className="flex justify-between items-center mb-4">
-              
-            <div className="relative w-full flex items-center">
-  <div className="absolute left-2">
-    <img src={search} alt="search" className="h-5 w-5" />
-  </div>
-  <input
-    className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
-    style={{
-      backgroundColor: "rgba(28, 28, 28, 0.04)",
-      outline: "none",
-      boxShadow: "none",
-    }}
-    placeholder="Search Route"
-  />
-</div>
-    
-  <div className='flex w-[60%] justify-end'>
-              <button className="flex border text-[14] w-[500]  text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg"> <img src={split} className='mt-1 me-1' alt="" />Sort By</button>
-              <button className="flex border text-[14] w-[500]  text-[#565148] border-[#565148]  px-4 py-2 rounded-lg"> <img src={printer} className='mt-1 me-1'  alt="" />Print</button>
-              </div>
-            </div>
-            <table className="w-full text-left">
-              <thead className=' bg-[#fdf8f0]'>
-                <tr className="border-b">
-                <th scope="col" className="px-6 py-3">
+        <table className="w-full text-left">
+          <thead className="bg-[#fdf8f0]">
+            <tr className="border-b">
+              <th scope="col" className="px-6 py-3">
                 <input type="checkbox" />
               </th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Sl No</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route Code</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Main Route</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Description</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Actions</th>
-                
-                </tr>
-              </thead>
-              <tbody>
-
-                {routesList.map((route,index)=>(
-                                  <tr className="border-b" key={route.id}>
-                                  <td className="px-6 py-4">
-                                    <input type="checkbox" />
-                                  </td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subRoute}</td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subrouteCode}</td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
-                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                                    <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
-                                        <img src={pen} alt="" />
-                                      </button>
-                                      <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2"><img src={trash} alt="" /></button>
-                  
-                                    </td>
-                                  </tr>
-                ))}
-
-              </tbody>
-            </table>
-          </div>
-
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Sl No</th>
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route</th>
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route Code</th>
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Main Route</th>
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Description</th>
+              <th className="p-2 text-[12px] text-center text-[#303F58]">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredRouteList.map((route, index) => (
+              <tr className="border-b" key={route._id}>
+                <td className="px-6 py-4">
+                  <input type="checkbox" />
+                </td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subRoute}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subrouteCode}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                  <button onClick={handleEdit} className="text-blue-500 mx-2 items-center">
+                    <img src={pen} alt="" />
+                  </button>
+                  <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2">
+                    <img src={trash} alt="" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    
-
-  )
+  );
 }
 
-export default SubRoute
+export default SubRoute;
