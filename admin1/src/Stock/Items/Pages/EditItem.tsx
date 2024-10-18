@@ -17,7 +17,7 @@ const EditItem: React.FC = () => {
   return (
 <div className='p-6 '>
   <div className="flex gap-3 items-center w-full max-w-8xl mb-4 ms-1">
-    <Link to={'/citem'}>
+    <Link to={'/item'}>
       <div className="icon-placeholder">
         <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
       </div>

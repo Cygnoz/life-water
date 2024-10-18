@@ -90,6 +90,9 @@ const CreateRoute: React.FC = () => {
   const handleView = (routeId: string): void => {
     navigate(`/route/viewroute/${routeId}`);
   };
+  const handleEdit = (routeId: string): void => {
+    navigate(`/route/editmainroute/${routeId}`);
+  };
   const tableRef = useRef<HTMLDivElement>(null);
   const handlePrint = () => {
     const printContent = tableRef.current;
@@ -285,7 +288,7 @@ const CreateRoute: React.FC = () => {
                       >
                         <img src={eye} alt="View" />
                       </button>
-                      <button className="text-red-500 ml-2">
+                      <button onClick={() => handleEdit(route._id)} className="text-red-500 ml-2">
                         <img src={vector} alt="Edit" />
                       </button>
                       <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2">
