@@ -251,7 +251,7 @@ const AddVehicle: React.FC<Props> = () => {
             />
           </div>
           {/* Buttons */}
-          <div className="col-span-2 flex justify-end mt-6">
+          <div className="col-span-2 flex justify-end mt-4">
             <button
               className="px-3 py-1 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]"
               type="button"

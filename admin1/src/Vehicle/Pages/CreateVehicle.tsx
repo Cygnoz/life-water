@@ -4,7 +4,6 @@ import trash from "../../assets/images/trash.svg"
 import split from "../../assets/images/list-filter.svg"
 import plus from "../../assets/circle-plus.svg"
 import eye from "../../assets/images/eye.svg"
-import dot from "../../assets/ellipsis-vertical.svg"
 
 import search from "../../assets/images/search.svg"
 import vehicle from "../../assets/images/vehicle 1.svg"
@@ -93,9 +92,9 @@ const CreateVehicle: React.FC = () => {
                 <img src={plus} alt="" />
                 <p>Add New Vehicle</p>
               </button>
-              <button className="ms-2 me-4">
+              {/* <button className="ms-2 me-4">
                 <img src={dot} alt="" />
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -170,7 +169,9 @@ const CreateVehicle: React.FC = () => {
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceValidity ? new Date(vehicle.insuranceValidity).toLocaleDateString() : "N/A"}</td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{vehicle.insuranceAmount || "N/A"}</td>
                     <td className="p-2 text-[14] text-center ">
-                      <span className={`bg-${vehicle.insuranceStatus === "Expired" ? "red" : "green"}-100 p-2 rounded-lg`}>{vehicle.insuranceStatus}</span>
+<span className={`bg-${vehicle.insuranceStatus === "Expired" ? "red" : "green"}-100 text-${vehicle.insuranceStatus === "Expired" ? "red" : "green"}-600 px-2 py-1 rounded-lg`}>
+  {vehicle.insuranceStatus}
+</span>
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79] ">
                       <button onClick={() => handleView(vehicle._id)} className="text-blue-500">
