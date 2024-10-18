@@ -50,11 +50,14 @@ const EditVehicles: React.FC<EditVehiclesProps> = () => {
 
     fetchVehicle()
   }, [id])
-
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  setVehicleData((prev) => ({ ...prev, [name]: value }));
-};
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setVehicleData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
 
 const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0]; // Ensure the file exists
@@ -112,13 +115,38 @@ const handleSubmit = async (e: React.FormEvent) => {
         <h2 className="text-2xl text-[#303F58] font-bold">Edit Vehicle</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl text-[#303F58] font-semibold mb-6">Edit Vehicle Details</h2>
+      <form onSubmit={handleSubmit} className="w-full mx-auto p-7 bg-white rounded-lg shadow-md space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Vehicle Number</label>
-            <input type="text" name="vehicleNo" value={vehicleData.vehicleNo} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-          </div>
+
+
+
+        <div>
+  <label className="block text-[#303F58] text-sm font-medium mb-2">
+    Vehicle Number <span className="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+    name="vehicleNo"
+    placeholder="Enter Vehicle Number (e.g., KL07AB1234)"
+    value={vehicleData.vehicleNo}
+    onChange={(e) => {
+      const inputValue = e.target.value.toUpperCase(); // Convert to uppercase
+      const formattedValue = inputValue.replace(/[^A-Z0-9]/g, ''); // Allow only alphanumeric characters
+      setVehicleData((prev) => ({ ...prev, vehicleNo: formattedValue })); // Directly set the value in state
+    }}
+    className={`w-full px-3 py-2 border rounded-md 
+                ${vehicleData.vehicleNo && !/^[A-Z0-9]+$/.test(vehicleData.vehicleNo) ? 'border-red-500' : 'border-gray-300'}
+                focus:outline-none focus:ring-2 focus:ring-blue-500`}
+    required
+  />
+  <p className="text-red-500 mt-1">
+    {vehicleData.vehicleNo && !/^[A-Z0-9]+$/.test(vehicleData.vehicleNo) && "Only uppercase letters and numbers are allowed"}
+  </p>
+</div>
+
+
+
+
           <div>
             <label className="block text-[#303F58] text-sm font-medium mb-2">Vehicle Image</label>
             <div className="flex items-center space-x-4">
@@ -142,7 +170,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
           <div>
             <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Status</label>
             <select name="insuranceStatus" value={vehicleData.insuranceStatus} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
@@ -159,10 +187,29 @@ const handleSubmit = async (e: React.FormEvent) => {
             <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Validity</label>
             <input type="date" name="insuranceValidity" value={vehicleData.insuranceValidity?.slice(0, 10) || ""} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
-          <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Starting Kilometer</label>
-            <input type="number" name="startingKilometer" value={vehicleData.startingKilometer} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" required />
-          </div>
+
+
+         <div>
+  <label className="block text-[#303F58] text-sm font-medium mb-2">
+    Starting Kilometer <span className="text-red-500">*</span>
+  </label>
+  <input
+    type="number"
+    name="startingKilometer"
+    placeholder="Enter Starting Kilometers"
+    value={vehicleData.startingKilometer}
+    onChange={(e) => {
+      setVehicleData((prev) => ({
+        ...prev,
+        startingKilometer: parseInt(e.target.value, 10) || 0 // Ensure it's an integer or fallback to 0
+      }));
+    }}
+    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+    required
+  />
+</div>
+
+
           <div>
             <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Amount</label>
             <input type="number" name="insuranceAmount" value={vehicleData.insuranceAmount} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="10000" required />
@@ -181,7 +228,7 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
 
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-end mt-6 py-1">
           <Link to="/vehicle">
             <button className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md mr-2 hover:bg-gray-300 transition duration-300" type="button">
               Cancel
