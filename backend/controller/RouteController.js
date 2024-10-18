@@ -1,5 +1,5 @@
 const MainRoute = require("../Models/RouteSchema");
- 
+const mongoose = require('mongoose');
  
  
 // Add a new route
@@ -66,7 +66,7 @@ const updateRoute = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
  
-    const updatedRoute = await Route.findByIdAndUpdate(id, updateData, { new: true });
+    const updatedRoute = await MainRoute.findByIdAndUpdate(id, updateData, { new: true });
     if (!updatedRoute) {
       return res.status(404).json({ message: 'Route not found' });
     }
@@ -92,18 +92,25 @@ const updateRoute = async (req, res) => {
 const viewRouteById = async (req, res) => {
   try {
     const { id } = req.params;
- 
-    const route = await Route.findById(id).populate('subroutes');
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid route ID format' });
+    }
+
+    const route = await MainRoute.findById(id)
     if (!route) {
+      console.log(`No route found for ID: ${id}`);
       return res.status(404).json({ message: 'Route not found' });
     }
- 
+
     return res.status(200).json({ route });
   } catch (error) {
-    console.error('Error fetching route:', error.message);
+    console.error('Error fetching route:', error);
     return res.status(500).json({ message: 'Error fetching route', error: error.message });
   }
 };
+
  
 module.exports = {
   addRoute,

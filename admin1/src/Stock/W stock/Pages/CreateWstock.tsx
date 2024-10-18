@@ -7,8 +7,18 @@ import dot from "../../../assets/ellipsis-vertical.svg";
 import printer from "../../../assets/images/printer.svg";
 import split from "../../../assets/images/list-filter.svg";
 import search from "../../../assets/images/search.svg";
+import { useNavigate } from "react-router-dom";
 
 const CreateWStock: React.FC = () => {
+  const navigate =useNavigate()
+
+  
+  const handleAdd =()=>{
+    navigate('/addWstock')
+
+  }
+
+
   return (
     <div>
       <div className="flex min-h-screen w-full">
@@ -25,7 +35,7 @@ const CreateWStock: React.FC = () => {
                 </p>
               </div>
               <div className="flex justify-between">
-                <button className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md">
+                <button onClick={handleAdd} className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md">
                   <img src={plus} alt="" />
                   <p>Add New Stock</p>
                 </button>

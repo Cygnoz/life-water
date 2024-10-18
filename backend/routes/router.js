@@ -45,7 +45,7 @@ router.post('/addRoute', routeController.addRoute);
 router.delete('/delRoute/:id', routeController.deleteRoute);    // Delete route by ObjectId
 router.put('/updateRoute/:id', routeController.updateRoute);       // Update route by ObjectId
 router.get('/getAllRoutes' ,routeController.getAllRoutes)        // View all routes
-router.get('/viewRoute/:id', routeController.viewRouteById);     // View route by ObjectId
+router.get('/getroute/:id', routeController.viewRouteById);     // View route by ObjectId
 
 // subroute
 router.post('/addSRoute', subrouteController.addSubroute);
