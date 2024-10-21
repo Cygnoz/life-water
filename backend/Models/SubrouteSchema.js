@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Route = require('./RouteSchema'); // Importing the Route schema
+const MainRoute = require('./RouteSchema'); // Importing the Route schema
 
 const subRouteSchema = new Schema({
   subRoute: {
@@ -18,7 +18,7 @@ const subRouteSchema = new Schema({
   mainRoute: {
     type: String,
     required: true,
-    ref: 'Route'  // Reference to Route schema's routeCode
+    ref: 'MainRoute'  // Reference to Route schema's routeCode
   }
 });
 

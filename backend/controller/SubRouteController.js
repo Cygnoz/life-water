@@ -37,25 +37,27 @@ exports.addSubroute = async (req, res) => {
 
 // Edit an existing subroute by ID
 exports.editSubroute = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { subRoute, subrouteCode, description, routeCode } = req.body;
-  
-      const updatedSubroute = await Subroute.findByIdAndUpdate(
-        id,
-        { subRoute, subrouteCode, description, routeCode },
-        { new: true } // Return the updated document
-      );
-  
-      if (!updatedSubroute) {
-        return res.status(404).json({ message: 'Subroute not found' });
-      }
-  
-      res.status(200).json(updatedSubroute);
-    } catch (error) {
-      res.status(500).json({ message: 'Error updating subroute', error });
+  try {
+    const { id } = req.params;
+    const { subRoute, subrouteCode, description, mainRoute } = req.body; // Use mainRoute (which is now an ObjectId)
+
+    // Update the subRoute document, including the mainRoute reference
+    const updatedSubroute = await Subroute.findByIdAndUpdate(
+      id,
+      { subRoute, subrouteCode, description, mainRoute }, // Use mainRoute for the reference
+      { new: true} // Return the updated document with validators
+    );
+
+    if (!updatedSubroute) {
+      return res.status(404).json({ message: 'Subroute not found' });
     }
-  };
+
+    res.status(200).json(updatedSubroute);
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ message: 'Error updating subroute', error });
+  }
+}
   
 
 
