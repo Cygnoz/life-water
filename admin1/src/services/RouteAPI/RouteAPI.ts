@@ -54,7 +54,28 @@ export const deleteRouteAPI = async (id: string) => {
 };
 
 // Function to update a route
-export const updateRouteAPI = async (id: string, updateData: any) => {
+// export const updateRouteAPI = async (id: string, updateData: any) => {
+//   try {
+//     const response = await axios.put(`${BASEURL}/api/updateRoute/${id}`, updateData, {
+//       headers: {
+//         'Content-Type': 'application/json',  // Ensure correct content type
+//       },
+//     });
+//     return response.data;
+//   } catch (error: any) {
+//     console.error('Error updating route:', error.response?.data?.message || error.message);
+//     throw new Error(error.response?.data?.message || 'Error updating route');
+//   }
+// };
+
+// Function to update a route
+export const updateRouteAPI = async (id: string | undefined, updateData: any) => {
+  // Check if id is defined and is a string
+  if (!id || typeof id !== 'string') {
+    console.error('ID is undefined or not a string:', id);
+    throw new Error('Invalid ID provided for updating the route.');
+  }
+
   try {
     const response = await axios.put(`${BASEURL}/api/updateRoute/${id}`, updateData, {
       headers: {
@@ -74,8 +95,15 @@ export const getRouteByIdAPI = async (id: string) => {
   try {
     const response = await axios.get(`${BASEURL}/api/getroute/${id}`);
     return response.data; // Assuming your server returns data in this format
-  } catch (error) {
-    console.error('Error fetching route by ID:', error.response?.data?.message || error.message);
-    throw new Error(error.response?.data?.message || 'Error fetching route');
+  } catch (error:unknown) {
+     if (axios.isAxiosError(error)) {
+      console.error('Error fetching route by ID:', error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || 'Error fetching route');
+    } else {
+      console.error('Error fetching route by ID:', error);
+      throw new Error('An unexpected error occurred while fetching the route by ID.');
+    }
   }
 };
+
+

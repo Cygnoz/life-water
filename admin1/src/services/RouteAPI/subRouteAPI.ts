@@ -61,16 +61,40 @@ export const deleteSubRouteAPI = async (id: string) => {
 
 
 // update an existing subRoute 
-export const editSubRouteAPI = async (id: string,formData:string) => {
+// export const editSubRouteAPI = async (id: string,formData:string) => {
+//   try {
+//     const response = await axios.put(`${BASEURL}/api/updateSRoute/${id}`,formData, {
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     return response.data;
+//   } catch (error: any) {
+//     console.error('Error updating route', error.response?.data?.message || error.message);
+//     throw new Error(error.response?.data?.message || 'An unexpected error occurred');
+//   }
+// };
+
+// Update the editSubRouteAPI function to accept an object
+export const editSubRouteAPI = async (
+  id: string,
+  updateData: { subRoute: string; subrouteCode: string; mainRoute: string; description: string; } // Change this to match your form data structure
+) => {
   try {
-    const response = await axios.put(`${BASEURL}/api/updateSRoute/${id}`,formData, {
+    const response = await axios.put(`${BASEURL}/api/editSubRoute/${id}`, updateData, {
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json', // Ensure correct content type
       },
     });
     return response.data;
-  } catch (error: any) {
-    console.error('Error updating route', error.response?.data?.message || error.message);
-    throw new Error(error.response?.data?.message || 'An unexpected error occurred');
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error updating subroute:', error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || 'Error updating subroute');
+    } else {
+      console.error('Error updating subroute:', error);
+      throw new Error('An unexpected error occurred while updating the subroute.');
+    }
   }
 };
+

@@ -1,10 +1,11 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import back from '../../assets/images/backbutton.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getRoutesAPI } from '../../services/RouteAPI/RouteAPI';
 import { addSubRouteAPI } from '../../services/RouteAPI/subRouteAPI';
+
 
 const CreateSubRoute: React.FC = () => {
   interface Route {
@@ -17,6 +18,8 @@ const CreateSubRoute: React.FC = () => {
 
   const [routesList, setRouteList] = useState<Route[]>([]); // Full route list
   const [filteredRouteList, setFilteredRouteList] = useState<Route[]>([]); // Filtered route list
+  console.log(filteredRouteList);
+  
 
   // State to manage form values
   const [formData, setFormData] = useState({
@@ -50,7 +53,30 @@ const CreateSubRoute: React.FC = () => {
   };
 
   // Handler for form submission
-  const handleSubmit = async (e: FormEvent) => {
+  // const handleSubmit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   if (!formData.mainRoute || !formData.subrouteCode) {
+  //     toast.warning('Main Route and Subroute Code are required fields.');
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await addSubRouteAPI(formData); // Send the form data as JSON
+  //     toast.success('Subroute created successfully!');
+  //     setFormData({
+  //       subRoute: '',
+  //       subrouteCode: '',
+  //       mainRoute: '',
+  //       description: '',
+  //     });
+  //   } catch (error: any) {
+  //     console.error('Error submitting form:', error.message);
+  //     toast.error('Failed to create subroute. Please try again.');
+  //   }
+  // };
+  const navigate = useNavigate(); // Initialize navigate here
+
+   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.mainRoute || !formData.subrouteCode) {
       toast.warning('Main Route and Subroute Code are required fields.');
@@ -58,7 +84,7 @@ const CreateSubRoute: React.FC = () => {
     }
 
     try {
-      const response = await addSubRouteAPI(formData); // Send the form data as JSON
+      await addSubRouteAPI(formData);
       toast.success('Subroute created successfully!');
       setFormData({
         subRoute: '',
@@ -66,6 +92,7 @@ const CreateSubRoute: React.FC = () => {
         mainRoute: '',
         description: '',
       });
+      navigate('/route/subroute'); // Redirect after success
     } catch (error: any) {
       console.error('Error submitting form:', error.message);
       toast.error('Failed to create subroute. Please try again.');

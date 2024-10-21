@@ -42,6 +42,12 @@ const EditSubRoute: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+     // Check if id is a string
+     if (typeof id !== 'string') {
+      console.error('ID is undefined or not a string:', id);
+      toast.error('ID is required to update the subroute.'); // Show error message to the user
+      return; // Exit early if id is not valid
+    }
     try {
       console.log('Updating subroute with data:', formData); // Log the data being sent
       const response = await editSubRouteAPI(id, formData); // Call the API to update the subroute
