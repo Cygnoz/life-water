@@ -100,7 +100,7 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender} alt="Insurance Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.vehicle.insuranceValidity}</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.vehicle.insuranceValidity.split('T')[0]}</h2>
               <p className="text-gray-600">Insurance Validity</p>
             </div>
           </div>
@@ -112,8 +112,9 @@ const ViewVehicle: React.FC = () => {
           >
             <img src={calender1} alt="License Validity" />
             <div className="text-right">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2">{vehicle?.vehicle.licenseValidity}</h2>
-              <p className="text-gray-600">License Validity</p>
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">
+  {vehicle?.vehicle.licenseValidity.split('T')[0]}</h2>
+             <p className="text-gray-600">License Validity</p>
             </div>
           </div>
         </div>
@@ -151,11 +152,11 @@ const ViewVehicle: React.FC = () => {
                 <p className="text-gray-700">Vehicle Number</p>
                 <p>{vehicle?.vehicle.vehicleNo || 'N/A'}</p>
                 <p className="text-gray-700">Insurance Validity</p>
-                <p>{vehicle?.vehicle.insuranceValidity || 'N/A'}</p>
+                <p>{vehicle?.vehicle.insuranceValidity.split('T')[0] || 'N/A'}</p>
                 <p className="text-gray-700">Insurance Amount</p>
                 <p>{vehicle?.vehicle.insuranceAmount || '0'}</p>
                 <p className="text-gray-700">License Validity</p>
-                <p>{vehicle?.vehicle.licenseValidity || 'N/A'}</p>
+                <p>{vehicle?.vehicle.licenseValidity.split('T')[0] || 'N/A'}</p>
               </div>
             </div>
             <div className="bg-gray-5 p-4 rounded-lg">

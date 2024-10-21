@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import upload from "../../../assets/images/upload image.svg";
+// import upload from "../../../assets/images/upload image.svg";
 import { Link } from 'react-router-dom';
 import back from '../../../assets/images/backbutton.svg';
  

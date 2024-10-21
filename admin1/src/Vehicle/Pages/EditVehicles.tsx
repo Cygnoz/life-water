@@ -106,20 +106,17 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   
   return (
-    <div className="p-6">
+    <div className="p-2">
       <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} />
-      <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
+      <div className="flex gap-3 items-center w-full max-w-8xl mb-3 ms-1">
         <Link to="/vehicle">
           <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
         </Link>
         <h2 className="text-2xl text-[#303F58] font-bold">Edit Vehicle</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="w-full mx-auto p-7 bg-white rounded-lg shadow-md space-y-3">
+      <form onSubmit={handleSubmit} className="w-full mx-auto p-4 bg-white rounded-lg shadow-md space-y-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
-
         <div>
   <label className="block text-[#303F58] text-sm font-medium mb-2">
     Vehicle Number <span className="text-red-500">*</span>
@@ -146,9 +143,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
 
-
+{/* vehicle image */}
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Vehicle Image</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Vehicle Image</label>
             <div className="flex items-center space-x-4">
               <img
                 className="object-cover w-11 h-11 rounded-full"
@@ -170,9 +167,11 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+        {/* insurane status */}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-6">
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Status</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Insurance Status  <span className="text-red-500">*</span></label>
             <select name="insuranceStatus" value={vehicleData.insuranceStatus} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
               <option value="">Select status</option>
               <option value="Valid">Valid</option>
@@ -180,17 +179,17 @@ const handleSubmit = async (e: React.FormEvent) => {
             </select>
           </div>
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Registration Validity</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Registration Validity</label>
             <input type="date" name="registrationValidity" value={vehicleData.registrationValidity?.slice(0, 10) || ""} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Validity</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Insurance Validity</label>
             <input type="date" name="insuranceValidity" value={vehicleData.insuranceValidity?.slice(0, 10) || ""} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
 
 
          <div>
-  <label className="block text-[#303F58] text-sm font-medium mb-2">
+  <label className="block text-[#303F58] text-sm font-medium mb-1">
     Starting Kilometer <span className="text-red-500">*</span>
   </label>
   <input
@@ -211,26 +210,26 @@ const handleSubmit = async (e: React.FormEvent) => {
 
 
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Insurance Amount</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Insurance Amount</label>
             <input type="number" name="insuranceAmount" value={vehicleData.insuranceAmount} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="10000" required />
           </div>
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">Expense</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">Expense</label>
             <input type="number" name="expenses" value={vehicleData.expenses} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="0" required />
           </div>
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">License Amount</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">License Amount</label>
             <input type="number" name="licenseAmount" value={vehicleData.licenseAmount} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="10000" required />
           </div>
           <div>
-            <label className="block text-[#303F58] text-sm font-medium mb-2">License Validity</label>
+            <label className="block text-[#303F58] text-sm font-medium mb-1">License Validity</label>
             <input type="date" name="licenseValidity" value={vehicleData.licenseValidity?.slice(0, 10) || ""} onChange={handleInputChange} className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
         </div>
 
-        <div className="flex justify-end mt-6 py-1">
+        <div className="flex justify-end py-1">
           <Link to="/vehicle">
-            <button className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md mr-2 hover:bg-gray-300 transition duration-300" type="button">
+            <button className="px-4 py-2 bg-gray-200 text-gray-800 font-medium rounded-md mr-2  hover:bg-gray-300 transition duration-300" type="button">
               Cancel
             </button>
           </Link>

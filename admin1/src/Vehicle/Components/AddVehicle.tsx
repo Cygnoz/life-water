@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import uploadvehicle from '../../assets/images/uploadvehicle.svg';
 import { Link } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
@@ -24,6 +24,14 @@ const AddVehicle: React.FC<Props> = () => {
   const [preview, setPreview] = useState<string | null>(null);
 
 
+
+  console.log(error);
+  console.log(success);
+  
+  
+
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // Create a ref for the file input
 
    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -90,8 +98,13 @@ const AddVehicle: React.FC<Props> = () => {
     }
   };
 
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Trigger the file input click
+    }
+  };
   return (
-    <div className='p-6'>
+    <div className='p-1'>
 
 <ToastContainer
         position="top-center"
@@ -106,7 +119,7 @@ const AddVehicle: React.FC<Props> = () => {
         theme="colored"
          // optional CSS class for further styling
       />
-      <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
+      <div className="flex gap-3 items-center w-full max-w-8xl mb-3 ms-1">
         <Link to={'/vehicle'}>
           <div className="icon-placeholder">
             <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
@@ -117,7 +130,7 @@ const AddVehicle: React.FC<Props> = () => {
 
       <div className="w-full mx-auto p-8 bg-white rounded-lg shadow-md">
         {/* <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2> */}
-        <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-5">
+        <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-5 space-y-1">
 
 
           {/* Vehicle Number */}
@@ -149,7 +162,7 @@ const AddVehicle: React.FC<Props> = () => {
 
 
           {/* Uploaded Vehicle Image */}
-          <div className="flex">
+          {/* <div className="flex">
             <div className="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden">
               {preview ? (
                 <img src={preview} alt="Vehicle Preview" className="object-cover w-full h-full" />
@@ -167,7 +180,31 @@ const AddVehicle: React.FC<Props> = () => {
                 
               />
             </div>
-          </div>
+          </div> */}
+
+
+<div className="flex">
+      <div className="w-24 h-24 bg-gray-200 rounded-lg overflow-hidden cursor-pointer" onClick={handleUploadClick}>
+        {preview ? (
+          <img src={preview} alt="Vehicle Preview" className="object-cover w-full h-full" />
+        ) : (
+          <img src={uploadvehicle} alt="Upload Vehicle" className="object-cover w-full h-full" />
+        )}
+      </div>
+      <div className="mx-5">
+        <h2 className="font-bold mb-1 text-[#303F58]">Upload Vehicle Image</h2>
+        <p className="text-[#8F99A9] text-base font-[14px]">Click the image to upload a vehicle image</p>
+        <input
+          type="file"
+          ref={fileInputRef} // Attach ref to file input
+          onChange={handleImageChange}
+          className="hidden" // Hide the file input
+          accept="image/*"
+        />
+      </div>
+    </div>
+
+    
           {/* Insurance Status */}
           <div>
   <label className="block text-[#303F58] font-[14px] mb-2">Insurance Status</label>
@@ -185,7 +222,7 @@ const AddVehicle: React.FC<Props> = () => {
 
           {/* Registration Validity */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Registration Validity</label>
+            <label className="block text-[#303F58] font-[14px] mb-1">Registration Validity</label>
             <input
               type="date"
               value={registrationValidity}
@@ -196,7 +233,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* Insurance Validity */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Insurance Validity</label>
+            <label className="block text-[#303F58] font-[14px] mb-1">Insurance Validity</label>
             <input
               type="date"
               value={insuranceValidity}
@@ -207,7 +244,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* Starting Kilometer */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Starting Kilometer <span className="text-red-500">*</span></label>
+            <label className="block text-[#303F58] font-[14px] mb-1">Starting Kilometer <span className="text-red-500">*</span></label>
             <input
               type="number"
               placeholder="Enter Starting Kilometers"
@@ -219,7 +256,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* Insurance Amount */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Insurance Amount</label>
+            <label className="block text-[#303F58] font-[14px]">Insurance Amount</label>
             <input
               type="number"
               placeholder="Enter Insurance Amount"
@@ -231,7 +268,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* Expenses */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Expenses</label>
+            <label className="block text-[#303F58] font-[14px] mb-1">Expenses</label>
             <input
               type="number"
               placeholder="Enter Expenses"
@@ -243,7 +280,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* License Amount */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">License Amount</label>
+            <label className="block text-[#303F58] font-[14px] mb-1">License Amount</label>
             <input
               type="number"
               placeholder="Enter License Amount"
@@ -255,7 +292,7 @@ const AddVehicle: React.FC<Props> = () => {
           </div>
           {/* License Validity */}
           <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">License Validity</label>
+            <label className="block text-[#303F58] font-[14px] mb-1">License Validity</label>
             <input
               type="date"
               value={licenseValidity}
@@ -265,7 +302,7 @@ const AddVehicle: React.FC<Props> = () => {
             />
           </div>
           {/* Buttons */}
-          <div className="col-span-2 flex justify-end mt-4">
+          <div className="col-span-2 flex justify-end">
             <button
               className="px-3 py-1 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]"
               type="button"
