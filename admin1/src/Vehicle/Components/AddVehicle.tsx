@@ -207,7 +207,7 @@ const AddVehicle: React.FC<Props> = () => {
     
           {/* Insurance Status */}
           <div>
-  <label className="block text-[#303F58] font-[14px] mb-2">Insurance Status</label>
+  <label className="block text-[#303F58] font-[14px] mb-2">Insurance Status <span className="text-red-500">*</span></label>
   <select
     value={insuranceStatus}
     onChange={(e) => setInsuranceStatus(e.target.value)}
