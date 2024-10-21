@@ -93,6 +93,10 @@ const CreateRoute: React.FC = () => {
   const handleEdit = (routeId: string): void => {
     navigate(`/route/editmainroute/${routeId}`);
   };
+  const handleSub = ()  => {
+    navigate('/route/subroute')
+  };
+ 
   const tableRef = useRef<HTMLDivElement>(null);
   const handlePrint = () => {
     const printContent = tableRef.current;
@@ -162,7 +166,7 @@ const CreateRoute: React.FC = () => {
                 Lorem ipsum dolor sit amet consectetur{" "}
               </p>
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">
-                120
+                
               </div>
             </div>
 
@@ -175,11 +179,11 @@ const CreateRoute: React.FC = () => {
                 Lorem ipsum dolor sit amet consectetur{" "}
               </p>
               <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">
-                10
+               {routesList.length}
               </div>
             </div>
 
-            <div className="p-4 bg-white shadow-md rounded-lg">
+            <div onClick={handleSub} className="p-4 bg-white shadow-md rounded-lg">
               <img src={totsub} alt="" />
               <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">
                 Total Sub Route

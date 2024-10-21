@@ -73,7 +73,7 @@ const EditSubRoute: React.FC = () => {
       navigate('/route/subroute'); // Redirect after successful edit
     } catch (error) {
       console.error('Error updating route', error);
-      toast.error('Error updating subroute. Please try again.');
+      toast.error('Sub route code already exist. Please try another.');
     }
   };
 

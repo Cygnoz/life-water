@@ -57,7 +57,7 @@ const EditMainRoute: React.FC = () => {
       navigate('/route/createroute'); // Redirect after update
     } catch (error) {
       console.error('Error updating route:', error);
-      toast.error('Error updating route');
+      toast.error('Route code already exist. Try another one !');
     }
   };
 
@@ -69,7 +69,19 @@ const EditMainRoute: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
 
       {/* First Row: Heading and Icon */}
       <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
