@@ -10,7 +10,7 @@ import { getRoutesAPI } from '../../services/RouteAPI/RouteAPI';
 
 const EditSubRoute: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get ID from URL params
-  const [mainRoutes, setMainRoutes] = useState([]); // Initialize mainRoutes as an array
+  const [mainRoutes, setMainRoutes] = useState<{ mainRoute: string }[]>([]);
   const [formData, setFormData] = useState({
     subRoute: '',
     subrouteCode: '',
@@ -67,7 +67,11 @@ const EditSubRoute: React.FC = () => {
     e.preventDefault();
     try {
       console.log('Updating subroute with data:', formData);
-      const response = await editSubRouteAPI(id, formData); // Call the API to update the subroute
+      if (!id) {
+        toast.error("Invalid ID");
+        return;
+      }
+      const response = await editSubRouteAPI(id, JSON.stringify(formData)); // Call the API to update the subroute
       console.log('Response from update:', response);
       toast.success('Subroute updated successfully!');
       navigate('/route/subroute'); // Redirect after successful edit
