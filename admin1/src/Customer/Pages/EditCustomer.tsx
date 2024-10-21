@@ -1,538 +1,368 @@
-import { useState } from "react";
-import back from '../../assets/images/backbutton.svg'
-import { Link } from "react-router-dom";
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import back from "../../assets/images/backbutton.svg"
+import upload from "../../assets/images/upload image.svg"
+// import { addBusinessCustomerAPI, addIndividualCustomerAPI } from "../../services/CustomerAPI/Customer"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+ import { addCustomerAPI } from "../../services/CustomerAPI/Customer"
 
+ interface EditCustomerFormData {
+  customerType: string
+  companyName: string
+  firstName: string
+  lastName: string
+  mobileNumber: string
+  workPhone: string
+  workPhone2: string
+  currency: string
+  currencyCode: string
+  state: string
+  city: string
+  billingAddress: string
+  salesMan: string
+  nationality: string
+  numberOfBottles: string
+  ratePerBottle: string
+  depositAmount: string
+  paymentMode: string
+  customerWebsite: string
+  taxPreference: string
+  whatsappNumber: string
+  placeOfSupply: string
+  area: string
+  zipCode: string
+  email: string
+  landmark: string
+  buildingNumber: string
+  street: string
+  mainRoute: string
+  subRoute: string
+}
 
+export default function EditCustomer() {
+  const [formData, setFormData] = useState<EditCustomerFormData>({
+    customerType: "Business",
+    companyName: "",
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    workPhone: "",
+    workPhone2: "",
+    whatsappNumber: "",
+    currency: "",
+    currencyCode: "AED",
+    state: "",
+    city: "",
+    billingAddress: "",
+    salesMan: "",
+    nationality: "",
+    numberOfBottles: "",
+    ratePerBottle: "",
+    depositAmount: "",
+    paymentMode: "Cash",
+    customerWebsite: "",
+    taxPreference: "",
+    placeOfSupply: "",
+    area: "",
+    zipCode: "",
+    email: "",
+    landmark: "",
+    buildingNumber: "",
+    street: "",
+    mainRoute: "",
+    subRoute: "",
+  })
 
+  const [logo, setLogo] = useState<File | null>(null)
+  const [whatsappSameAsMobile, setWhatsappSameAsMobile] = useState(false)
 
-type Props = {}
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
 
-function EditCustomer({}: Props) {
+  
 
-    const [customerType, setCustomerType] = useState('Business');
-  const [paymentMode, setPaymentMode] = useState('Cash');
-  const [workPhone, setWorkPhone] = useState('');
-  const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [whatsappSameAsMobile, setWhatsappSameAsMobile] = useState(false);
-
-  const handleWhatsappCheckbox = () => {
-    setWhatsappSameAsMobile(!whatsappSameAsMobile);
-    if (!whatsappSameAsMobile) {
-      setWhatsappNumber(workPhone); // Set WhatsApp number to work phone if checkbox is checked
-    } else {
-      setWhatsappNumber(''); // Clear WhatsApp number if checkbox is unchecked
-    }
-  };
-
-
-  const [profile, setProfile] = useState(null) // Local state for profile image
-
-
-  const handleProfileChange = (e:any) => {
-    const file = e.target.files[0] // Get the selected file
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
-      setProfile(file) // Update local state with the selected file
+      setLogo(file)
     }
   }
 
+ 
+  const handleWhatsappCheckbox = () => {
+    setWhatsappSameAsMobile(!whatsappSameAsMobile)
+    setFormData((prev) => ({
+      ...prev,
+      whatsappNumber: !whatsappSameAsMobile ? prev.workPhone : "",
+    }))
+  }
+  
+  
+ 
 
   return (
-    <div className="">
-
-<div className="flex gap-3 items-center w-full max-w-8xl mb-4 ms-3 p-3">
-<Link to={'/customer'}>
-    
-    <div className="icon-placeholder">
-         <img className='bg-gray-200 rounded-full p-2' src={back} alt="" />
-        </div></Link>
+    <div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+      <div className="flex gap-3 items-center w-full max-w-8xl mb-1 ms-1 p-3">
+        <Link to="/customer">
+          <div className="icon-placeholder">
+            <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
+          </div>
+        </Link>
         <h2 className="text-[20px] text-[#303F58] font-bold">Edit Customer</h2>
       </div>
 
+      <div className="w-full mx-auto px-10 py-5 bg-white rounded-lg shadow-md">
+        <form >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left column */}
+            <div className="space-y-4">
+              {/* Customer type */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input type="radio" name="customerType" value="Business" checked={formData.customerType === "Business"} onChange={handleInputChange} className="mr-2" required />
+                    Business
+                  </label>
+                  <label className="flex items-center">
+                    <input type="radio" name="customerType" value="Individual" checked={formData.customerType === "Individual"} onChange={handleInputChange} className="mr-2" required />
+                    Individual
+                  </label>
+                </div>
+              </div>
 
-    <div className="w-full mx-auto p-10 bg-white rounded-lg shadow-md">
-      <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Edit Customer</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Customer type */}
-        <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Customer Type</label>
-          <div className="flex space-x-4">
-            <label className="flex items-center">
-              <input 
-                type="radio" 
-                value="Business" 
-                checked={customerType === 'Business'} 
-                onChange={() => setCustomerType('Business')}
-                className="mr-2" 
-              />
-              Business
-            </label>
-            <label className="flex items-center">
-            <Link to='/editindividual'>
-            <input 
-                type="radio" 
-                value="Individual" 
-                checked={customerType === 'Individual'} 
-                onChange={() => setCustomerType('Individual')}
-                className="mr-2" 
-              />
-            </Link>
-            Individual
-            </label>
-          </div>
-        </div>
-        {/* Uploaded Image */}
-        <div className="flex">
-          <div className="w-[84px] h-[84px] bg-[#F7E7CE] rounded-lg overflow-hidden">
-            <img src={profile? URL.createObjectURL(profile) :"nbvnb"} alt="" className="object-cover w-24" />
-          </div>
-          <div className="mx-5">
-          <h2 className="font-bold mb-4 text-[#303F58]">Uploaded Company Logo</h2>
-          {/* <p className="text-[#8F99A9] text-base font-[14px]">Upload company logo</p> */}
-          <label className="mt-4 p-2 border text-[#8F99A9] text-base font-[14px] rounded-lg cursor-pointer">
-                      Upload Company Logo
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleProfileChange} // Handle file change
-                        required
-                      />
+              {/* Conditional rendering for company name (if Business is selected) */}
+              {formData.customerType === "Business" && (
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
+                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Company Name" required />
+                </div>
+              )}
+
+              {/* Primary contact */}
+              <div>
+                <label className="block text-[#303F58] font-[14px] mb-2">Primary Contact</label>
+                <div className="grid grid-cols-2 space-x-2">
+                  <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="First Name" required />
+                  <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Last Name" required />
+                </div>
+              </div>
+
+              {/* Mobile number, work phone */}
+              <div className="grid grid-cols-2 space-x-2">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Mobile Number</label>
+                  <input type="text" name="mobileNumber" value={formData.mobileNumber} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter mobile" maxLength={10} pattern="\d{10}" required />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Work Phone</label>
+                  <input type="text" name="workPhone" value={formData.workPhone} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter work phone" maxLength={10} pattern="\d{10}" />
+                </div>
+              </div>
+
+              {/* Currency */}
+              <div>
+                <label className="block text-[#303F58] font-[14px] mb-2">Currency</label>
+                <div className="flex">
+                  <input type="text" name="currency" value={formData.currency} onChange={handleInputChange} className="w-[600px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Price" />
+                  <input type="text" name="currencyCode" value={formData.currencyCode} onChange={handleInputChange} className="w-[50px] h-[36px] px-2 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="AED" />
+                </div>
+              </div>
+
+              {/* State, City */}
+              <div className="grid grid-cols-2 space-x-2">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">State</label>
+                  <input type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter state" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">City</label>
+                  <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter city" />
+                </div>
+              </div>
+
+              {/* Building Address */}
+              <div>
+                <label className="block text-[#303F58] font-[14px] mb-2">Billing Address</label>
+                <textarea name="billingAddress" value={formData.billingAddress} onChange={handleInputChange} className="w-full border border-gray-300 p-2 rounded-md"></textarea>
+              </div>
+
+              {/* Sales Man, Nationality */}
+              <div className="grid grid-cols-2 space-x-2">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Sales Man</label>
+                  <input type="text" name="salesMan" value={formData.salesMan} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter sales man" required />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Nationality</label>
+                  <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter nationality" />
+                </div>
+              </div>
+
+              {/* Number of bottles, Rate per bottle, Deposit amount */}
+              <div className="flex space-x-2">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Number of bottles</label>
+                  <input type="text" name="numberOfBottles" value={formData.numberOfBottles} onChange={handleInputChange} className="h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter number of bottles" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Rate per bottle</label>
+                  <input type="text" name="ratePerBottle" value={formData.ratePerBottle} onChange={handleInputChange} className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter rate per bottle" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Deposit Amount</label>
+                  <input type="text" name="depositAmount" value={formData.depositAmount} onChange={handleInputChange} className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter deposit amount" />
+                </div>
+              </div>
+
+              {/* Payment mode */}
+              <div className="mt-3">
+                <label className="block text-[#303F58] font-[14px] my-2">Payment Mode</label>
+                <div className="flex space-x-4">
+                  <label className="flex items-center">
+                    <input type="radio" name="paymentMode" value="Cash" checked={formData.paymentMode === "Cash"} onChange={handleInputChange} className="mr-2" required />
+                    Cash
+                  </label>
+                  <label className="flex items-center">
+                    <input type="radio" name="paymentMode" value="Credit" checked={formData.paymentMode === "Credit"} onChange={handleInputChange} className="mr-2" required  />
+                    Credit
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-4">
+              {formData.customerType === "Business" && (
+                <div>
+                  {/* Uploaded Image */}
+                  <div className="flex">
+                    <label className="mt-4 border text-[#8F99A9] text-base font-[14px] rounded-lg cursor-pointer">
+                      <div className="w-[80px] h-[80px] bg-[#F7E7CE] rounded-lg overflow-hidden">
+                        <img src={logo ? URL.createObjectURL(logo) : upload} alt="" className="object-cover w-20 h-20 rounded-md p-1" />
+                      </div>
+                      <input type="file" accept="image/*" className="hidden" onChange={handleProfileChange} />
                     </label>
+                    <h2 className="font-bold mt-10 ms-3 text-[#303F58]">Upload Company Logo</h2>
+                  </div>
+                  {/* Customer website */}
+                  <div>
+                    <label className="block text-[#303F58] mt-0.5 font-[14px] mb-2">Customer Website</label>
+                    <input type="text" name="customerWebsite" value={formData.customerWebsite} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Website" />
+                  </div>
+                </div>
+              )}
+
+              {/* Tax preference */}
+              <div>
+                <label className="block text-[#303F58] font-[14px] mb-2">Tax Preference</label>
+                <select name="taxPreference" value={formData.taxPreference} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">Select Tax Preference</option>
+                  <option value="exclusive">exclusive</option>
+                  <option value="inclusive">inclusive</option>
+                </select>
+              </div>
+
+              {/* Work phone, WhatsApp number */}
+              <div className="flex">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Work Phone 2</label>
+                  <input type="text" name="workPhone2" value={formData.workPhone2} onChange={handleInputChange} className="w-[308px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter work phone" maxLength={10} pattern="\d{10}" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">
+                    WhatsApp Number
+                    <input type="checkbox" checked={whatsappSameAsMobile} onChange={handleWhatsappCheckbox} className="mr-1 ms-2" />
+                    Same as Work Phone
+                  </label>
+                  <input type="text" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter WhatsApp number" maxLength={10} pattern="\d{10}" disabled={whatsappSameAsMobile} />
+                </div>
+              </div>
+
+              {/* Place of supply */}
+              <div>
+                <label className="block text-[#303F58] font-[14px] mb-2">Place of Supply</label>
+                <input type="text" name="placeOfSupply" value={formData.placeOfSupply} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Place of supply" required />
+              </div>
+
+              {/* Area, Zip Postal Code */}
+              <div className="flex">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Area</label>
+                  <input type="text" name="area" value={formData.area} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter area" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Zip Postal Code</label>
+                  <input type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter zip code" maxLength={6} pattern="\d{6}" />
+                </div>
+              </div>
+
+              {/* Email, Landmark */}
+              <div className="flex">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Email</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter Email id" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Landmark</label>
+                  <input type="text" name="landmark" value={formData.landmark} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Landmark" />
+                </div>
+              </div>
+
+              {/* Building Number, Street */}
+              <div className="flex">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Building Number</label>
+                  <input type="text" name="buildingNumber" value={formData.buildingNumber} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter building number" />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Street</label>
+                  <input type="text" name="street" value={formData.street} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter street" />
+                </div>
+              </div>
+
+              {/* Main route, Sub route */}
+              <div className="flex">
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Main route</label>
+                  <input type="text" name="mainRoute" value={formData.mainRoute} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter main route" required />
+                </div>
+                <div>
+                  <label className="block text-[#303F58] font-[14px] mb-2">Sub Route</label>
+                  <input type="text" name="subRoute" value={formData.subRoute} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter sub route" required />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-end">
+                <button className="px-3 py-1 mt-8 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]" type="button">
+                  Cancel
+                </button>
+                <button className="px-3 py-1 mt-8 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]" type="submit">
+                  Save
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-3">
-        {/* company name */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
-          <input
-            type="text"
-            // value={insuranceStatus}
-            // onChange={(e) => setInsuranceStatus(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="floral co"
-            required
-          />
-        </div>
-        {/* customer website */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Customer Website</label>
-          <input
-            type="text"
-            // value={registrationValidity}
-            // onChange={(e) => setRegistrationValidity(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="floral.com"
-            required
-          />
-        </div>
-        {/* primary contact */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Primary Contact</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder="Bling"
-            required
-          />
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Chandler"
-          />
-
-        </div>
-        {/* Tax preference */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Tax Preference</label>
-          <input
-            type="text"
-            // value={vehicleNumber}
-            // onChange={(e) => setVehicleNumber(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Lorem"
-            required
-          />
-        </div>
-        {/* mobile number, work phone */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Mobile Number</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder="777777"
-            maxLength={10}
-            pattern="\d{10}"
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Work Phone</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="777777"
-             maxLength={10}
-            pattern="\d{10}"
-            required
-          />
-
-        </div>
-        </div>
-
-        {/* workphone, whatsapp number */}
-        <div className="flex">
-      <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Work Phone</label>
-        <input
-          type="text"
-          value={workPhone}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
-            if (value.length <= 10) {
-              setWorkPhone(value); // Set only if it's 10 digits or less
-            }
-          }}
-          className="w-[308px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter work phone"
-          maxLength={10}
-          pattern="\d{10}" // Regex pattern to enforce exactly 10 digits
-          required
-        />
-      </div>
-      <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">
-          WhatsApp Number
-          <input 
-            type="checkbox" 
-            checked={whatsappSameAsMobile} 
-            onChange={handleWhatsappCheckbox} 
-            className="mr-1 ms-2"
-          />
-          Same as Work Phone
-        </label>
-        <input
-          type="text"
-          value={whatsappNumber}
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, ''); // Remove non-digit characters
-            if (value.length <= 10 && !whatsappSameAsMobile) {
-              setWhatsappNumber(value); // Set only if it's 10 digits or less and checkbox is unchecked
-            }
-          }}
-          className="w-[336px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter WhatsApp number"
-          maxLength={10}
-          pattern="\d{10}" // Regex pattern to enforce exactly 10 digits
-          required
-          disabled={whatsappSameAsMobile} // Disable input if checkbox is checked
-        />
+        </form>
       </div>
     </div>
-    {/* currency */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Currency</label>
-          <input
-            type="text"
-            // value={vehicleNumber}
-            // onChange={(e) => setVehicleNumber(e.target.value)}
-            className="w-[600px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="222222"
-            required
-          />
-          <input
-            type="text"
-            // value={vehicleNumber}
-            // onChange={(e) => setVehicleNumber(e.target.value)}
-            className="w-[50px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="INR"
-            required
-          />
-        </div>
-        {/* Place of supply */}
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Place of Supply</label>
-          <input
-            type="text"
-            // value={licenseValidity}
-            // onChange={(e) => setLicenseValidity(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Lorem"
-            required
-          />
-        </div>
-
-        {/* State, City */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">State</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">City</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-
-        </div>
-        </div>
-
-        {/* Area, postalcode */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Area</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[307px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Zip Postal Code</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[336px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter zip code"
-             maxLength={6}
-            pattern="\d{6}"
-            required
-          />
-
-        </div>
-        </div>
-
-        <div>
-          <label className="block text-[#303F58] font-[14px] mb-2">Building Address</label>
-          <textarea className="w-full border border-gray-300 p-2 rounded-md h-[130px]" ></textarea>
-        </div>
-        {/* email, landmark */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Email</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[307px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder="Enter email id"
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Landmark</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[337px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Landmark"
-            required
-          />
-
-        </div>
-
-
-        {/* building number, street */}
-        <div className="flex mt-[90px] ms-[-665px]">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Building Number</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[307px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Street</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[337px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Landmark"
-          />
-
-        </div>
-        </div>
-        </div>
-            
-        {/* SalesMan, Nationality */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Sales Man</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Nationality</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[315px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-
-        </div>
-        </div>
-
-        {/* main route, subroute */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Main route</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[307px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Sub Route</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[337px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-
-        </div>
-        </div>
-
-        {/* number of bottles, reate per bottle, deposit amount */}
-        <div className="flex">
-            <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Number of bottles</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[325px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-            <label className="block text-[#303F58] font-[14px] mb-2">Rate per bottle</label>
-          <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[455px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-        </div>
-        <div>
-        <label className="block text-[#303F58] font-[14px] mb-2">Deposit Amount</label>
-        <input
-            type="text"
-            // value={insuranceValidity}
-            // onChange={(e) => setInsuranceValidity(e.target.value)}
-            className="w-[525px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder=""
-            required
-          />
-
-        </div>
-        </div>
-        
-      </div>
-
-      {/* payment mode */}
-      <div className="mt-3">
-      <label className="block text-[#303F58] font-[14px] my-2">Payment Mode</label>
-      <div className="flex space-x-4">
-            <label className="flex items-center">
-              <input 
-                type="radio" 
-                value="Cash" 
-                checked={paymentMode === 'Cash'} 
-                onChange={() => setPaymentMode('Cash')}
-                className="mr-2" 
-                required
-              />
-              Cash
-            </label>
-            <label className="flex items-center">
-              <input 
-                type="radio" 
-                value="Credit" 
-                checked={paymentMode === 'Credit'} 
-                onChange={() => setPaymentMode('Credit')}
-                className="mr-2" 
-                required
-              />
-              Credit
-            </label>
-          </div>
-          
-        </div>
-
-
-      {/* Buttons */}
-      <div className="flex justify-end mt-6">
-        <button
-          className="px-3 py-1 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]"
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          className="px-3 py-1 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]"
-          type="submit"
-        >
-          Update
-        </button>
-      </div>
-    </div>
-
-
-
-    </div>
-
-    
   )
 }
-
-export default EditCustomer
