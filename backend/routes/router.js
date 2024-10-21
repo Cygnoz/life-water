@@ -57,7 +57,7 @@ router.get('/getSRoute/:id', subrouteController.getSubroutebyID);
 
 //customer
 // Bussiness customer
-router.post('/business-customer',  upload.single('logo'),CustomerController.createBusinessCustomer);
+// router.post('/business-customer',  upload.single('logo'),CustomerController.createBusinessCustomer);
 router.get('/business-customer', CustomerController.getAllBusinessCustomers);
 router.get('/business-customer/:id', CustomerController.getBusinessCustomerById);
 router.put('/business-customer/:id', CustomerController.updateBusinessCustomerById);
