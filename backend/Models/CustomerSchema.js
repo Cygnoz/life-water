@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const customerSchema = new mongoose.Schema({
-    customerName: {
-      type: String,
-      required: true,
-      trim: true
-    },
     firstName: {
       type: String,
       required: true,
@@ -105,7 +100,7 @@ const customerSchema = new mongoose.Schema({
     },
     paymentMode: {
       type: String,
-      enum: ['cash', 'credit']
+      enum: ['Cash', 'Credit']
     }
   })
   

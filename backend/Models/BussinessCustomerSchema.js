@@ -113,7 +113,7 @@ const businessCustomerSchema = new mongoose.Schema({
   },
   paymentMode: {
     type: String,
-    enum: ['cash', 'credit']
+    enum: ['Cash', 'Credit']
   }
 });
 

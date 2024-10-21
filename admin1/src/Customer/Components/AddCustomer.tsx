@@ -1,40 +1,43 @@
-'use client'
-
-import React, { useState, FormEvent } from "react";
-import { Link } from "react-router-dom";
-import back from "../../assets/images/backbutton.svg";
-import upload from "../../assets/images/upload image.svg";
+import React, { useState } from "react"
+import { Link } from "react-router-dom"
+import back from "../../assets/images/backbutton.svg"
+import upload from "../../assets/images/upload image.svg"
+// import { addBusinessCustomerAPI, addIndividualCustomerAPI } from "../../services/CustomerAPI/Customer"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import { addCustomerAPI } from "../../services/CustomerAPI/Customer"
 
 interface CustomerFormData {
-  customerType: string;
-  companyName: string;
-  firstName: string;
-  lastName: string;
-  mobileNumber: string;
-  workPhone: string;
-  currency: string;
-  currencyCode: string;
-  state: string;
-  city: string;
-  buildingAddress: string;
-  salesMan: string;
-  nationality: string;
-  numberOfBottles: string;
-  ratePerBottle: string;
-  depositAmount: string;
-  paymentMode: string;
-  customerWebsite: string;
-  taxPreference: string;
-  whatsappNumber: string;
-  placeOfSupply: string;
-  area: string;
-  zipCode: string;
-  email: string;
-  landmark: string;
-  buildingNumber: string;
-  street: string;
-  mainRoute: string;
-  subRoute: string;
+  customerType: string
+  companyName: string
+  firstName: string
+  lastName: string
+  mobileNumber: string
+  workPhone: string
+  workPhone2: string
+  currency: string
+  currencyCode: string
+  state: string
+  city: string
+  billingAddress: string
+  salesMan: string
+  nationality: string
+  numberOfBottles: string
+  ratePerBottle: string
+  depositAmount: string
+  paymentMode: string
+  customerWebsite: string
+  taxPreference: string
+  whatsappNumber: string
+  placeOfSupply: string
+  area: string
+  zipCode: string
+  email: string
+  landmark: string
+  buildingNumber: string
+  street: string
+  mainRoute: string
+  subRoute: string
 }
 
 export default function AddCustomer() {
@@ -45,11 +48,13 @@ export default function AddCustomer() {
     lastName: "",
     mobileNumber: "",
     workPhone: "",
+    workPhone2: "",
+    whatsappNumber: "",
     currency: "",
-    currencyCode: "INR",
+    currencyCode: "AED",
     state: "",
     city: "",
-    buildingAddress: "",
+    billingAddress: "",
     salesMan: "",
     nationality: "",
     numberOfBottles: "",
@@ -58,7 +63,6 @@ export default function AddCustomer() {
     paymentMode: "Cash",
     customerWebsite: "",
     taxPreference: "",
-    whatsappNumber: "",
     placeOfSupply: "",
     area: "",
     zipCode: "",
@@ -68,40 +72,153 @@ export default function AddCustomer() {
     street: "",
     mainRoute: "",
     subRoute: "",
-  });
+  })
 
-  const [profile, setProfile] = useState<File | null>(null);
-  const [profilePreview, setProfilePreview] = useState<string | null>(null);
-  const [whatsappSameAsMobile, setWhatsappSameAsMobile] = useState(false);
+  const [logo, setLogo] = useState<File | null>(null)
+  const [whatsappSameAsMobile, setWhatsappSameAsMobile] = useState(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
 
   const handleWhatsappCheckbox = () => {
-    setWhatsappSameAsMobile(!whatsappSameAsMobile);
-    setFormData(prev => ({
+    setWhatsappSameAsMobile(!whatsappSameAsMobile)
+    setFormData((prev) => ({
       ...prev,
       whatsappNumber: !whatsappSameAsMobile ? prev.workPhone : "",
-    }));
-  };
+    }))
+  }
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setProfile(file);
+      setLogo(file)
     }
-  };
+  }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const clearForm = () => {
+    setFormData({
+      customerType: "Business",
+      companyName: "",
+      firstName: "",
+      lastName: "",
+      mobileNumber: "",
+      workPhone: "",
+      workPhone2: "",
+      currency: "",
+      currencyCode: "INR",
+      state: "",
+      city: "",
+      billingAddress: "",
+      salesMan: "",
+      nationality: "",
+      numberOfBottles: "",
+      ratePerBottle: "",
+      depositAmount: "",
+      paymentMode: "Cash",
+      customerWebsite: "",
+      taxPreference: "",
+      whatsappNumber: "",
+      placeOfSupply: "",
+      area: "",
+      zipCode: "",
+      email: "",
+      landmark: "",
+      buildingNumber: "",
+      street: "",
+      mainRoute: "",
+      subRoute: "",
+    })
+    setLogo(null)
+    setWhatsappSameAsMobile(false)
+  }
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  
+  //   const formDataObj = new FormData();
+  
+  //   Object.entries(formData).forEach(([key, value]) => {
+  //     if (key === 'customerType') {
+  //       formDataObj.append(key, value.toString());
+  //     } else if (value !== null && value !== undefined && value !== "") {
+  //       formDataObj.append(key, value.toString());
+  //     }
+  //   });
+  
+  //   if (logo) {
+  //     formDataObj.append("logo", logo);
+  //   }
+  
+  //   try {
+  //     const response = await addCustomerAPI(formDataObj);
+  
+  //   console.log("Response status:", response.status);
+  
+  //     // Check for response status
+  //     if (response.status === 201) {
+  //       toast.success(response.message); // Display success message
+  //       clearForm();
+  //     } else {
+  //       toast.error(response.message || "Failed to add customer. Please try again.");
+  //     }
+  //   } catch (error: any) {
+  //     console.error("Error submitting the form:", error);
+  //     toast.error(error.message || "Failed to add customer. Please try again.");
+  //   }
+  // };
+  
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted with data:", formData);
-    // Add your API call or state update logic here
+  
+    const formDataObj = new FormData();
+  
+    Object.entries(formData).forEach(([key, value]) => {
+      if (key === 'customerType') {
+        formDataObj.append(key, value.toString());
+      } else if (value !== null && value !== undefined && value !== "") {
+        formDataObj.append(key, value.toString());
+      }
+    });
+  
+    if (logo) {
+      formDataObj.append("logo", logo);
+    }
+  
+    try {
+      const response = await addCustomerAPI(formDataObj);
+  
+      console.log("Response:", response); // Debug log
+  
+      if (response.status === 201) {
+        toast.success(response.message || "Customer added successfully");
+        clearForm();
+      } else {
+        toast.error(response.message || "Failed to add customer. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("Error submitting the form:", error);
+      toast.error(error.message || "Failed to add customer. Please try again.");
+    }
   };
 
   return (
     <div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       <div className="flex gap-3 items-center w-full max-w-8xl mb-1 ms-1 p-3">
         <Link to="/customer">
           <div className="icon-placeholder">
@@ -118,32 +235,14 @@ export default function AddCustomer() {
             <div className="space-y-4">
               {/* Customer type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">
-                  Customer Type
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>
                 <div className="flex space-x-4">
                   <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="customerType"
-                      value="Business"
-                      checked={formData.customerType === "Business"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                      required
-                    />
+                    <input type="radio" name="customerType" value="Business" checked={formData.customerType === "Business"} onChange={handleInputChange} className="mr-2" required />
                     Business
                   </label>
                   <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="customerType"
-                      value="Individual"
-                      checked={formData.customerType === "Individual"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                      required
-                    />
+                    <input type="radio" name="customerType" value="Individual" checked={formData.customerType === "Individual"} onChange={handleInputChange} className="mr-2" required />
                     Individual
                   </label>
                 </div>
@@ -152,254 +251,97 @@ export default function AddCustomer() {
               {/* Conditional rendering for company name (if Business is selected) */}
               {formData.customerType === "Business" && (
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter Company Name"
-                    required
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
+                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Company Name" required />
                 </div>
               )}
 
               {/* Primary contact */}
               <div>
-                <label className="block text-[#303F58] font-[14px] mb-2">
-                  Primary Contact
-                </label>
+                <label className="block text-[#303F58] font-[14px] mb-2">Primary Contact</label>
                 <div className="grid grid-cols-2 space-x-2">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="First Name"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Last Name"
-                    required
-                  />
+                  <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="First Name" required />
+                  <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Last Name" required />
                 </div>
               </div>
 
               {/* Mobile number, work phone */}
               <div className="grid grid-cols-2 space-x-2">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="text"
-                    name="mobileNumber"
-                    value={formData.mobileNumber}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter mobile"
-                    maxLength={10}
-                    pattern="\d{10}"
-                    required
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Mobile Number</label>
+                  <input type="text" name="mobileNumber" value={formData.mobileNumber} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter mobile" maxLength={10} pattern="\d{10}" required />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Work Phone
-                  </label>
-                  <input
-                    type="text"
-                    name="workPhone"
-                    value={formData.workPhone}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter work phone"
-                    maxLength={10}
-                    pattern="\d{10}"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Work Phone</label>
+                  <input type="text" name="workPhone" value={formData.workPhone} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter work phone" maxLength={10} pattern="\d{10}" />
                 </div>
               </div>
 
               {/* Currency */}
               <div>
-                <label className="block text-[#303F58] font-[14px] mb-2">
-                  Currency
-                </label>
+                <label className="block text-[#303F58] font-[14px] mb-2">Currency</label>
                 <div className="flex">
-                  <input
-                    type="text"
-                    name="currency"
-                    value={formData.currency}
-                    onChange={handleInputChange}
-                    className="w-[600px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter Price"
-                  />
-                  <input
-                    type="text"
-                    name="currencyCode"
-                    value={formData.currencyCode}
-                    onChange={handleInputChange}
-                    className="w-[50px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="INR"
-                  />
+                  <input type="text" name="currency" value={formData.currency} onChange={handleInputChange} className="w-[600px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Price" />
+                  <input type="text" name="currencyCode" value={formData.currencyCode} onChange={handleInputChange} className="w-[50px] h-[36px] px-2 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="AED" />
                 </div>
               </div>
 
               {/* State, City */}
               <div className="grid grid-cols-2 space-x-2">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    State
-                  </label>
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter state"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">State</label>
+                  <input type="text" name="state" value={formData.state} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter state" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter city"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">City</label>
+                  <input type="text" name="city" value={formData.city} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter city" />
                 </div>
               </div>
 
               {/* Building Address */}
               <div>
-                <label className="block text-[#303F58] font-[14px] mb-2">
-                  Building Address
-                </label>
-                <textarea
-                  name="buildingAddress"
-                  value={formData.buildingAddress}
-                  onChange={handleInputChange}
-                  className="w-full border border-gray-300 p-2 rounded-md"
-                ></textarea>
+                <label className="block text-[#303F58] font-[14px] mb-2">Billing Address</label>
+                <textarea name="billingAddress" value={formData.billingAddress} onChange={handleInputChange} className="w-full border border-gray-300 p-2 rounded-md"></textarea>
               </div>
 
               {/* Sales Man, Nationality */}
               <div className="grid grid-cols-2 space-x-2">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Sales Man
-                  </label>
-                  <input
-                    type="text"
-                    name="salesMan"
-                    value={formData.salesMan}
-                    onChange={handleInputChange}
-                    className="h-[36px] w-full px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter sales man"
-                    required
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Sales Man</label>
+                  <input type="text" name="salesMan" value={formData.salesMan} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter sales man" required />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Nationality
-                  </label>
-                  <input
-                    type="text"
-                    name="nationality"
-                    value={formData.nationality}
-                    onChange={handleInputChange}
-                    className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter nationality"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Nationality</label>
+                  <input type="text" name="nationality" value={formData.nationality} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter nationality" />
                 </div>
               </div>
 
               {/* Number of bottles, Rate per bottle, Deposit amount */}
               <div className="flex space-x-2">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Number of bottles
-                  </label>
-                  <input
-                    type="text"
-                    name="numberOfBottles"
-                    value={formData.numberOfBottles}
-                    onChange={handleInputChange}
-                    className="h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter number of bottles"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Number of bottles</label>
+                  <input type="text" name="numberOfBottles" value={formData.numberOfBottles} onChange={handleInputChange} className="h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter number of bottles" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Rate per bottle
-                  </label>
-                  <input
-                    type="text"
-                    name="ratePerBottle"
-                    value={formData.ratePerBottle}
-                    onChange={handleInputChange}
-                    className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter rate per bottle"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Rate per bottle</label>
+                  <input type="text" name="ratePerBottle" value={formData.ratePerBottle} onChange={handleInputChange} className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter rate per bottle" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Deposit Amount
-                  </label>
-                  <input
-                    type="text"
-                    name="depositAmount"
-                    value={formData.depositAmount}
-                    onChange={handleInputChange}
-                    className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter deposit amount"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Deposit Amount</label>
+                  <input type="text" name="depositAmount" value={formData.depositAmount} onChange={handleInputChange} className="px-3 h-[36px] py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter deposit amount" />
                 </div>
               </div>
 
               {/* Payment mode */}
               <div className="mt-3">
-                <label className="block text-[#303F58] font-[14px] my-2">
-                  Payment Mode
-                </label>
+                <label className="block text-[#303F58] font-[14px] my-2">Payment Mode</label>
                 <div className="flex space-x-4">
                   <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="paymentMode"
-                      value="Cash"
-                      checked={formData.paymentMode === "Cash"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                      required
-                    />
+                    <input type="radio" name="paymentMode" value="Cash" checked={formData.paymentMode === "Cash"} onChange={handleInputChange} className="mr-2" required />
                     Cash
                   </label>
                   <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="paymentMode"
-                      value="Credit"
-                      checked={formData.paymentMode === "Credit"}
-                      onChange={handleInputChange}
-                      className="mr-2"
-                      required
-                
-                    />
+                    <input type="radio" name="paymentMode" value="Credit" checked={formData.paymentMode === "Credit"} onChange={handleInputChange} className="mr-2" required  />
                     Credit
                   </label>
                 </div>
@@ -414,249 +356,106 @@ export default function AddCustomer() {
                   <div className="flex">
                     <label className="mt-4 border text-[#8F99A9] text-base font-[14px] rounded-lg cursor-pointer">
                       <div className="w-[80px] h-[80px] bg-[#F7E7CE] rounded-lg overflow-hidden">
-                        <img
-                          src={profile ? URL.createObjectURL(profile) : upload}
-                          alt=""
-                          className="object-cover w-20 h-20 rounded-md p-1"
-                        />
+                        <img src={logo ? URL.createObjectURL(logo) : upload} alt="" className="object-cover w-20 h-20 rounded-md p-1" />
                       </div>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleProfileChange}
-                      />
+                      <input type="file" accept="image/*" className="hidden" onChange={handleProfileChange} />
                     </label>
-                    <h2 className="font-bold mt-10 ms-3 text-[#303F58]">
-                      Upload Company Logo
-                    </h2>
+                    <h2 className="font-bold mt-10 ms-3 text-[#303F58]">Upload Company Logo</h2>
                   </div>
                   {/* Customer website */}
                   <div>
-                    <label className="block text-[#303F58] mt-0.5 font-[14px] mb-2">
-                      Customer Website
-                    </label>
-                    <input
-                      type="text"
-                      name="customerWebsite"
-                      value={formData.customerWebsite}
-                      onChange={handleInputChange}
-                      className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Enter Website"
-                    />
+                    <label className="block text-[#303F58] mt-0.5 font-[14px] mb-2">Customer Website</label>
+                    <input type="text" name="customerWebsite" value={formData.customerWebsite} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Website" />
                   </div>
                 </div>
               )}
 
               {/* Tax preference */}
               <div>
-                <label className="block text-[#303F58] font-[14px] mb-2">
-                  Tax Preference
-                </label>
-                <input
-                  type="text"
-                  name="taxPreference"
-                  value={formData.taxPreference}
-                  onChange={handleInputChange}
-                  className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Select Tax Preference"
-                />
+                <label className="block text-[#303F58] font-[14px] mb-2">Tax Preference</label>
+                <select name="taxPreference" value={formData.taxPreference} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="">Select Tax Preference</option>
+                  <option value="exclusive">exclusive</option>
+                  <option value="inclusive">inclusive</option>
+                </select>
               </div>
 
               {/* Work phone, WhatsApp number */}
               <div className="flex">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Work Phone
-                  </label>
-                  <input
-                    type="text"
-                    name="workPhone"
-                    value={formData.workPhone}
-                    onChange={handleInputChange}
-                    className="w-[308px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter work phone"
-                    maxLength={10}
-                    pattern="\d{10}"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Work Phone 2</label>
+                  <input type="text" name="workPhone2" value={formData.workPhone2} onChange={handleInputChange} className="w-[308px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter work phone" maxLength={10} pattern="\d{10}" />
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">
                     WhatsApp Number
-                    <input
-                      type="checkbox"
-                      checked={whatsappSameAsMobile}
-                      onChange={handleWhatsappCheckbox}
-                      className="mr-1 ms-2"
-                    />
+                    <input type="checkbox" checked={whatsappSameAsMobile} onChange={handleWhatsappCheckbox} className="mr-1 ms-2" />
                     Same as Work Phone
                   </label>
-                  <input
-                    type="text"
-                    name="whatsappNumber"
-                    value={formData.whatsappNumber}
-                    onChange={handleInputChange}
-                    className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter WhatsApp number"
-                    maxLength={10}
-                    pattern="\d{10}"
-                    disabled={whatsappSameAsMobile}
-                  />
+                  <input type="text" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter WhatsApp number" maxLength={10} pattern="\d{10}" disabled={whatsappSameAsMobile} />
                 </div>
               </div>
 
               {/* Place of supply */}
               <div>
-                <label className="block text-[#303F58] font-[14px] mb-2">
-                  Place of Supply
-                </label>
-                <input
-                  type="text"
-                  name="placeOfSupply"
-                  value={formData.placeOfSupply}
-                  onChange={handleInputChange}
-                  className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Place of supply"
-                  required
-                />
+                <label className="block text-[#303F58] font-[14px] mb-2">Place of Supply</label>
+                <input type="text" name="placeOfSupply" value={formData.placeOfSupply} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Place of supply" required />
               </div>
 
               {/* Area, Zip Postal Code */}
               <div className="flex">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Area
-                  </label>
-                  <input
-                    type="text"
-                    name="area"
-                    value={formData.area}
-                    onChange={handleInputChange}
-                    className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter area"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Area</label>
+                  <input type="text" name="area" value={formData.area} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter area" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Zip Postal Code
-                  </label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={formData.zipCode}
-                    onChange={handleInputChange}
-                    className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter zip code"
-                    maxLength={6}
-                    pattern="\d{6}"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Zip Postal Code</label>
+                  <input type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter zip code" maxLength={6} pattern="\d{6}" />
                 </div>
               </div>
 
               {/* Email, Landmark */}
               <div className="flex">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter Email id"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Email</label>
+                  <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter Email id" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Landmark
-                  </label>
-                  <input
-                    type="text"
-                    name="landmark"
-                    value={formData.landmark}
-                    onChange={handleInputChange}
-                    className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Landmark"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Landmark</label>
+                  <input type="text" name="landmark" value={formData.landmark} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Landmark" />
                 </div>
               </div>
 
               {/* Building Number, Street */}
               <div className="flex">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Building Number
-                  </label>
-                  <input
-                    type="text"
-                    name="buildingNumber"
-                    value={formData.buildingNumber}
-                    onChange={handleInputChange}
-                    className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter building number"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Building Number</label>
+                  <input type="text" name="buildingNumber" value={formData.buildingNumber} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter building number" />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Street
-                  </label>
-                  <input
-                    type="text"
-                    name="street"
-                    value={formData.street}
-                    onChange={handleInputChange}
-                    className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter street"
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Street</label>
+                  <input type="text" name="street" value={formData.street} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter street" />
                 </div>
               </div>
 
               {/* Main route, Sub route */}
               <div className="flex">
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Main route
-                  </label>
-                  <input
-                    type="text"
-                    name="mainRoute"
-                    value={formData.mainRoute}
-                    onChange={handleInputChange}
-                    className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500"
-                    placeholder="Enter main route"
-                    required
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Main route</label>
+                  <input type="text" name="mainRoute" value={formData.mainRoute} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter main route" required />
                 </div>
                 <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">
-                    Sub Route
-                  </label>
-                  <input
-                    type="text"
-                    name="subRoute"
-                    value={formData.subRoute}
-                    onChange={handleInputChange}
-                    className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Enter sub route"
-                    required
-                  />
+                  <label className="block text-[#303F58] font-[14px] mb-2">Sub Route</label>
+                  <input type="text" name="subRoute" value={formData.subRoute} onChange={handleInputChange} className="w-[337px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter sub route" required />
                 </div>
               </div>
 
               {/* Buttons */}
               <div className="flex justify-end">
-                <button
-                  className="px-3 py-1 mt-8 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]"
-                  type="button"
-                >
+                <button className="px-3 py-1 mt-8 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]" type="button">
                   Cancel
                 </button>
-                <button
-                  className="px-3 py-1 mt-8 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]"
-                  type="submit"
-                >
+                <button className="px-3 py-1 mt-8 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]" type="submit">
                   Save
                 </button>
               </div>
@@ -665,5 +464,5 @@ export default function AddCustomer() {
         </form>
       </div>
     </div>
-  );
+  )
 }
