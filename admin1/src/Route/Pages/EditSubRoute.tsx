@@ -1,37 +1,59 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import back from '../../assets/images/backbutton.svg';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; 
 import { BASEURL } from '../../services/Baseurl';
 import axios from 'axios';
 import { editSubRouteAPI } from '../../services/RouteAPI/subRouteAPI';
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; 
+import { getRoutesAPI } from '../../services/RouteAPI/RouteAPI';
+
 const EditSubRoute: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Get ID from URL params
+  const [mainRoutes, setMainRoutes] = useState([]); // Initialize mainRoutes as an array
   const [formData, setFormData] = useState({
     subRoute: '',
     subrouteCode: '',
-    mainRoute: '',
+    mainRoute: '',  // This will store the selected mainRoute
     description: ''
   });
   const navigate = useNavigate();
 
+  // Fetch the subRoute data when the component mounts
   useEffect(() => {
-    // Fetch existing subroute data when component mounts
     const fetchSubRoute = async () => {
       try {
         const response = await axios.get(`${BASEURL}/api/getSRoute/${id}`);
-        setFormData(response.data); // Ensure response.data contains subRoute, subRouteCode, etc.
+        setFormData({
+          subRoute: response.data.subRoute || '',
+          subrouteCode: response.data.subrouteCode || '',
+          mainRoute: response.data.mainRoute || '',  // Ensure it gets initial value
+          description: response.data.description || '',
+        });
       } catch (error) {
         console.error('Error fetching subroute data', error);
-        toast.error('Failed to load subroute data'); // Show error toast
+        toast.error('Failed to load subroute data');
       }
     };
 
     fetchSubRoute();
   }, [id]);
 
+  // Fetch all available routes for the dropdown
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        const response = await getRoutesAPI();
+        setMainRoutes(response); // Set the routes data
+      } catch (error) {
+        console.error('Error fetching routes:', error);
+      }
+    };
+
+    fetchRoutes();
+  }, []);
+
+  // Handle input changes, including the select dropdown for mainRoute
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -40,26 +62,21 @@ const EditSubRoute: React.FC = () => {
     });
   };
 
+  // Handle form submission to update the subRoute
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-     // Check if id is a string
-     if (typeof id !== 'string') {
-      console.error('ID is undefined or not a string:', id);
-      toast.error('ID is required to update the subroute.'); // Show error message to the user
-      return; // Exit early if id is not valid
-    }
     try {
-      console.log('Updating subroute with data:', formData); // Log the data being sent
+      console.log('Updating subroute with data:', formData);
       const response = await editSubRouteAPI(id, formData); // Call the API to update the subroute
-      console.log('Response from update:', response); // Log the response
-      toast.success('Subroute updated successfully!'); // Show success message
+      console.log('Response from update:', response);
+      toast.success('Subroute updated successfully!');
       navigate('/route/subroute'); // Redirect after successful edit
     } catch (error) {
       console.error('Error updating route', error);
-      toast.error('Error updating subroute. Please try again.'); // Show error message
+      toast.error('Error updating subroute. Please try again.');
     }
   };
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 p-8">
       <ToastContainer
@@ -118,14 +135,19 @@ const EditSubRoute: React.FC = () => {
               <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
                 Main Route
               </label>
+              
               <select
                 name="mainRoute"
-                value={formData.mainRoute}
-                onChange={handleInputChange}
+                value={formData.mainRoute}  // Set value based on formData
+                onChange={handleInputChange}  // This will update formData.mainRoute
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
-                <option value="" disabled>Select Main Route</option>
-                {/* Add options dynamically here based on your routes */}
+                {mainRoutes.map((route) => (
+                  <option >
+                    {route.mainRoute}
+                  </option>))}
+                
+               
               </select>
             </div>
           </div>
@@ -148,7 +170,7 @@ const EditSubRoute: React.FC = () => {
             <button
               type="button"
               className="px-2 py-2 bg-gray-200 rounded-md hover:bg-gray-300 transition"
-              onClick={() => navigate('/route/subroute')} // Implement Cancel functionality
+              onClick={() => navigate('/route/subroute')}
             >
               Cancel
             </button>

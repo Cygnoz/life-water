@@ -9,7 +9,7 @@ import search from "../../assets/images/search.svg"
 import vehicle from "../../assets/images/vehicle 1.svg"
 
 import { useNavigate } from "react-router-dom"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { deleteVehicleByIdAPI, getVehicleAPI, Vehicle } from "../../services/VehicleAPI/Vehicle"
 import { BASEURL } from "../../services/Baseurl"
 
@@ -77,6 +77,20 @@ const CreateVehicle: React.FC = () => {
     navigate(`/viewvehicle/${id}`)
   }
 
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  const handlePrint = () => {
+    const printContent = tableRef.current;
+    const originalContent = document.body.innerHTML;
+    if (printContent) {
+      document.body.innerHTML = printContent.innerHTML;
+      window.print();
+      document.body.innerHTML = originalContent;
+    }
+  };
+
+
+
   return (
     <div>
       <div className="flex min-h-screen w-full">
@@ -134,16 +148,17 @@ const CreateVehicle: React.FC = () => {
                   <img className="mt-1 me-1" src={split} alt="" />
                   Sort By
                 </button>
-                <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
+                <button onClick={handlePrint} className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
                   <img className="mt-1 me-1" src={printer} alt="" />
                   Print
                 </button>
               </div>
             </div>
-            <table className="w-full text-left">
+           <div ref={tableRef}>
+           <table className="print-table w-full text-left">
               <thead className="bg-[#fdf8f0]">
                 <tr className="border-b">
-                  <th scope="col" className="px-8 py-6">
+                  <th scope="col" className="no-print px-8 py-6">
                     <input type="checkbox" />
                   </th>
                   <th className="p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Sl No</th>
@@ -152,13 +167,13 @@ const CreateVehicle: React.FC = () => {
                   <th className="p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Insurance Validity</th>
                   <th className="p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Insurance Amount</th>
                   <th className="p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Insurance Status</th>
-                  <th className="p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Action</th>
+                  <th className="no-print p-2 text-[14px] font-medium text-center leading-[18px] text-[#303F58]">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredVehicleList.map((vehicle, index) => (
                   <tr key={vehicle._id || index} className="border-b">
-                    <td className="px-8 py-6">
+                    <td className="no-print px-8 py-6">
                       <input type="checkbox" />
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
@@ -173,7 +188,7 @@ const CreateVehicle: React.FC = () => {
   {vehicle.insuranceStatus}
 </span>
                     </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79] ">
+                    <td className="no-print p-2 text-[14] text-center text-[#4B5C79] ">
                       <button onClick={() => handleView(vehicle._id)} className="text-blue-500">
                         <img src={eye} alt="" />
                       </button>
@@ -188,6 +203,7 @@ const CreateVehicle: React.FC = () => {
                 ))}
               </tbody>
             </table>
+           </div>
           </div>
         </div>
       </div>

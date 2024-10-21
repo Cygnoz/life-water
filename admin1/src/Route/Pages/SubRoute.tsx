@@ -6,7 +6,7 @@ import trash from '../../assets/images/trash.svg';
 import { useNavigate } from 'react-router-dom';
 import dot from '../../assets/ellipsis-vertical.svg';
 import plus from '../../assets/circle-plus.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { deleteSubRouteAPI, getSubRoutesAPI } from '../../services/RouteAPI/subRouteAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
@@ -80,6 +80,18 @@ function SubRoute({}: Props) {
     setSearchQuery(e.target.value); // Update search query state
   };
 
+
+  const tableRef = useRef<HTMLDivElement>(null);
+  const handlePrint = () => {
+    const printContent = tableRef.current;
+    const originalContent = document.body.innerHTML;
+    if (printContent) {
+      document.body.innerHTML = printContent.innerHTML;
+      window.print();
+      document.body.innerHTML = originalContent;
+    }
+  };
+
   return (
     <div>
       <ToastContainer
@@ -140,16 +152,17 @@ function SubRoute({}: Props) {
             <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
               <img src={split} className="mt-1 me-1" alt="" />Sort By
             </button>
-            <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
+            <button onClick={handlePrint} className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
               <img src={printer} className="mt-1 me-1" alt="" />Print
             </button>
           </div>
         </div>
 
-        <table className="w-full text-left">
+        <div ref={tableRef}>
+        <table className="print-table w-full text-left">
           <thead className="bg-[#fdf8f0]">
             <tr className="border-b">
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="no-print px-6 py-3">
                 <input type="checkbox" />
               </th>
               <th className="p-2 text-[12px] text-center text-[#303F58]">Sl No</th>
@@ -157,13 +170,13 @@ function SubRoute({}: Props) {
               <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route Code</th>
               <th className="p-2 text-[12px] text-center text-[#303F58]">Main Route</th>
               <th className="p-2 text-[12px] text-center text-[#303F58]">Description</th>
-              <th className="p-2 text-[12px] text-center text-[#303F58]">Actions</th>
+              <th className="no-print p-2 text-[12px] text-center text-[#303F58]">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredRouteList.map((route, index) => (
               <tr className="border-b" key={route._id}>
-                <td className="px-6 py-4">
+                <td className="no-print px-6 py-4">
                   <input type="checkbox" />
                 </td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
@@ -171,7 +184,7 @@ function SubRoute({}: Props) {
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.subrouteCode}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
-                <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                <td className="no-print p-2 text-[14] text-center text-[#4B5C79]">
                   <button onClick={() => handleEdit(route._id)} className="text-blue-500 mx-2 items-center">
                     <img src={pen} alt="" />
                   </button>
@@ -183,6 +196,7 @@ function SubRoute({}: Props) {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );
