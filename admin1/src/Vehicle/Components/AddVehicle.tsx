@@ -3,7 +3,8 @@ import uploadvehicle from '../../assets/images/uploadvehicle.svg';
 import { Link } from 'react-router-dom';
 import back from '../../assets/images/backbutton.svg';
 import { addVehicleAPI } from '../../services/VehicleAPI/Vehicle';
-
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'; 
 
 type Props = {};
 
@@ -60,9 +61,9 @@ const AddVehicle: React.FC<Props> = () => {
     try {
       const response = await addVehicleAPI(formData);
       if (response.message) {
-        setError(response.message);
+        toast.error(response.message);
       } else {
-        setSuccess('Vehicle added successfully');
+        toast.success('Vehicle added successfully');
         console.log('Vehicle added successfully:', response.data);
 
         // Reset form fields
@@ -91,6 +92,20 @@ const AddVehicle: React.FC<Props> = () => {
 
   return (
     <div className='p-6'>
+
+<ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+         // optional CSS class for further styling
+      />
       <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
         <Link to={'/vehicle'}>
           <div className="icon-placeholder">
@@ -103,8 +118,7 @@ const AddVehicle: React.FC<Props> = () => {
       <div className="w-full mx-auto p-8 bg-white rounded-lg shadow-md">
         {/* <h2 className="text-[20px] text-[#303F58] font-semibold mb-6">Add vehicle</h2> */}
         <form onSubmit={handleAddVehicle} className="grid grid-cols-1 md:grid-cols-2 gap-2 gap-x-5">
-        {error && <p className="text-red-600">{error}</p>}
-        {success && <p className="text-green-600">{success}</p>}
+
 
           {/* Vehicle Number */}
           <div>

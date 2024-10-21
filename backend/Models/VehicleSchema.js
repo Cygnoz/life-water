@@ -3,37 +3,38 @@ const mongoose = require('mongoose');
 const vehicleSchema = new mongoose.Schema({
   vehicleNo: {
     type: String,
-    required: true
-    // unique: true
+    required: true,
+    unique: true
   },
   image: {
     type: String,
-    required: true
+    // required: true
   },
   insuranceValidity: {
     type: Date,
-    required: true
+    // required: true
   },
   insuranceStatus: {
     type: String,
-    enum: ['Valid', 'Expired', 'Pending'],
-    required: true
+    enum: ['Valid', 'Expired'],
+    default:'Valid',
+    required: true,
   },
   registrationValidity: {
     type: Date,
-    required: true
+    // required: true
   },
   insuranceAmount: {
     type: Number,
-    required: true
+    // required: true
   },
   licenseAmount: {
     type: Number,
-    required: true
+    // required: true
   },
   licenseValidity: {
     type: Date,
-    required: true
+    // required: true
   },
   startingKilometer: {
     type: Number,
@@ -41,7 +42,7 @@ const vehicleSchema = new mongoose.Schema({
   },
   expenses: {
     type: Number,
-    required: true
+    // required: true
   }
 }, { timestamps: true });
 

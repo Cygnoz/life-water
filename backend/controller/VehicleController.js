@@ -30,7 +30,7 @@ const addVehicle = async (req, res) => {
 
     // Save vehicle to the database
     const savedVehicle = await vehicle.save();
-    return res.status(201).json({ message: 'Vehicle added successfully', vehicle: savedVehicle });
+    return res.status(201).json({status:201, data: savedVehicle });
   } catch (error) {
     console.error('Error adding vehicle:', error.message);
     return res.status(500).json({ message: 'Error adding vehicle', error: error.message });
