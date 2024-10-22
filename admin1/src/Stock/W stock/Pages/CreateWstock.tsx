@@ -23,7 +23,7 @@ const CreateWStock: React.FC = () => {
     <div>
       <div className="flex min-h-screen w-full">
         <div>
-          <div className="p-6">
+          <div className="p-2">
             {/* Header Section */}
             <div className="flex justify-between items-center">
               <div>
@@ -39,9 +39,7 @@ const CreateWStock: React.FC = () => {
                   <img src={plus} alt="" />
                   <p>Add New Stock</p>
                 </button>
-                <button className="ms-2 me-4">
-                  <img src={dot} alt="" />
-                </button>
+               
               </div>
             </div>
             {/* Cards Section */}

@@ -18,7 +18,7 @@ const CreateItem: React.FC = () => {
 
   return (
     <div className="flex min-h-screen w-full">
-      <div className="p-6 w-full">
+      <div className="p-2 w-full">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-4">
           <div>

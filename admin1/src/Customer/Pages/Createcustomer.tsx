@@ -82,7 +82,7 @@ const CreateCustomer: React.FC = () => {
 
 <div className="flex min-h-screen w-full">
       <div>
-        <div className="p-6">
+        <div className="p-2">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <div>
@@ -154,13 +154,13 @@ const CreateCustomer: React.FC = () => {
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img className="w-[40px] h-[35px] " src={credit} alt="" />
-              <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">
+              <div className=" font-bold leading-normal text-[#303F58] text-[17px] mt-2">
                 Credit Customer
               </div>
               <p className="text-[#4B5C79] w-[400] text-[12]">
                 Lorem ipsum dolor sit amet consectetur{" "}
               </p>
-              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">
+              <div className="text-[#820000] font-bold  leading-normal text-[18px] mt-3">
                 12
               </div>
             </div>

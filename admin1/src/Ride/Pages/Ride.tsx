@@ -6,7 +6,7 @@ import search from '../../assets/images/search.svg'
  
 const Ride: React.FC = () => {
   return (
-<div className='mt-5'>
+<div className='mt-2'>
 <div className="flex gap-3 items-center w-full max-w-8xl mb-6 ms-3">
      {/* <Link to={'/route/createroute'}>
      <div className="icon-placeholder">
