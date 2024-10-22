@@ -26,7 +26,7 @@ import AddCustomer from '../Customer/Components/AddCustomer';
 import EditCustomer from '../Customer/Pages/EditCustomer';
 import ViewCustmor from '../Customer/Components/ViewCustmor';
 import Ride from '../Ride/Pages/Ride';
-import EditMainRoute from '../Route/Pages/EditMainRoute';
+
 import CreateInternalTransfer from '../Stock/Internal transfer/Pages/CreateInternalTransfer';
 import AddItem from '../Stock/Items/Components/AddItem';
 import CreateItem from '../Stock/Items/Pages/CreateItem';
@@ -35,6 +35,17 @@ import StockLoaded from '../Stock/Stock loaded/Pages/Stock_loaded';
 import UnloadedAdd from '../Stock/Unload stock/Pages/UnloadAdd';
 import AddWStock from '../Stock/W stock/Components/AddWStock';
 import CreateWStock from '../Stock/W stock/Pages/CreateWstock';
+import EditMainRoute from '../Route/Pages/EditMainRoute';
+import BalanceSheet from '../Reportss/Pages/Balancesheet';
+import CashSale from '../Reportss/Pages/Cashsale';
+import CouponSale from '../Reportss/Pages/Couponsale';
+import CreditSale from '../Reportss/Pages/Creditsale';
+import DayBook from '../Reportss/Pages/DayBook';
+import ProfitLoss from '../Reportss/Pages/Profit&loss';
+import ReturnStock from '../Reportss/Pages/ReturnStock';
+import StockSold from '../Reportss/Pages/StockSold';
+import TotalSale from '../Reportss/Pages/TotalSale';
+import TrailBalance from '../Reportss/Pages/Trailbalance';
 
 
 
@@ -78,7 +89,7 @@ const App: React.FC = () => {
               <Route path='/route/createmainroute' element={<CreateMainRoute />} />
               <Route path='/route/viewroute/:id' element={<ViewRoute />} />
               <Route path='/route/activeroute' element={<ActiveRoute />} />
-              <Route path='/route/editmainroute/:id' element={<EditMainRoute />} />
+              <Route path='/route/editmainroute/:id' element={<EditMainRoute/>} />
               <Route path='/route/subroute' element={<SubRoute />} />
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
               <Route path='/route/editsubroute/:id' element={<EditSubRoute />} />
@@ -121,6 +132,19 @@ const App: React.FC = () => {
                    {/* WAREHOSUE STOCK */}
                    <Route path='/addWstock' element={<AddWStock/>}/>
                    <Route path='/warstock' element={<CreateWStock/>}/>
+
+                        {/* REPORTS */}
+                        <Route path='/balancesheet' element={<BalanceSheet/>}/>
+            <Route path='/cashsale' element={<CashSale/>}/>
+            <Route path='/couponsale' element={<CouponSale/>}/>
+            <Route path='/creditsale' element={<CreditSale/>}/>
+            <Route path='/daybook' element={<DayBook/>}/>
+            <Route path='/profit-lose' element={<ProfitLoss/>}/>
+            <Route path='/returnstock' element={<ReturnStock/>}/>
+            <Route path='/stocksold' element={<StockSold/>}/>
+            <Route path='/totalsale' element={<TotalSale/>}/>
+            <Route path='/trailbalance' element={<TrailBalance/>}/>
+
 
 
 

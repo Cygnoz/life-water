@@ -8,7 +8,7 @@ import search from '../../assets/images/search.svg'
 
 const DayBook: React.FC = () => {
   return (
-<div className='p-5'>
+<div className='p-2'>
 <div className="flex justify-between items-center">
             <div>
               <h3 className="text-[#303F58] text-[20px] font-bold">Day Book</h3>
