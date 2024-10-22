@@ -23,7 +23,7 @@ const PaymentCollection: React.FC = () => {
 <img src={search} alt="Search Icon" className="w-4 h-4 text-gray-500" />
 </div>
 </div>
-        <Link to="/credit">
+        <Link to="/creditcollection">
             <img className='m-2' src={plus} alt="" />
         </Link>
       </div>
