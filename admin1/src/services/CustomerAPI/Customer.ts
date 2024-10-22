@@ -34,6 +34,8 @@
 // };
 
 
+// import axios from "axios";
+import axios from "axios";
 import { BASEURL } from "../Baseurl";
 import { commonAPI } from "../CommonApi";
 
@@ -75,5 +77,56 @@ export const addCustomerAPI = async (customerData: FormData): Promise<ApiRespons
   }
 };
 
+// export const getBCustomerAPI = async()=>{
+//   try{
+//     const response = await axios.get(`${BASEURL}/api/business-customer`)
+//     console.log(response);
+    
+//   }
+//   catch(error:any){
+//     console.error(`Error getting customer:`, error);
+//     throw error; 
+//   }
+// }
+
+export const getAllCustomersAPI = async (): Promise<ApiResponse> => {
+  try {
+    const response = await axios.get(`${BASEURL}/api/customer`);
+
+    console.log("Response Status:", response.status); // Check the response status
+    console.log("Response Data:", response.data); // Check the response data
+
+    return {
+      status: response.status,
+      data: response.data,
+    };
+  } catch (error: any) {
+    console.error(`Error fetching customers:`, error);
+    throw error; // Rethrow the error to be caught in the component
+  }
+};
 
 
+
+// export const deleteCustomerAPI = async (id: string) => {
+//   try {
+//     const response = await axios.delete(`${BASEURL}/api/customer/${id}`);
+//     if (response.status === 200) {
+//       console.log('Customer deleted successfully');
+//       return true;
+//     }
+//   } catch (error) {
+//     console.error('Error deleting customer:', error);
+//     return false;
+//   }
+// };
+
+export const deleteCustomerAPI = async (id: string) => {
+  try {
+    const response = await axios.delete(`${BASEURL}/api/customer/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    throw error;
+  }
+};
