@@ -16,8 +16,8 @@ const fields: string[] = [
 
 const Summary: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="bg-white p-6 rounded-lg  shadow-lg w-96">
         <div className="flex items-center justify-between mb-6"></div>
         
         {/* Summary Form */}
