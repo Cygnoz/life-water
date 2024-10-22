@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 const CreditCollection: React.FC = () => {
@@ -23,7 +24,7 @@ const CreditCollection: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-start min-h-screen bg-gray-100 p-3">
+    <div className="flex justify-center items-start min-h-screen bg-gray-100 p-5">
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded-lg p-6 w-full max-w-md space-y-4"
@@ -132,10 +133,12 @@ const CreditCollection: React.FC = () => {
 
          {/* Buttons */}
          <div className="flex justify-between mt-5">
-          <button className="w-1/2 p-2 bg-[#F6F6F6] text-[#820000] border border-red-500 rounded-lg hover:bg-gray-100 m-2">
+          <Link to={'/collection'}>
+          <button className=" py-1 px-8 bg-[#F6F6F6] text-[#820000] border border-red-500 rounded-lg hover:bg-gray-100 m-2">
             Cancel
           </button>
-          <button className="w-1/2 p-2 bg-[#820000] text-[#FEFDF9] rounded-lg m-2">
+          </Link>
+          <button className="py-1 px-8 bg-[#820000] text-[#FEFDF9] rounded-lg m-2">
             Submit
           </button>
         </div>
