@@ -9,9 +9,14 @@ import printer from "../../assets/images/printer.svg"
 import vector from "../../assets/images/Vector.svg"
 import trash from "../../assets/images/trash.svg"
 import split from "../../assets/images/list-filter.svg"
-import user from "../../assets/images/circle-user.svg"
 import { Link, useNavigate } from "react-router-dom"
 import search from "../../assets/images/search.svg"
+import { useEffect, useState } from "react"
+import { deleteCustomerAPI, getAllCustomersAPI } from "../../services/CustomerAPI/Customer"
+import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from "react-toastify"
+
+
 
 const CreateCustomer: React.FC = () => {
   const navigate =useNavigate()
@@ -22,9 +27,54 @@ const CreateCustomer: React.FC = () => {
   const handleEdit =()=>{
     navigate('/editcustomer')
   }
+
+  const [customers, setCustomers] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const response = await getAllCustomersAPI();
+        setCustomers(response.data); // Store customers in state
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      } 
+    };
+
+    fetchCustomers();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this customer?")) {
+      try {
+        await deleteCustomerAPI(id);
+        // Remove the deleted customer from the local state
+        setCustomers(customers.filter((customer) => customer._id !== id));
+        console.log(`Customer ${id} deleted successfully.`);
+        toast.success("Customer deleted successfully");
+      } catch (error) {
+        console.error("Error deleting customer:", error);
+        toast.error("Failed to delete customer. Please try again.");
+      }
+    }
+  };
+
+
   
     return (
   <div>
+          <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
 <div className="flex min-h-screen w-full">
       <div>
         <div className="p-6">
@@ -170,49 +220,36 @@ const CreateCustomer: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                
-                 <tr className="border-b" >
+              {customers.map((customer,index)=>(
+                 <tr className="border-b" key={customer.id} >
                  <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      1
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      <img className="mx-auto object-cover w-11 h-11 rounded-full" src={user} alt="" />
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      jhon
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      99898989
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      AN-990
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                     Lorem
-                    </td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      No
-                    </td>
-                    
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                      <button
-                      onClick={handleView}
-                        
-                        className="text-blue-500"
-                      >
-                        <img src={eye} alt="View" />
-                      </button>
-                      <button className="text-red-500 ml-2"    onClick={handleEdit}>
-                   
-                        <img src={vector} alt="Edit" />
-                      </button>
-                      <button className="text-red-500 ml-2">
-            
-                        <img src={trash} alt="Delete" />
-                      </button>
-                    </td>
-                  </tr>
+                <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                  {index + 1} </td>
+                <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                  <img className="mx-auto object-cover w-11 h-11 rounded-full" src={customer.logo} alt="" /> </td>
+                <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                 {customer.firstName} {customer.lastName} </td>
+                <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                {customer.workPhone}
+                </td>
+              <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                {customer.mainRoute}
+              </td>
+              <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                {customer.subRoute}
+              </td>
+            <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+                No
+            </td>
+                                        
+            <td className="p-2 text-[14px] text-center text-[#4B5C79]">
+              <button onClick={handleView} className="text-blue-500"><img src={eye} alt="View" /></button>
+              <button className="text-red-500 ml-2" onClick={handleEdit}><img src={vector} alt="Edit" /></button>
+              <button className="text-red-500 ml-2"  onClick={() => handleDelete(customer._id)} ><img src={trash} alt="Delete" /></button>
+            </td>
+        </tr>
+        ))}
+
               </tbody>
             </table>
           </div>
