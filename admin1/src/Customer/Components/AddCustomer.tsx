@@ -12,9 +12,10 @@ interface CustomerFormData {
   companyName: string
   firstName: string
   lastName: string
-  mobileNumber: string
+  mobileNo: string
   workPhone: string
   workPhone2: string
+  whatsappNo:string
   currency: string
   currencyCode: string
   state: string
@@ -22,19 +23,18 @@ interface CustomerFormData {
   billingAddress: string
   salesMan: string
   nationality: string
-  numberOfBottles: string
+  noOfBottles: string
   ratePerBottle: string
   depositAmount: string
   paymentMode: string
   customerWebsite: string
   taxPreference: string
-  whatsappNumber: string
   placeOfSupply: string
   area: string
-  zipCode: string
+  zipPostalCode: string
   email: string
   landmark: string
-  buildingNumber: string
+  buildingNo: string
   street: string
   mainRoute: string
   subRoute: string
@@ -46,10 +46,10 @@ export default function AddCustomer() {
     companyName: "",
     firstName: "",
     lastName: "",
-    mobileNumber: "",
+    mobileNo: "",
     workPhone: "",
     workPhone2: "",
-    whatsappNumber: "",
+    whatsappNo: "",
     currency: "",
     currencyCode: "AED",
     state: "",
@@ -57,7 +57,7 @@ export default function AddCustomer() {
     billingAddress: "",
     salesMan: "",
     nationality: "",
-    numberOfBottles: "",
+    noOfBottles: "",
     ratePerBottle: "",
     depositAmount: "",
     paymentMode: "Cash",
@@ -65,10 +65,10 @@ export default function AddCustomer() {
     taxPreference: "",
     placeOfSupply: "",
     area: "",
-    zipCode: "",
+    zipPostalCode: "",
     email: "",
     landmark: "",
-    buildingNumber: "",
+    buildingNo: "",
     street: "",
     mainRoute: "",
     subRoute: "",
@@ -105,9 +105,10 @@ export default function AddCustomer() {
       companyName: "",
       firstName: "",
       lastName: "",
-      mobileNumber: "",
+      mobileNo: "",
       workPhone: "",
       workPhone2: "",
+      whatsappNo:"",
       currency: "",
       currencyCode: "INR",
       state: "",
@@ -115,19 +116,18 @@ export default function AddCustomer() {
       billingAddress: "",
       salesMan: "",
       nationality: "",
-      numberOfBottles: "",
+      noOfBottles: "",
       ratePerBottle: "",
       depositAmount: "",
       paymentMode: "Cash",
       customerWebsite: "",
       taxPreference: "",
-      whatsappNumber: "",
       placeOfSupply: "",
       area: "",
-      zipCode: "",
+      zipPostalCode: "",
       email: "",
       landmark: "",
-      buildingNumber: "",
+      buildingNo: "",
       street: "",
       mainRoute: "",
       subRoute: "",
@@ -269,7 +269,7 @@ export default function AddCustomer() {
               <div className="grid grid-cols-2 space-x-2">
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Mobile Number</label>
-                  <input type="text" name="mobileNumber" value={formData.mobileNumber} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter mobile" maxLength={10} pattern="\d{10}" required />
+                  <input type="text" name="mobileNo" value={formData.mobileNo} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter mobile" maxLength={10} pattern="\d{10}" required />
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Work Phone</label>
@@ -320,7 +320,7 @@ export default function AddCustomer() {
               <div className="flex space-x-2">
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Number of bottles</label>
-                  <input type="text" name="numberOfBottles" value={formData.numberOfBottles} onChange={handleInputChange} className="h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter number of bottles" />
+                  <input type="text" name="noOfBottles" value={formData.noOfBottles} onChange={handleInputChange} className="h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter number of bottles" />
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Rate per bottle</label>
@@ -392,7 +392,7 @@ export default function AddCustomer() {
                     <input type="checkbox" checked={whatsappSameAsMobile} onChange={handleWhatsappCheckbox} className="mr-1 ms-2" />
                     Same as Work Phone
                   </label>
-                  <input type="text" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter WhatsApp number" maxLength={10} pattern="\d{10}" disabled={whatsappSameAsMobile} />
+                  <input type="text" name="whatsappNo" value={formData.whatsappNo} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter WhatsApp number" maxLength={10} pattern="\d{10}" disabled={whatsappSameAsMobile} />
                 </div>
               </div>
 
@@ -410,7 +410,7 @@ export default function AddCustomer() {
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Zip Postal Code</label>
-                  <input type="text" name="zipCode" value={formData.zipCode} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter zip code" maxLength={6} pattern="\d{6}" />
+                  <input type="text" name="zipPostalCode" value={formData.zipPostalCode} onChange={handleInputChange} className="w-[336px] h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter zip code" maxLength={6} pattern="\d{6}" />
                 </div>
               </div>
 
@@ -430,7 +430,7 @@ export default function AddCustomer() {
               <div className="flex">
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Building Number</label>
-                  <input type="text" name="buildingNumber" value={formData.buildingNumber} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter building number" />
+                  <input type="text" name="buildingNo" value={formData.buildingNo} onChange={handleInputChange} className="w-[307px] h-[36px] px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter building number" />
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Street</label>

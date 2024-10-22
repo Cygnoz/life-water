@@ -132,7 +132,7 @@ const ViewCustmor: React.FC = () => {
             <div className="p-8 rounded-[24px] flex justify-between items-center w-[388px] mx-8 h-[123px]" style={{ background: 'linear-gradient(91.71deg, #FFE3B8 -19.39%, #D5DCB3 97.82%)' }}>
               <img src={bottle} alt="License Validity" />
               <div className="text-right">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">Vehicle in hand</h2>
+                <h2 className="text-xl font-semibold text-gray-800 mb-2">Bottle in hand</h2>
                 <p className="text-gray-600">0</p>
               </div>
             </div>

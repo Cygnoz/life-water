@@ -15,6 +15,8 @@ import { useEffect, useState } from "react"
 import { deleteCustomerAPI, getAllCustomersAPI } from "../../services/CustomerAPI/Customer"
 import 'react-toastify/dist/ReactToastify.css'; 
 import { ToastContainer, toast } from "react-toastify"
+import { BASEURL } from "../../services/Baseurl"
+
 
 
 
@@ -42,6 +44,9 @@ const CreateCustomer: React.FC = () => {
 
     fetchCustomers();
   }, []);
+
+  const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
+
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this customer?")) {
@@ -226,7 +231,10 @@ const CreateCustomer: React.FC = () => {
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                   {index + 1} </td>
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-                  <img className="mx-auto object-cover w-11 h-11 rounded-full" src={customer.logo} alt="" /> </td>
+                  {/* <img className="mx-auto object-cover w-11 h-11 rounded-full" src={customer.logo} alt="" />  */}
+                  <img className="mx-auto object-cover w-11 h-11 rounded-full" src={customer.logo ? `${BASEURL}/uploads/${customer.logo}` : defaultImage} alt={`${customer.firstName} ${customer.lastName}`} />
+                  </td>
+
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">
                  {customer.firstName} {customer.lastName} </td>
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">
