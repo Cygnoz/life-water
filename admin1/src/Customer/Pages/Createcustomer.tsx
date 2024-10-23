@@ -23,11 +23,11 @@ import { BASEURL } from "../../services/Baseurl"
 const CreateCustomer: React.FC = () => {
   const navigate =useNavigate()
 
-  const handleView =()=>{
-    navigate('/viewcustomer')
+  const handleView =(id:string)=>{
+    navigate(`/viewcustomer/${id}`)
   }
-  const handleEdit =()=>{
-    navigate('/editcustomer')
+  const handleEdit =(id:string)=>{
+    navigate(`/editcustomer/${id}`)
   }
 
   const [customers, setCustomers] = useState<any[]>([]);
@@ -82,7 +82,7 @@ const CreateCustomer: React.FC = () => {
 
 <div className="flex min-h-screen w-full">
       <div>
-        <div className="p-2">
+        <div className="p-6">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <div>
@@ -154,13 +154,13 @@ const CreateCustomer: React.FC = () => {
 
             <div className="p-4 bg-white shadow-md rounded-lg">
               <img className="w-[40px] h-[35px] " src={credit} alt="" />
-              <div className=" font-bold leading-normal text-[#303F58] text-[17px] mt-2">
+              <div className="w-[700px] font-bold leading-normal text-[#303F58] text-[17px] mt-2">
                 Credit Customer
               </div>
               <p className="text-[#4B5C79] w-[400] text-[12]">
                 Lorem ipsum dolor sit amet consectetur{" "}
               </p>
-              <div className="text-[#820000] font-bold  leading-normal text-[18px] mt-3">
+              <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">
                 12
               </div>
             </div>
@@ -251,8 +251,8 @@ const CreateCustomer: React.FC = () => {
             </td>
                                         
             <td className="p-2 text-[14px] text-center text-[#4B5C79]">
-              <button onClick={handleView} className="text-blue-500"><img src={eye} alt="View" /></button>
-              <button className="text-red-500 ml-2" onClick={handleEdit}><img src={vector} alt="Edit" /></button>
+              <button onClick={() =>handleView(customer._id)} className="text-blue-500"><img src={eye} alt="View" /></button>
+              <button className="text-red-500 ml-2" onClick={() =>handleEdit(customer._id)}><img src={vector} alt="Edit" /></button>
               <button className="text-red-500 ml-2"  onClick={() => handleDelete(customer._id)} ><img src={trash} alt="Delete" /></button>
             </td>
         </tr>

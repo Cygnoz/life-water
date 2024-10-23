@@ -54,6 +54,9 @@ const customerSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  currencyCode: {
+    type: String,
+  },
   placeOfSupply: {
     type: String,
     trim: true
@@ -115,6 +118,9 @@ const customerSchema = new mongoose.Schema({
   noOfBottles: {
     type: Number
   },
+  ratePerBottle:{
+    type: Number
+  },
   depositAmount: {
     type: Number
   },
@@ -122,7 +128,7 @@ const customerSchema = new mongoose.Schema({
     type: String,
     enum: ['Cash', 'Credit']
   }
-});
+},{ timestamps: true });
  
 module.exports = mongoose.model('Customer', customerSchema);
  
