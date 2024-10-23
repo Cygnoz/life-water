@@ -1,12 +1,14 @@
  import rupee from '../assets/images/receipt-indian-rupee.svg';
+ import dollar from '../assets/images/circle-dollar.svg';
+
 
 // Define the props interface
 
 const Customers: React.FC = () => {
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 bg-[#F5F6FA] pb-64">
       <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col items-center p-4 bg-gray-100 rounded-lg shadow-md border border-gray-200 col-span-2">
+        <div className="flex flex-col items-center p-4 bg-[#FFFFFF] rounded-lg shadow-md border border-gray-200 col-span-2">
           <div className="space-y-4">
             {/* Cash Sale Section */}
             <div className="flex justify-between items-center p-4 bg-[#F5F6FA] rounded-lg shadow-md border border-gray-200">
@@ -25,7 +27,7 @@ const Customers: React.FC = () => {
             <div className="flex justify-between items-center p-4 bg-[#F5F6FA] rounded-lg shadow-md border border-gray-200">
               <div className="flex items-center">
                 <span className="bg-[#E3E6D5] p-2 rounded-full">
-                  <img src={rupee} alt="Icon" className="w-6 h-6" />
+                  <img src={dollar} alt="Icon" className="w-6 h-6" />
                 </span>
                 <div className="ml-4">
                   <p className="text-xl font-bold  text-[#820000]">0 AED</p>
@@ -52,7 +54,7 @@ const Customers: React.FC = () => {
       </div>
 
       {/* All Customers Button */}
-      <div className="flex justify-center m-2">
+      <div className="flex justify-center ">
         <button className="w-full md:w-96 py-3 bg-[#820000] text-white font-bold rounded-lg">
           All Customers
         </button>
