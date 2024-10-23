@@ -1,6 +1,5 @@
- import rupee from '../assets/images/receipt-indian-rupee.svg';
- import dollar from '../assets/images/circle-dollar.svg';
-
+import rupee from "../assets/images/receipt-indian-rupee.svg";
+import dollar from "../assets/images/circle-dollar.svg";
 
 // Define the props interface
 
@@ -18,7 +17,9 @@ const Customers: React.FC = () => {
                 </span>
                 <div className="ml-4">
                   <p className="text-xl font-bold text-[#820000]">0 AED</p>
-                  <p className="text-sm font-medium text-[#787A7D]">Cash Sale</p>
+                  <p className="text-sm font-medium text-[#787A7D]">
+                    Cash Sale
+                  </p>
                 </div>
               </div>
             </div>
@@ -31,7 +32,9 @@ const Customers: React.FC = () => {
                 </span>
                 <div className="ml-4">
                   <p className="text-xl font-bold  text-[#820000]">0 AED</p>
-                  <p className="text-sm font-medium text-[#787A7D]">Cash Sale</p>
+                  <p className="text-sm font-medium text-[#787A7D]">
+                    Cash Sale
+                  </p>
                 </div>
               </div>
             </div>
@@ -44,8 +47,12 @@ const Customers: React.FC = () => {
                   <img src={rupee} alt="Icon" className="w-6 h-6" />
                 </span>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-[#787A7D]">Membership Customer</p>
-                  <p className="text-xl font-bold  text-[#820000] mr-20">0 AED</p>
+                  <p className="text-sm font-medium text-[#787A7D]">
+                    Membership Customer
+                  </p>
+                  <p className="text-xl font-bold  text-[#820000] mr-20">
+                    0 AED
+                  </p>
                 </div>
               </div>
             </div>
@@ -61,6 +68,6 @@ const Customers: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Customers;
