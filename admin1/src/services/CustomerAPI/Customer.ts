@@ -130,3 +130,31 @@ export const deleteCustomerAPI = async (id: string) => {
     throw error;
   }
 };
+
+export const getACustomerAPI = async (id: string): Promise<ApiResponse> => {
+  try {
+    // Use `id` to fetch the customer by their ID
+    const response = await commonAPI('GET', `${BASEURL}/api/customer/${id}`, null, {
+      // No need to specify headers for GET requests
+    });
+
+    return response; // Ensure the response matches the expected ApiResponse structure
+  } catch (error: any) {
+    console.error("Error fetching customer data:", error); // Log the full error for debugging
+    return { message: error.message || "An unexpected error occurred." }; // Fallback error message
+  }
+};
+
+
+export const updateCustomerAPI = async (id: string, formData: FormData) => {
+  try {
+    const response = await axios.put(`${BASEURL}/api/editcustomer/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the correct content type for form data
+      },
+    });
+    return response.data; // Return the response data
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to update customer');
+  }
+};
