@@ -55,20 +55,13 @@ router.get('/viewSRoute', subrouteController.viewAllSubroutes);
 router.get('/viewSRoute/:id', subrouteController.viewSubroute);
 router.get('/getSRoute/:id', subrouteController.getSubroutebyID);
  
+
+
 //customer
-// Bussiness customer
 router.post('/addcustomer', upload.single('logo'),CustomerController.createCustomer);
-// router.post('/business-customer',  upload.single('logo'),CustomerController.createBusinessCustomer);
-// router.get('/business-customer', CustomerController.getAllBusinessCustomers);
-// router.get('/business-customer/:id', CustomerController.getBusinessCustomerById);
-// router.put('/business-customer/:id', CustomerController.updateBusinessCustomerById);
-// router.delete('/business-customer/:id', CustomerController.deleteBusinessCustomerById);
- 
-// // Individual customer
-// // router.post('/customer', CustomerController.createCustomer);
 router.get('/customer', CustomerController.getAllCustomers);
 router.get('/customer/:id', CustomerController.getCustomerById);
-router.put('/customer/:id', CustomerController.updateCustomerById);
+router.put('/editcustomer/:id', upload.single('logo'),CustomerController.updateCustomerById);
 router.delete('/customer/:id', CustomerController.deleteCustomerById);
  
 module.exports = router;

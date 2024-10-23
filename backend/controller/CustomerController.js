@@ -522,6 +522,7 @@ const createCustomer = async (req, res) => {
       workPhone2,
       whatsappNo,
       currency,
+      currencyCode,
       placeOfSupply,
       state,
       city,
@@ -537,9 +538,13 @@ const createCustomer = async (req, res) => {
       mainRoute,
       subRoute,
       noOfBottles,
+      ratePerBottle,
       depositAmount,
       paymentMode
     } = req.body;
+
+    console.log(req.body);
+    
  
     // Validate required fields
     if (!firstName) {
@@ -570,6 +575,7 @@ const createCustomer = async (req, res) => {
       workPhone2,
       whatsappNo,
       currency,
+      currencyCode,
       placeOfSupply,
       state,
       city,
@@ -585,6 +591,7 @@ const createCustomer = async (req, res) => {
       mainRoute,
       subRoute,
       noOfBottles,
+      ratePerBottle,
       depositAmount,
       paymentMode
     });
@@ -636,24 +643,39 @@ const getCustomerById = async (req, res) => {
 // Update a business customer by ID
 const updateCustomerById = async (req, res) => {
   try {
-    const updatedCustomer = await Customer.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedCustomer) {
-      return res.status(404).json({ message: 'Business customer not found' });
+    // Check if a file (logo) is uploaded
+    let updatedData = { ...req.body };
+    if (req.file) {
+      updatedData.logo = req.file.filename;  // Store the uploaded file's name in the logo field
     }
-    res.status(200).json(updatedCustomer);
+
+    // Update the customer in the database
+    const updatedCustomer = await Customer.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+
+    // Check if the customer was found and updated
+    if (!updatedCustomer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    // Return the updated customer
+    return res.status(200).json(updatedCustomer);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating business customer', error });
+    console.error('Error updating customer:', error);
+    return res.status(500).json({ message: 'Error updating customer', error });
   }
 };
+
+
+
  
 // Delete a business customer by ID
 const deleteCustomerById = async (req, res) => {
   try {
     const deletedCustomer = await Customer.findByIdAndDelete(req.params.id);
     if (!deletedCustomer) {
-      return res.status(404).json({ message: 'Business customer not found' });
+      return res.status(404).json({ message: 'Customer not found' });
     }
-    res.status(200).json({ message: 'Business customer deleted successfully' });
+    res.status(200).json({ message: 'Customer deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Error deleting business customer', error });
   }

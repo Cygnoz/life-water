@@ -105,10 +105,10 @@ const App: React.FC = () => {
 
               {/* CUSTOMER */}
               <Route path='/customer' element={<CreateCustomer/>}/>
-              <Route path='/editcustomer' element={<EditCustomer/>}/>
+              <Route path='/editcustomer/:id' element={<EditCustomer/>}/>
               <Route path='/addcustomer' element={<AddCustomer/>}/>
               {/* <Route path='/editindividual' element={<EditIndividual/>}/> */}
-              <Route path='/viewcustomer' element={<ViewCustmor/>}/>
+              <Route path='/viewcustomer/:id' element={<ViewCustmor/>}/>
 
               {/* RIDE */}
               <Route path='/ride' element={<Ride/>}/>
