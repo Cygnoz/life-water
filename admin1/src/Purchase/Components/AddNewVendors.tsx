@@ -19,7 +19,7 @@ export default function AddNewVendors() {
         theme="colored"
       />
       <div className="flex gap-3 items-center w-full max-w-8xl  ms-1 p-3">
-        <Link to="/customer">
+        <Link to="/suppliers">
           <div className="icon-placeholder">
             <img
               className="bg-gray-200 rounded-full p-2"
@@ -287,12 +287,13 @@ export default function AddNewVendors() {
               </div>
 
               <div className="flex justify-end">
+              <Link to="/suppliers">
                 <button
                   className="px-3 py-1 mt-10 bg-[#FEFDFA] text-[#565148] font-[14px] rounded-md mr-2 border-2 border-[#565148] w-[74px] h-[38px]"
                   type="button"
                 >
                   Cancel
-                </button>
+                </button></Link>
                 <button
                   className="px-3 py-1 mt-10 bg-[#820000] text-[#FEFDF9] font-[14px] rounded-md w-[142px] h-[38px]"
                   type="submit"

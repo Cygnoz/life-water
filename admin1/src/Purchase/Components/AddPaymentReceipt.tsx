@@ -1,15 +1,15 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import back from '../../../assets/images/backbutton.svg';
-import settings from '../../../assets/images/settings.svg'
+import back from '../../assets/images/backbutton.svg';
+import settings from '../../assets/images/settings.svg'
 
 const AddPaymentReceipt: React.FC = () => {
   return (
     <div className='p-2'>
       {/* Header with Back Button */}
       <div className="flex gap-3 items-center w-full max-w-8xl mb-4">
-        <Link to={'/item'}>
+        <Link to={'/paymentreciept'}>
           <div className="icon-placeholder">
             <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
           </div>
@@ -121,12 +121,13 @@ const AddPaymentReceipt: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex justify-end mt-6 space-x-4">
+        <Link to={'/paymentreciept'}>
           <button
             className="px-3 py-1 bg-[#FEFDFA] text-[#565148] font-medium rounded-md border-2 border-[#565148] w-[74px] h-[38px]"
             type="button"
           >
             Cancel
-          </button>
+          </button></Link>
           <button
             className="px-3 py-1 bg-[#820000] text-[#FEFDF9] font-medium rounded-md w-[142px] h-[38px]"
             type="submit"

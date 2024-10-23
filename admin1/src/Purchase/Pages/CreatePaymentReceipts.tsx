@@ -1,10 +1,10 @@
 import React from 'react';
-import printer from "../../../assets/images/printer.svg";
+import printer from "../../assets/images/printer.svg";
 // import vector from "../../../assets/images/Vector.svg";
 // import trash from "../../../assets/images/trash.svg";
-import split from "../../../assets/images/list-filter.svg";
-import plus from "../../../assets/circle-plus.svg";
-import search from "../../../assets/images/search.svg";
+import split from "../../assets/images/list-filter.svg";
+import plus from "../../assets/circle-plus.svg";
+import search from "../../assets/images/search.svg";
 import { Link,} from 'react-router-dom';
 
 const CreatePaymentReceipts: React.FC = () => {
@@ -16,7 +16,7 @@ const CreatePaymentReceipts: React.FC = () => {
 
     return (
         <div className="flex min-h-screen w-full">
-            <div className="p-6 w-full">
+            <div className="p-2 w-full">
                 {/* Header Section */}
                 <div className="flex justify-between items-center mb-4">
                     <div>
@@ -24,7 +24,7 @@ const CreatePaymentReceipts: React.FC = () => {
                         <p className="text-[#4B5C79]">Lorem ipsum dolor sit amet consectetur</p>
                     </div>
                     <div className="flex items-center">
-                        <Link to={'/addpr'}>
+                        <Link to={'/addpaymentreciept'}>
                             <button className="flex items-center gap-2 bg-[#820000] text-white px-3 py-2 rounded-md">
                                 <img src={plus} alt="Add New Item" />
                                 <p>Add New</p>

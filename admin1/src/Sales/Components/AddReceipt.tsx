@@ -10,7 +10,7 @@ const AddReceipt: React.FC = () => {
     <div className='p-2'>
       {/* Header with Back Button */}
       <div className="flex gap-3 items-center w-full max-w-8xl mb-4">
-        <Link to={'/'}>
+        <Link to={'/reciept'}>
           <div className="icon-placeholder">
             <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
           </div>
@@ -125,12 +125,14 @@ const AddReceipt: React.FC = () => {
   Print
 </button>
 
+          <Link to={'/reciept'}>
           <button
             className="px-3 py-1 bg-[#FEFDFA] text-[#565148] font-medium rounded-md border-2 border-[#565148] w-[74px] h-[38px]"
             type="button"
           >
             Cancel
           </button>
+          </Link>
           <button
             className="px-3 py-1 bg-[#820000] text-[#FEFDF9] font-medium rounded-md w-[142px] h-[38px]"
             type="submit"

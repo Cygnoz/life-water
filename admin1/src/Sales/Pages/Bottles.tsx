@@ -12,7 +12,7 @@ const Bottles: React.FC = () => {
     <div>
       <div className="flex min-h-screen w-full">
         <div>
-          <div className="p-6">
+          <div className="p-2">
             {/* Header Section */}
             <div className="flex justify-between items-center">
               <div>

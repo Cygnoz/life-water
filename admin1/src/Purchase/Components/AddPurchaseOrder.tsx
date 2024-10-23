@@ -95,7 +95,7 @@ const AddPurchaseOrder: React.FC = () => {
  {/* Main content */}
  <div className="flex-1 min-h-screen">
  <div className="flex gap-3 items-center w-full max-w-8xl ms-1 mt-2">
-  <Link to="">
+  <Link to="/purchaseorder">
     <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
   </Link>
   <h3 className="text-[20px] text-[#303F58] font-bold ms-1">Add Purchase Order</h3>
@@ -482,9 +482,10 @@ const AddPurchaseOrder: React.FC = () => {
 
 <div className='flex ms-24 mt-5'>
 <div>
+<Link to="/purchaseorder">
   <button className="bg-[#FEFDFA] rounded-lg text-[#565148] text-[14px] py-2 px-4 mx-1 mt-2 w-[74px] h-[38px] border border-[#565148]">
     Cancel
-  </button>
+  </button></Link>
 
 </div>
 <div>
