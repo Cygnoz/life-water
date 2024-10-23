@@ -1,29 +1,31 @@
-import printer from '../assets/images/printer.svg'
-import split from '../assets/images/list-filter.svg'
-import search from "../assets/images/search.svg"
-import plus from "../assets/circle-plus.svg";
+import printer from '../../assets/images/printer.svg'
+import split from '../../assets/images/list-filter.svg'
+import search from "../../assets/images/search.svg"
+import plus from "../../assets/circle-plus.svg";
+import { Link } from 'react-router-dom';
 
 
 const PurchaseOrder: React.FC = () => {
   return (
 <div>
 
-<div className="flex justify-between items-center  pt-3 mx-4">
+<div className="flex justify-between items-center p-2">
         <div >
           <h3 className="text-[#303F58] text-[20px]  font-bold">Purchase Order</h3>
           <p className='text-[#4B5C79] m' >Lorem ipsum dolor sit amet consectetur </p>           
         </div>
         <div className="flex justify-between">
+        <Link to={'/addpurchaseorder'}>
         <button
                 
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white  px-5 py-2 rounded-md"
               >
                 <img src={plus} alt="" />
                 <p>New Purchase Order </p>
-              </button>
+              </button></Link>
           
         </div>
-      </div>
+</div>
 
     {/* Table Section */}
     <div className="bg-white shadow-md rounded-lg p-6 mx-3 my-2">
@@ -75,7 +77,7 @@ const PurchaseOrder: React.FC = () => {
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">abcd</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">
                     <span className="text-red-900 bg-[#E3E6D5] px-5 py-1 rounded-3xl">Billed</span>
-                    </td>
+         </td>
                            <td className="p-2 text-[14] text-center text-[#4B5C79]">60.00</td>
                  
                  
@@ -89,7 +91,7 @@ const PurchaseOrder: React.FC = () => {
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">abcde</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">
                     <span className="text-red-900 bg-[#E3E6D5] px-5 py-1 rounded-3xl">Billed</span>
-                    </td>
+         </td>
                            <td className="p-2 text-[14] text-center text-[#4B5C79]">60.00</td>
                  
                   
@@ -99,11 +101,11 @@ const PurchaseOrder: React.FC = () => {
                 
               </tbody>
             </table>
-          </div>
+</div>
 
 
 </div>
   );
 };
  
-export default PurchaseOrder;
+export default PurchaseOrder;

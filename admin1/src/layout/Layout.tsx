@@ -26,7 +26,6 @@ import AddCustomer from '../Customer/Components/AddCustomer';
 import EditCustomer from '../Customer/Pages/EditCustomer';
 import ViewCustmor from '../Customer/Components/ViewCustmor';
 import Ride from '../Ride/Pages/Ride';
-
 import CreateInternalTransfer from '../Stock/Internal transfer/Pages/CreateInternalTransfer';
 import AddItem from '../Stock/Items/Components/AddItem';
 import CreateItem from '../Stock/Items/Pages/CreateItem';
@@ -46,7 +45,25 @@ import ReturnStock from '../Reportss/Pages/ReturnStock';
 import StockSold from '../Reportss/Pages/StockSold';
 import TotalSale from '../Reportss/Pages/TotalSale';
 import TrailBalance from '../Reportss/Pages/Trailbalance';
-
+import AddNewVendors from '../Purchase/Components/AddNewVendors';
+import AddPaymentReceipt from '../Purchase/Components/AddPaymentReceipt';
+import AddPurchase from '../Purchase/Components/AddPurchase';
+import AddPurchaseOrder from '../Purchase/Components/AddPurchaseOrder';
+import CreatePaymentReceipts from '../Purchase/Pages/CreatePaymentReceipts';
+import Purchase from '../Purchase/Pages/Purchase';
+import PurchaseOrder from '../Purchase/Pages/PurchaseOrder';
+import Suppliers from '../Purchase/Pages/Suppliers';
+import AddCollection from '../Sales/Components/AddCollection';
+import AddCoupon from '../Sales/Components/AddCoupon';
+import AddCreditNote from '../Sales/Components/AddCreditNote';
+import AddReceipt from '../Sales/Components/AddReceipt';
+import Bottles from '../Sales/Pages/Bottles';
+import Coupon from '../Sales/Pages/Coupon';
+import CreditNotes from '../Sales/Pages/CreditNotes';
+import EditCoupon from '../Sales/Pages/EditCoupon';
+import Invoice from '../Sales/Pages/Invoice';
+import Receipt from '../Sales/Pages/Receipt';
+import Salesman from '../Sales/Pages/Salesman';
 
 
 const App: React.FC = () => {
@@ -144,6 +161,31 @@ const App: React.FC = () => {
             <Route path='/stocksold' element={<StockSold/>}/>
             <Route path='/totalsale' element={<TotalSale/>}/>
             <Route path='/trailbalance' element={<TrailBalance/>}/>
+
+            {/* PURCHASE */}
+            <Route path='/addvendors' element={<AddNewVendors/>}/>
+            <Route path='/addpaymentreciept' element={<AddPaymentReceipt/>}/>
+            <Route path='/addpurchase' element={<AddPurchase/>}/>
+            <Route path='/addpurchaseorder' element={<AddPurchaseOrder/>}/>
+            <Route path='/paymentreciept' element={<CreatePaymentReceipts/>}/>
+            <Route path='/purchase' element={<Purchase/>}/>
+            <Route path='/purchaseorder' element={<PurchaseOrder/>}/>
+            <Route path='/suppliers' element={<Suppliers/>}/>
+
+
+            {/* SALES */}
+            <Route path='/addcollection' element={<AddCollection/>}/>
+            <Route path='/addcoupon' element={<AddCoupon/>}/>
+            <Route path='/addcreditnote' element={<AddCreditNote/>}/>
+            <Route path='/addreciept' element={<AddReceipt/>}/>
+            <Route path='/bottles' element={<Bottles/>}/>
+            <Route path='/coupon' element={<Coupon/>}/>
+            <Route path='/editcoupon' element={<EditCoupon/>}/>
+            <Route path='/creditnote' element={<CreditNotes/>}/>
+            <Route path='/editcoupon' element={<EditCoupon/>}/>
+            <Route path='/invoice' element={<Invoice/>}/>
+            <Route path='/reciept' element={<Receipt/>}/>
+            <Route path='/salesman' element={<Salesman/>}/>
 
 
 

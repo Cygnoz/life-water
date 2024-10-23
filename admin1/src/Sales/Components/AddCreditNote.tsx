@@ -11,11 +11,11 @@ const AddCreditNote: React.FC = () => {
   return (
     <div className="flex">
       {/* Left Content */}
-      <div className="w-[65%] p-6">
+      <div className="w-[65%] p-2">
 
         {/* Header Section */}
         <div className="flex items-center mb-6">
-          <Link to="">
+          <Link to="/creditnote">
             <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
           </Link>
           <h3 className="text-[20px] text-[#303F58] font-bold ms-2">New Credit Note</h3>
@@ -148,9 +148,11 @@ const AddCreditNote: React.FC = () => {
     </div>    
 
     <div className="flex justify-center w-full space-x-2 mt-3 ms-24">
+    <Link to={'/creditnote'}>
       <button className="bg-[#FEFDFA] text-[#565148] text-[14px] py-2 px-3 border border-[#565148] rounded-lg">
         Cancel
       </button>
+      </Link>
       <button className="bg-[#FEFDFA] text-[#565148] text-[14px] py-2 px-3 border border-[#565148] flex items-center rounded-lg">
         <img src={printer} className="mr-1" alt="Print" />
         Print

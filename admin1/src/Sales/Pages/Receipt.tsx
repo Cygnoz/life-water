@@ -2,6 +2,7 @@ import printer from '../../assets/images/printer.svg'
 import split from '../../assets/images/list-filter.svg'
 import search from "../../assets/images/search.svg"
 import plus from '../../assets/circle-plus.svg'
+import { Link } from 'react-router-dom';
 
 
 
@@ -9,26 +10,26 @@ const Receipt: React.FC = () => {
   return (
 <div>
 
-<div className="flex justify-between items-center  pt-3 mx-4">
+<div className="flex justify-between items-center  p-2">
         <div >
           <h3 className="text-[#303F58] text-[20px]  font-bold">Receipt</h3>
           <p className='text-[#4B5C79] m' >Lorem ipsum dolor sit amet consectetur commondo enim odio</p>           
         </div>
         <div className="flex justify-between">
-
+        <Link to={'/addreciept'}>
         <button
-          
           className="justify-between items-center gap-2 bg-[#820000] text-white flex px-4 py-2 rounded-md"
         >
           <img src={plus} alt="" />
           <p>Add New</p>
         </button>
+        </Link>
        
-      
+        
        
           
         </div>
-      </div>
+</div>
 
     {/* Table Section */}
     <div className="bg-white shadow-md rounded-lg p-6 mx-3 my-2">

@@ -8,7 +8,7 @@ const Invoice: React.FC = () => {
   return (
 <div>
 
-<div className="flex justify-between items-center  pt-3 mx-4">
+<div className="flex justify-between items-center p-2">
         <div >
           <h3 className="text-[#303F58] text-[20px]  font-bold">Invoice</h3>
           <p className='text-[#4B5C79] m' >Lorem ipsum dolor sit amet consectetur </p>           
@@ -106,4 +106,4 @@ const Invoice: React.FC = () => {
   );
 };
  
-export default Invoice;
+export default Invoice;

@@ -133,28 +133,29 @@ const navlist = [
   {
     nav: "Sales",
     icon:sale,
-    route: "/",
+    route: "/invoice",
     subhead: [
-      {
-        headName: "Dashboard",
-        subRoute: "/supplier",
-      },
-      {
-        headName: "Supplier",
-        subRoute: "/supplier/home",
-      },
+      { headName: "Dashboard", subRoute: "/" },
+      { headName: "Invoice", subRoute: "/invoice" },
+      { headName: "Reciept", subRoute: "/reciept" },
+      { headName: "Credit Notes", subRoute: "/creditnote" },
+      { headName: "Bottles", subRoute: "/bottles" },
+      { headName: "Coupon", subRoute: "/coupon" },
+      { headName: "SalesmanSDr.", subRoute: "/salesman" },
+     
     ],
   },
   {
     nav: "Purchase",
     icon:purchase,
-    route: "/",
+    route: "/suppliers",
     subhead: [
-      {
-        headName: "Dashboard",
-        subRoute: "/",
-      },
-   
+      { headName: "Dashboard", subRoute: "/" },
+      { headName: "Supplier", subRoute: "/suppliers" },
+      { headName: "Purchase Order", subRoute: "/purchaseorder" },
+      { headName: "Purchase", subRoute: "/purchase" },
+      { headName: "Payment Reciept", subRoute: "/paymentreciept" },
+     
     ],
   },
   {

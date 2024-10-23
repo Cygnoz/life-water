@@ -1,20 +1,22 @@
-import printer from '../assets/images/printer.svg'
-import split from '../assets/images/list-filter.svg'
-import search from "../assets/images/search.svg"
-import plus from "../assets/circle-plus.svg";
+import printer from '../../assets/images/printer.svg'
+import split from '../../assets/images/list-filter.svg'
+import search from "../../assets/images/search.svg"
+import plus from "../../assets/circle-plus.svg";
+import { Link } from 'react-router-dom';
 
 
 const Suppliers: React.FC = () => {
   return (
 <div>
 
-<div className="flex justify-between items-center  pt-3 mx-4">
+<div className="flex justify-between items-center p-2">
         <div >
           <h3 className="text-[#303F58] text-[20px]  font-bold">Suppliers</h3>
           <p className='text-[#4B5C79] m' >Lorem ipsum dolor sit amet consectetur </p>           
         </div>
         <div className="flex justify-between">
-        <button
+          <Link to={'/addvendors'} >
+          <button
                 
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white  px-5 py-2 rounded-md"
               >
@@ -22,8 +24,11 @@ const Suppliers: React.FC = () => {
                 <p>New Supplier </p>
               </button>
           
+          </Link>
+        
+          
         </div>
-      </div>
+</div>
 
     {/* Table Section */}
     <div className="bg-white shadow-md rounded-lg p-6 mx-3 my-2">
@@ -84,11 +89,11 @@ const Suppliers: React.FC = () => {
                 
               </tbody>
             </table>
-          </div>
+</div>
 
 
 </div>
   );
 };
  
-export default Suppliers;
+export default Suppliers;
