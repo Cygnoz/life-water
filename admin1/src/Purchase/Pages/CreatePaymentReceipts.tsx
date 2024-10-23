@@ -1,18 +1,18 @@
 import React from 'react';
 import printer from "../../../assets/images/printer.svg";
-import vector from "../../../assets/images/Vector.svg";
-import trash from "../../../assets/images/trash.svg";
+// import vector from "../../../assets/images/Vector.svg";
+// import trash from "../../../assets/images/trash.svg";
 import split from "../../../assets/images/list-filter.svg";
 import plus from "../../../assets/circle-plus.svg";
 import search from "../../../assets/images/search.svg";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,} from 'react-router-dom';
 
 const CreatePaymentReceipts: React.FC = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-    const handleEdit = () => {
-        navigate('/edititem');
-    };
+    // const handleEdit = () => {
+    //     navigate('/edititem');
+    // };
 
     return (
         <div className="flex min-h-screen w-full">
