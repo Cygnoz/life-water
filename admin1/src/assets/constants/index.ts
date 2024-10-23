@@ -165,11 +165,25 @@ const navlist = [
       { headName: "Dashbord", subRoute: "/" },
       { headName: "Expense", subRoute: "/expense/home" },
     ],
+
   },
   {
     nav: "Reports",
     icon:reports,
-    route: "/reports",
+    route: "/creditsale",
+    subhead: [
+      { headName: "Credit Sale", subRoute: "/creditsale" },
+      { headName: "Cash Sale", subRoute: "/cashsale" },
+      { headName: "Coupon Sale", subRoute: "/couponsale" },
+      { headName: "Trail Balance", subRoute: "/trailbalance" },
+      { headName: "Total Sale", subRoute: "/totalsale" },
+      { headName: "Return Stock", subRoute: "/returnstock" },
+      { headName: "Stock Sold", subRoute: "/stocksold" },
+      { headName: "Profit & Lose", subRoute: "/profit-lose" },
+      { headName: "Balance Sheet", subRoute: "/balancesheet" },
+      { headName: "Day Book", subRoute: "/daybook" },
+    ],
+
   },
 
  
