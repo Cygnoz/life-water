@@ -66,12 +66,6 @@ const updateRoute = async (req, res) => {
     const { id } = req.params;
     const updateData = req.body;
 
-    const existingRoute = await MainRoute.findOne({ routeCode: req.body.routeCode });
-
-    if (existingRoute) {
-      return res.status(400).json({ message: 'Route with this code already exists.' });
-    }
- 
     const updatedRoute = await MainRoute.findByIdAndUpdate(id, updateData, { new: true });
     if (!updatedRoute) {
       return res.status(404).json({ message: 'Route not found' });
