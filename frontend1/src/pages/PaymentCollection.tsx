@@ -16,7 +16,7 @@ const PaymentCollection: React.FC = () => {
 <input
     type="text"
     placeholder="Search"
-    className="pl-10 pr-4 text-sm w-full rounded-xl text-[#8F99A9] h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
+    className="pl-10 pr-4 text-sm w-full rounded-3xl text-[#8F99A9] h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
   />
   {/* Search Icon */}
 <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -34,11 +34,11 @@ const PaymentCollection: React.FC = () => {
         <img
           src={img}
           alt="Illustration"
-          className="w-54 h-54 object-cover mb-6 "
+          className=" object-cover mb-6 "
         />
 
         {/* No Payment Collection Text */}
-        <span className="text-[#787A7D] text-sm font-medium">No Payment Collection</span>
+        <span className="text-[#787A7D] text-[14px] font-[700]">No Payment Collection</span>
       </div>
     </div>
   );

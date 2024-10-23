@@ -30,7 +30,7 @@ const Visithistory: React.FC = () => {
       <input
     type="text"
     placeholder="Search"
-    className="pl-10 pr-4 text-sm w-full rounded-xl text-gray-800 h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
+    className="pl-10 pr-4 text-sm w-full rounded-3xl text-gray-800 h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
   />
   
   {/* Search Icon */}

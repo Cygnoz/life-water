@@ -15,8 +15,8 @@ const Returncustomer: React.FC = () => {
   {/* Search Input */}
 <input
     type="text"
-    placeholder="Search..."
-    className="pl-10 pr-4 text-sm w-full rounded-xl text-[#8F99A9] h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
+    placeholder="Search"
+    className="pl-10 pr-4 text-sm w-full rounded-3xl text-[#8F99A9] h-10 border-0 bg-[#FFFFFF] focus:ring-1 focus:ring-gray-100 focus:outline-none focus:shadow-none"
   />
   {/* Search Icon */}
 <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -29,12 +29,12 @@ const Returncustomer: React.FC = () => {
         </div>
 
         {/* Main illustration and text */}
-        <div className="flex flex-col items-center p-8 m-8">
+        <div className="flex flex-col items-center">
           {/* Illustration Image */}
-          <img src={customer} alt="Illustration" className="w-64 h-64 object-cover mb-4" />
+          <img src={customer} alt="Illustration" className=" w-auto object-cover mb-4" />
 
           {/* No Return Customers Text */}
-          <span className="text-gray-500 text-sm">No Return Customers</span>
+          <span className="text-gray-500 text-[14px] font-[700]">No Return Customers</span>
         </div>
       </div>
     </div>
