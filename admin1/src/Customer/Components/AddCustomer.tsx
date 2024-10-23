@@ -15,19 +15,19 @@ interface CustomerFormData {
   mobileNo: string
   workPhone: string
   workPhone2: string
-  whatsappNo:string
+  whatsappNo: string
   currency: string
   currencyCode: string
   state: string
   city: string
   billingAddress: string
-  salesMan: string
+  salesman: string
   nationality: string
   noOfBottles: string
   ratePerBottle: string
   depositAmount: string
   paymentMode: string
-  customerWebsite: string
+  companyWebsite: string
   taxPreference: string
   placeOfSupply: string
   area: string
@@ -55,13 +55,13 @@ export default function AddCustomer() {
     state: "",
     city: "",
     billingAddress: "",
-    salesMan: "",
+    salesman: "",
     nationality: "",
     noOfBottles: "",
     ratePerBottle: "",
     depositAmount: "",
     paymentMode: "Cash",
-    customerWebsite: "",
+    companyWebsite: "",
     taxPreference: "",
     placeOfSupply: "",
     area: "",
@@ -88,9 +88,10 @@ export default function AddCustomer() {
     setWhatsappSameAsMobile(!whatsappSameAsMobile)
     setFormData((prev) => ({
       ...prev,
-      whatsappNumber: !whatsappSameAsMobile ? prev.workPhone : "",
+      whatsappNo: !whatsappSameAsMobile ? prev.workPhone : "",
     }))
   }
+  
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -108,19 +109,19 @@ export default function AddCustomer() {
       mobileNo: "",
       workPhone: "",
       workPhone2: "",
-      whatsappNo:"",
+      whatsappNo: "",
       currency: "",
       currencyCode: "INR",
       state: "",
       city: "",
       billingAddress: "",
-      salesMan: "",
+      salesman: "",
       nationality: "",
       noOfBottles: "",
       ratePerBottle: "",
       depositAmount: "",
       paymentMode: "Cash",
-      customerWebsite: "",
+      companyWebsite: "",
       taxPreference: "",
       placeOfSupply: "",
       area: "",
@@ -138,9 +139,9 @@ export default function AddCustomer() {
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
-  
+
   //   const formDataObj = new FormData();
-  
+
   //   Object.entries(formData).forEach(([key, value]) => {
   //     if (key === 'customerType') {
   //       formDataObj.append(key, value.toString());
@@ -148,16 +149,16 @@ export default function AddCustomer() {
   //       formDataObj.append(key, value.toString());
   //     }
   //   });
-  
+
   //   if (logo) {
   //     formDataObj.append("logo", logo);
   //   }
-  
+
   //   try {
   //     const response = await addCustomerAPI(formDataObj);
-  
+
   //   console.log("Response status:", response.status);
-  
+
   //     // Check for response status
   //     if (response.status === 201) {
   //       toast.success(response.message); // Display success message
@@ -170,55 +171,44 @@ export default function AddCustomer() {
   //     toast.error(error.message || "Failed to add customer. Please try again.");
   //   }
   // };
-  
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  
-    const formDataObj = new FormData();
-  
+    e.preventDefault()
+
+    const formDataObj = new FormData()
+
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'customerType') {
-        formDataObj.append(key, value.toString());
+      if (key === "customerType") {
+        formDataObj.append(key, value.toString())
       } else if (value !== null && value !== undefined && value !== "") {
-        formDataObj.append(key, value.toString());
+        formDataObj.append(key, value.toString())
       }
-    });
-  
+    })
+
     if (logo) {
-      formDataObj.append("logo", logo);
+      formDataObj.append("logo", logo)
     }
-  
+
     try {
-      const response = await addCustomerAPI(formDataObj);
-  
-      console.log("Response:", response); // Debug log
-  
+      const response = await addCustomerAPI(formDataObj)
+
+      console.log("Response:", response) // Debug log
+
       if (response.status === 201) {
-        toast.success(response.message || "Customer added successfully");
-        clearForm();
+        toast.success(response.message || "Customer added successfully")
+        clearForm()
       } else {
-        toast.error(response.message || "Failed to add customer. Please try again.");
+        toast.error(response.message || "Failed to add customer. Please try again.")
       }
     } catch (error: any) {
-      console.error("Error submitting the form:", error);
-      toast.error(error.message || "Failed to add customer. Please try again.");
+      console.error("Error submitting the form:", error)
+      toast.error(error.message || "Failed to add customer. Please try again.")
     }
-  };
+  }
 
   return (
     <div>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
       <div className="flex gap-3 items-center w-full max-w-8xl mb-1 ms-1 p-3">
         <Link to="/customer">
           <div className="icon-placeholder">
@@ -308,7 +298,7 @@ export default function AddCustomer() {
               <div className="grid grid-cols-2 space-x-2">
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Sales Man</label>
-                  <input type="text" name="salesMan" value={formData.salesMan} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter sales man" required />
+                  <input type="text" name="salesman" value={formData.salesman} onChange={handleInputChange} className="h-[36px] w-full px-3 py-2 border me-5 rounded-md focus:outline-none focus:ring-2 gap-[126px] focus:ring-blue-500" placeholder="Enter sales man" required />
                 </div>
                 <div>
                   <label className="block text-[#303F58] font-[14px] mb-2">Nationality</label>
@@ -341,7 +331,7 @@ export default function AddCustomer() {
                     Cash
                   </label>
                   <label className="flex items-center">
-                    <input type="radio" name="paymentMode" value="Credit" checked={formData.paymentMode === "Credit"} onChange={handleInputChange} className="mr-2" required  />
+                    <input type="radio" name="paymentMode" value="Credit" checked={formData.paymentMode === "Credit"} onChange={handleInputChange} className="mr-2" required />
                     Credit
                   </label>
                 </div>
@@ -364,8 +354,8 @@ export default function AddCustomer() {
                   </div>
                   {/* Customer website */}
                   <div>
-                    <label className="block text-[#303F58] mt-0.5 font-[14px] mb-2">Customer Website</label>
-                    <input type="text" name="customerWebsite" value={formData.customerWebsite} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Website" />
+                    <label className="block text-[#303F58] mt-0.5 font-[14px] mb-2">Company Website</label>
+                    <input type="text" name="companyWebsite" value={formData.companyWebsite} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Website" />
                   </div>
                 </div>
               )}
