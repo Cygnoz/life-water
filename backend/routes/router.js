@@ -5,8 +5,9 @@ const vehicleController = require('../controller/VehicleController');
 const routeController = require('../controller/RouteController');
 const subrouteController = require('../controller/SubRouteController');
 const CustomerController = require('../controller/CustomerController');
- 
-const upload = require('../middleware/Multermiddleware')
+
+const upload = require('../middleware/Multermiddleware');
+const ActiveRouteController= require('../controller/ActiveRouteController');
  
 // STAFF
  
@@ -65,5 +66,9 @@ router.get('/customer', CustomerController.getAllCustomers);
 router.get('/customer/:id', CustomerController.getCustomerById);
 router.put('/editcustomer/:id', upload.single('logo'),CustomerController.updateCustomerById);
 router.delete('/customer/:id', CustomerController.deleteCustomerById);
+
+// Active Route
+router.post('/activroutes', ActiveRouteController.createActiveRoute);
+router.get('/getActiveRoutes', ActiveRouteController.getActiveRoutes);
  
 module.exports = router;
