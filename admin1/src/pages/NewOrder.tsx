@@ -21,7 +21,7 @@ interface Item {
   quantity: number;
   rate: number;
   amount: number;
-}
+} 
 
 interface OrderDetails {
   customer: string;
