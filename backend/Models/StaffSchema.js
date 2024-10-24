@@ -64,18 +64,6 @@ const staffSchema = new mongoose.Schema({
 });
 
 // Pre-save hook to hash the password before saving
-staffSchema.pre('save', async function(next) {
-  if (this.isModified('password')) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  }
-  next();
-});
-
-// Method to compare password for login
-staffSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
 
 const Staff = mongoose.model('Staff', staffSchema);
 
