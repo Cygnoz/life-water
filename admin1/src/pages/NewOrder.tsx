@@ -1,11 +1,15 @@
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
 import trash from '../assets/images/trash.svg'
 import circleplus from '../assets/images/Icon.svg'
 import pen from '../assets/images/pen.svg'
 import printer from '../assets/images/printer.svg'
 import back from '../assets/images/backbutton.svg'
 import { Link } from 'react-router-dom';
+import cimage from '../assets/images/Ellipse 43.svg'
+import icondown from '../assets/images/Icon down.svg'
+import search from '../assets/images/search.svg'
+
 
 
 interface Item {
@@ -52,6 +56,37 @@ const NewOrder: React.FC = () => {
     });
   };
 
+  const [openDropdownIndex, setOpenDropdownIndex] = useState<string | null>(
+    null
+  );
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+ 
+  const toggleDropdown = (key: string | null) => {
+    setOpenDropdownIndex(key === openDropdownIndex ? null : key);
+  };
+ 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setOpenDropdownIndex(null);
+    }
+  };
+ 
+  useEffect(() => {
+    if (openDropdownIndex !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+ 
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openDropdownIndex]);
+
+
   return (
     <>
       <div className='flex bg-gray-50'>
@@ -73,15 +108,63 @@ const NewOrder: React.FC = () => {
              <div className="grid grid-cols-2 gap-4 mb-4">
                <div>
                  <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Customer</label>
-                 <select
-                   name="customer"
-                   value={orderDetails.customer}
-                   onChange={updateOrder}
-                   className="w-full p-2 border rounded-md  text-[#8F99A9] text-[14px]"
-                 >
-                   <option value="" className='font-normal'>Select customer</option>
-                   {/* Add customer options */}
-                 </select>
+                 <div className="relative w-full" onClick={() => toggleDropdown("customer")}>
+                    <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <span className='font-normal'>Select Supplier</span>
+                    </div>
+                    {/* <img className='ms-96 -mt-6 w-[11px] h-[11px] text-[#495160]' src={icondown} alt="" /> */}
+
+                    {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    </div> */}
+                    <img className='ms-[435px] -mt-6 w-[11px] h-[11px] text-[#495160]' src={icondown} alt="" />
+
+                   
+                  </div>
+                  {openDropdownIndex === "customer" && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-[52px] space-y-1"
+                    >
+                      <div className=" grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+                      <input
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(#818894)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Order"
+                 
+              />
+                        <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
+                        {/* <span className='text-[#818894] ms-16 -mt-9 text-[14px] font-normal'>Search</span> */}
+                      </div>
+                      <div className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
+                        <div className="col-span-2 flex items-center justify-center">
+                          <img
+                            src={cimage}
+                            alt=""
+                          />
+                        </div>
+                        <div className="col-span-10 flex">
+                          <div>
+                            <p className="font-semibold text-[14px] text-[#0B1320]">Smart Phone</p>
+                            <p className="text-[12px] font-normal text-[#495160]">
+                              Phone: 9643287899
+                            </p>
+                          </div>
+                          <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
+                            &times;
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+                        <img className='mt-2 ms-3' src={circleplus} alt="" />
+                        <span className='text-[#820000] ms-8 -mt-10'>Add New Customer</span>
+                      </div>
+                    </div>
+                  )}
+
                </div>
                <div>
                  <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Salesman</label>
@@ -196,9 +279,50 @@ const NewOrder: React.FC = () => {
                 <tr className="border-b">
                   <td className="p-2 text-center font-normal">
                     <label className='text-[#8F99A9] text-[14px]'>Type or Click</label>
-                    <select name="" id="" className='text-gray-400'>
-                      <option value=""></option>
-                    </select>
+                    {openDropdownIndex === "product" && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-[52px] space-y-1"
+                    >
+                    <div className="bg-[#F9F7F5] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+                    <input
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(#818894)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Order"
+                 
+              />
+                        <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
+
+                    </div>
+                    <div className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
+                        <div className="col-span-2 flex items-center justify-center">
+                          <img
+                            src={cimage}
+                            alt=""
+                          />
+                        </div>
+                        <div className="col-span-10 flex">
+                          <div>
+                            <p className="font-semibold text-[14px] text-[#0B1320] -ms-1">Smart Phone</p>
+                            <p className="text-[12px] font-normal text-[#495160] ms-2">
+                              Phone: 9643287899
+                            </p>
+                          </div>
+                          <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
+                            &times;
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+                        <img className='mt-2 ms-4' src={circleplus} alt="" />
+                        <span className='text-[#820000] -mt-10 -ms-32'>Add New Item</span>
+                      </div>
+                    </div>
+                  )}
                   </td>
                   <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">0</td>
                   <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">0.00</td>
@@ -214,6 +338,8 @@ const NewOrder: React.FC = () => {
 
               </tbody>
             </table>
+            <img className='w-[11px] h-[11px] text-[#495160] ms-44 -mt-6' onClick={() => toggleDropdown("product")} src={icondown} alt="" />
+
 
                <button
                  onClick={addItem}
