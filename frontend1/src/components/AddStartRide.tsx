@@ -155,6 +155,8 @@ const AddStartRide: React.FC = () => {
               readOnly // Prevent user from editing this field
               className="w-full p-2 border border-gray-300 rounded-lg"
             />
+
+            
           </div>
 
           <div className="space-y-1">
