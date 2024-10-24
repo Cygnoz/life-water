@@ -9,6 +9,10 @@ import { Link } from 'react-router-dom';
 import cimage from '../assets/images/Ellipse 43.svg'
 import icondown from '../assets/images/Icon down.svg'
 import search from '../assets/images/search.svg'
+import { getAllCustomersAPI } from '../services/CustomerAPI/Customer';
+import { BASEURL } from '../services/Baseurl';
+import { getAllStaffsAPI } from '../services/AllApi';
+import { getItemsAPI } from '../services/StockAPI/StockAPI';
 
 
 
@@ -17,7 +21,7 @@ interface Item {
   quantity: number;
   rate: number;
   amount: number;
-}
+} 
 
 interface OrderDetails {
   customer: string;
@@ -41,6 +45,7 @@ const NewOrder: React.FC = () => {
     notes: '',
     terms: '',
   });
+
 
   // Update order details
   const updateOrder = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -87,6 +92,113 @@ const NewOrder: React.FC = () => {
   }, [openDropdownIndex]);
 
 
+  interface Customer{
+    companyName:string
+    firstName: string
+    lastName:string
+    logo:string
+    mobileNo:string
+  }
+   
+// get customer
+const [customers, setCustomers] = useState<any[]>([]);  // State for customer data
+// const [searchTerm, setSearchTerm] = useState('');  // State for search functionality
+const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+
+const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
+
+
+// Fetch customer data on component mount
+useEffect(() => {
+  const fetchCustomers = async () => {
+    try {
+      const response = await getAllCustomersAPI();
+      setCustomers(response.data); // Store customers in state
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
+
+  fetchCustomers();
+}, []);
+
+const handleCustomerSelection = (customer: Customer) => { setSelectedCustomer(customer); toggleDropdown(""); // Close dropdown after selection
+  };
+
+  // adding row in tables
+  const [rows, setRows] = useState([
+    { product: <img src={icondown} alt="" />, quantity: 0, rate: 0.0, amount: 0.0 },
+  ]);
+ 
+    // Function to add a new row
+    const addNewRow = () => {
+      const newRow = { product: <img src={icondown} alt="" />, quantity: 0, rate: 0.0, amount: 0.0 };
+      setRows([...rows, newRow]);
+    };
+ 
+    // delete a row
+    const deleteRow = (index: number) => {
+      setRows(rows.filter((_, rowIndex) => rowIndex !== index));
+    };
+
+    interface Staff {
+      firstname: string
+      lastname: string
+      designation: string 
+      profile :string// Add other fields as per your staff object structure
+    }
+    const [staffList, setStaffList] = useState<Staff[]>([])
+    const [selectedSalesman, setSelectedSalesman] = useState<Staff | null>(null);
+  const [filteredStaffList, setFilteredStaffList] = useState<Staff[]>([]) // Fix here
+
+    
+  // Fetch staff data on component mount
+  useEffect(() => {
+    const fetchStaff = async () => {
+      try {
+        const response = await getAllStaffsAPI()
+        console.log("Full API Response:", response) // Check the response
+        setStaffList(response as any) // Store full staff list
+        setFilteredStaffList(response as any) // Initially, display all staff
+      } catch (error) {
+        console.error("Error fetching staff data:", error)
+      }
+    }
+
+    fetchStaff()
+  }, [])
+
+  
+const handleSalesmanSelection = (salesman: Staff) => {
+  setSelectedSalesman(salesman);
+  toggleDropdown(""); // Close dropdown after selection
+};
+
+
+
+const [items, setItems] = useState<any[]>([]); // State to store fetched items
+const [loading, setLoading] = useState(true); // State to manage loading state
+
+useEffect(() => {
+  // Fetch items when the component mounts
+  const fetchItems = async () => {
+    try {
+      const data = await getItemsAPI();
+      setItems(data);
+    } catch (error) {
+      console.error('Error fetching items:', (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  console.log(items);
+  
+
+  fetchItems();
+}, []);
+
+
+// const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
   return (
     <>
       <div className='flex bg-gray-50'>
@@ -100,84 +212,142 @@ const NewOrder: React.FC = () => {
         <Link to="/orders">
           <img className="bg-gray-200 rounded-full p-2" src={back} alt="Back" />
         </Link>
-        <h3 className="text-[20px] text-[#303F58] font-bold ms-1">New Odrer</h3>
+        <h3 className="text-[20px] text-[#303F58] font-bold ms-1">New order</h3>
       </div>
          <div className="container mx-auto p-4">
            <div className="bg-white p-4 -mt-2 -ms-2 rounded-lg shadow-md">
              {/* Customer and Salesman Selection */}
              <div className="grid grid-cols-2 gap-4 mb-4">
+             <div className='mb-2'>
+      <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Customer</label>
+      <div className="relative w-full" onClick={() => toggleDropdown("customer")}>
+        <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+          <span className='font-normal'>
+          {selectedCustomer
+            ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}`
+            : "Select Customer"}
+          </span>
+        </div>
+
+        <img className='ms-[435px] -mt-6 w-[11px] h-[11px] text-[#495160]' src={icondown} alt="" />
+      </div>
+
+      {openDropdownIndex === "customer" && (
+        <div
+          ref={dropdownRef}
+          className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] space-y-1"
+        >
+          {/* Search input */}
+          <div className="grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+            <input
+              className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+              placeholder="Search Customer"
+              // value={searchTerm}
+              // onChange={(e) => setSearchTerm(e.target.value)} // Update search term on change
+            />
+            <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
+          </div>
+
+          {/* Filtered customer list */}
+          {customers.map(customer => (
+            <div key={customer._id}
+            onClick={()=>handleCustomerSelection(customer)}
+            className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
+              <div className="col-span-2 flex items-center justify-center">
+                <img src={customer.logo ? `${BASEURL}/uploads/${customer.logo}` : defaultImage} alt={`${customer.firstName} ${customer.lastName}`} />
+              </div>
+              <div className="col-span-10 flex">
+                <div>
+                  <p className="font-semibold text-[14px] text-[#0B1320]">{customer.companyName}</p>
+                  <p className="text-[12px] font-normal text-[#495160]">
+                    Phone: {customer.mobileNo}
+                  </p>
+                </div>
+                <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
+                  &times;
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Add new customer option */}
+         <Link to='/addcustomer'>
+         <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+            <img className='mt-2 ms-3' src={circleplus} alt="" />
+            <span className='text-[#820000] ms-8 -mt-10'>Add New Customer</span>
+          </div>
+         </Link>
+        </div>
+      )}
+    </div>
                <div>
-                 <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Customer</label>
-                 <div className="relative w-full" onClick={() => toggleDropdown("customer")}>
-                    <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                        <span className='font-normal'>Select Supplier</span>
-                    </div>
-                    {/* <img className='ms-96 -mt-6 w-[11px] h-[11px] text-[#495160]' src={icondown} alt="" /> */}
+    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">
+      Select Salesman
+    </label>
+    <div className="relative w-full" onClick={() => toggleDropdown("salesman")}>
+      <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+        <span className="font-normal">
+          {selectedSalesman
+            ? `${selectedSalesman.firstname} ${selectedSalesman.lastname}`
+            : "Select Salesman"}
+        </span>
+      </div>
+      <img className="ms-[435px] -mt-6 w-[11px] h-[11px] text-[#495160]" src={icondown} alt="" />
+    </div>
 
-                    {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                    </div> */}
-                    <img className='ms-[435px] -mt-6 w-[11px] h-[11px] text-[#495160]' src={icondown} alt="" />
+    {openDropdownIndex === "salesman" && (
+      <div ref={dropdownRef} className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-auto space-y-1">
+        {/* Search Bar */}
+        <div className="grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+          <input
+            className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+            style={{
+              backgroundColor: "rgba(#818894)",
+              outline: "none",
+              boxShadow: "none",
+            }}
+            placeholder="Search Salesman"
+          />
+          <img className="ms-3 -mt-12 w-[15px] h-[15px]" src={search} alt="" />
+        </div>
 
-                   
-                  </div>
-                  {openDropdownIndex === "customer" && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-[52px] space-y-1"
-                    >
-                      <div className=" grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
-                      <input
-                className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
-                style={{
-                  backgroundColor: "rgba(#818894)",
-                  outline: "none",
-                  boxShadow: "none",
-                }}
-                placeholder="Search Order"
-                 
-              />
-                        <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
-                        {/* <span className='text-[#818894] ms-16 -mt-9 text-[14px] font-normal'>Search</span> */}
-                      </div>
-                      <div className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
-                        <div className="col-span-2 flex items-center justify-center">
-                          <img
-                            src={cimage}
-                            alt=""
-                          />
-                        </div>
-                        <div className="col-span-10 flex">
-                          <div>
-                            <p className="font-semibold text-[14px] text-[#0B1320]">Smart Phone</p>
-                            <p className="text-[12px] font-normal text-[#495160]">
-                              Phone: 9643287899
-                            </p>
-                          </div>
-                          <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
-                            &times;
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
-                        <img className='mt-2 ms-3' src={circleplus} alt="" />
-                        <span className='text-[#820000] ms-8 -mt-10'>Add New Customer</span>
-                      </div>
-                    </div>
-                  )}
+        {/* Map through the salesman list */}
+        {filteredStaffList.map((staff, index) => (
+          <div
+            key={index}
+            className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink"
+            onClick={() => handleSalesmanSelection(staff)}
+          >
+            <div className="col-span-2 flex items-center justify-center">
+              {/* Add a placeholder image or staff image */}
+              <img src={staff.profile ? `${BASEURL}/uploads/${staff.profile}` : defaultImage} alt={`${staff.firstname} ${staff.lastname}`} />
+            </div>
+            <div className="col-span-10 flex">
+              <div>
+                <p className="font-semibold text-[14px] text-[#0B1320]">
+                  {staff.firstname} {staff.lastname}
+                </p>
+                <p className="text-[12px] font-normal text-[#495160]">
+                  Designation: {staff.designation}
+                </p>
+              </div>
+              <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
+                &times;
+              </div>
+            </div>
+          </div>
+        ))}
 
-               </div>
-               <div>
-                 <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Salesman</label>
-                 <select
-                   name="salesman"
-                   value={orderDetails.salesman}
-                   onChange={updateOrder}
-                   className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px]"
-                 >
-                   <option value="" className='font-normal'>Select salesman</option>
-                   {/* Add salesman options */}
-                 </select>
-               </div>
+        {/* Add New Salesman Link */}
+        <Link to="/addstaff">
+          <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+            <img className="mt-2 ms-3" src={circleplus} alt="" />
+            <span className="text-[#820000] ms-8 -mt-10">Add New Salesman</span>
+          </div>
+        </Link>
+      </div>
+    )}
+  </div>
              </div>
 
              {/* Date and Order Number */}
@@ -203,19 +373,24 @@ const NewOrder: React.FC = () => {
                </div>
              </div>
 
-             {/* Payment Mode */}
-             <div className="mb-4">
-               <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Payment Mode</label>
-               <select
-                 name="paymentMode"
-                 value={orderDetails.paymentMode}
-                 onChange={updateOrder}
-                 className="w-full p-2 border rounded-md  text-[#8F99A9] text-[14px] font-normal"
-               >
-                 <option value="" className='text-gray-200 font-normal'>Select payment mode</option>
-                 {/* Add payment options */}
-               </select>
-             </div>
+             
+      {/* Payment Mode Dropdown */}
+      <div className="mb-4">
+        <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Payment Mode</label>
+        <select
+          name="paymentMode"
+          value={orderDetails.paymentMode}
+          onChange={updateOrder}
+          className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px] font-normal"
+        >
+          <option value="" className='text-blue-200 font-normal'>Select payment mode</option>
+          <option value="cash" className='text-gray-800 font-normal'>Cash</option>
+          <option value="credit" className='text-gray-800 font-normal'>Credit</option>
+          <option value="foc" className='text-gray-800 font-normal'>FOC</option>
+          {/* Add more payment options as needed */}
+        </select>
+      </div>
+
 
              {/* Add Item Section */}
              <div className="mb-4">
@@ -276,79 +451,94 @@ const NewOrder: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="p-2 text-center font-normal">
-                    <label className='text-[#8F99A9] text-[14px]'>Type or Click</label>
-                    {openDropdownIndex === "product" && (
-                    <div
-                      ref={dropdownRef}
-                      className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-[52px] space-y-1"
-                    >
-                    <div className="bg-[#F9F7F5] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
-                    <input
-                className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
-                style={{
-                  backgroundColor: "rgba(#818894)",
-                  outline: "none",
-                  boxShadow: "none",
-                }}
-                placeholder="Search Order"
-                 
-              />
-                        <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
+  {loading ? ( // Check if loading
+    <tr>
+      <td colSpan={5} className="text-center p-4">Loading items...</td>
+    </tr>
+  ) : (
+    items.map((item, index) => ( // Map over the fetched items
+      <tr className="border-b" key={index}>
+        <td className="p-2 text-center font-normal">
+          <label className='text-[#8F99A9] text-[14px]' onClick={() => toggleDropdown("product")}>
+            {item.productName || "Select Product"} {/* Display the product name */}
+            <img className='w-[11px] h-[11px] text-[#495160] -mt-4' onClick={() => toggleDropdown("product")} src={icondown} alt="" />
+          </label>
 
-                    </div>
-                    <div className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
-                        <div className="col-span-2 flex items-center justify-center">
-                          <img
-                            src={cimage}
-                            alt=""
-                          />
-                        </div>
-                        <div className="col-span-10 flex">
-                          <div>
-                            <p className="font-semibold text-[14px] text-[#0B1320] -ms-1">Smart Phone</p>
-                            <p className="text-[12px] font-normal text-[#495160] ms-2">
-                              Phone: 9643287899
-                            </p>
-                          </div>
-                          <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
-                            &times;
-                          </div>
-                        </div>
-                      </div>
-                      <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
-                        <img className='mt-2 ms-4' src={circleplus} alt="" />
-                        <span className='text-[#820000] -mt-10 -ms-32'>Add New Item</span>
-                      </div>
-                    </div>
-                  )}
-                  </td>
-                  <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">0</td>
-                  <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">0.00</td>
-                  <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">0.00</td>
-                  <td className="p-2 text-center font-normal">
-                  <button className="text-blue-500 mx-2 items-center">
-                      <img src={pen} alt="" />
-                    </button>
-                    <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
+          {openDropdownIndex === "product" && (
+  <div
+    ref={dropdownRef}
+    className="absolute z-10 bg-white rounded-md mt-1 p-2 w-[326px] h-auto space-y-1"
+  >
+    {/* Render the search bar outside of the loop */}
+    <div className="bg-[#F9F7F5] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+      <input
+        className="pl-9 text-sm w-[100%] rounded-md text-start text-[#818894] h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+        style={{
+          backgroundColor: "rgba(#818894)",
+          outline: "none",
+          boxShadow: "none",
+        }}
+        placeholder="Search Order"
+      />
+      <img className='ms-3 -mt-12 w-[15px] h-[15px]' src={search} alt="" />
+    </div>
 
-                  </td>
-                </tr>
+    {/* Map through items to display in the dropdown */}
+    {items.map((item, index) => (
+      <div key={item.id} className="grid grid-cols-12 gap-1 p-2 bg-[#FDF8F0] cursor-pointer border border-slate-400 rounded-lg bg-lightPink">
+        <div className="col-span-2 flex items-center justify-center">
+          <img src={item.image || cimage} alt={item.productName} className="w-10 h-10 rounded-full" />
+        </div>
+        <div className="col-span-10 flex">
+          <div>
+            <p className="font-semibold text-[14px] text-[#0B1320] -ms-1">{item.itemName}</p>
+            <p className="text-[12px] font-normal text-[#495160] ms-2">
+              Retailprice: {item.retailPrice || "N/A"}
+            </p>
+          </div>
+          <div className="ms-auto text-2xl cursor-pointer relative -mt-2 pe-2">
+            &times;
+          </div>
+        </div>
+      </div>
+    ))}
 
-              </tbody>
+    <div className="bg-[#FFFFFF] grid grid-col-12 h-12 items-center cursor-pointer border border-slate-400 rounded-lg">
+      <img className='mt-2 ms-4' src={circleplus} alt="" />
+      <span className='text-[#820000] -mt-10 -ms-32'>Add New Item</span>
+    </div>
+  </div>
+)}
+
+        </td>
+        <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">{item.quantity}</td>
+        <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">{item.rate}</td>
+        <td className="p-2 text-[#8F99A9] text-[14px] text-center font-normal">{item.amount}</td>
+        <td className="p-2 text-center font-normal">
+          <button className="text-blue-500 mx-2 items-center">
+            <img src={pen} alt="" />
+          </button>
+          <button className="text-red-500 ml-2" onClick={() => deleteRow(index)}>
+            <img src={trash} alt="" />
+          </button>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
+
             </table>
-            <img className='w-[11px] h-[11px] text-[#495160] ms-44 -mt-6' onClick={() => toggleDropdown("product")} src={icondown} alt="" />
-
-
+ 
+ 
                <button
-                 onClick={addItem}
+                 onClick={addNewRow}
                  className="mt-3 flex text-red-700"
                  type="button"
                >
                  <img className='my-1 mx-1' src={circleplus} alt="" />
                   Add Item
                </button>
+ 
              </div>
 
              {/* Notes and Terms */}
