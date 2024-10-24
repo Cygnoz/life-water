@@ -37,7 +37,7 @@ const addStaff = async (req, res) => {
   try {
     const { firstname, lastname, username, designation, password, emiratesId, mobileNumber } = req.body;
 
-    // Check for existing staff with the same emiratesId
+    // Check for existing staff with the same mobile number
     const existingStaff = await Staff.findOne({ mobileNumber });
     if (existingStaff) {
       return res.status(400).json({ message: 'Staff member with this mobile number already exists.' });
@@ -45,31 +45,30 @@ const addStaff = async (req, res) => {
 
     // Handle logic specific to "Sales"
     if (designation === 'Sales') {
-      // Ensure username and password are provided
       if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required for Sales staff.' });
       }
 
-      // Check for existing staff with the same username
+      // Check if username already exists
       const existingSalesStaff = await Staff.findOne({ username });
       if (existingSalesStaff) {
         return res.status(400).json({ message: 'User with this username already exists.' });
       }
 
-      // Hash the password before saving
-      const hashedPassword = await bcrypt.hash(password, 10);
-
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(password.trim(),10);
+      
       // Create the new staff record for "Sales"
       const newStaff = new Staff({
         firstname,
         lastname,
-        username,
-        password: hashedPassword,  // Save hashed password for Sales
+        username: username.trim(),
+        password: hashedPassword,
         profile: req.file ? normalizeFilePath(req.file.path) : null,
         address: req.body.address,
         visaStatus: req.body.visaStatus,
         visaValidity: req.body.visaValidity,
-        mobileNumber: req.body.mobileNumber,
+        mobileNumber,
         whatsAppNumber: req.body.whatsAppNumber,
         visaNumber: req.body.visaNumber,
         dateofBirth: req.body.dateofBirth,
@@ -91,7 +90,7 @@ const addStaff = async (req, res) => {
       address: req.body.address,
       visaStatus: req.body.visaStatus,
       visaValidity: req.body.visaValidity,
-      mobileNumber: req.body.mobileNumber,
+      mobileNumber,
       whatsAppNumber: req.body.whatsAppNumber,
       visaNumber: req.body.visaNumber,
       dateofBirth: req.body.dateofBirth,
@@ -100,7 +99,6 @@ const addStaff = async (req, res) => {
       emiratesId,
     });
 
-    // Save the staff record
     const savedStaff = await newStaff.save();
     res.status(201).json(savedStaff);
 
@@ -188,16 +186,18 @@ const loginSalesStaff = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log(req.body);
-    
     // Ensure both username and password are provided
     if (!username || !password) {
       return res.status(400).json({ message: 'Username and password are required.' });
     }
 
-    // Find the staff member with the provided username
-    const staff = await Staff.findOne({ username });
-    
+    // Trim the username and password to avoid accidental spaces
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+
+    // Find the staff member with the provided username (case-sensitive match)
+    const staff = await Staff.findOne({ username: trimmedUsername });
+
     // If staff not found
     if (!staff) {
       return res.status(404).json({ message: 'Staff not found.' });
@@ -209,20 +209,26 @@ const loginSalesStaff = async (req, res) => {
     }
 
     // Compare the provided password with the stored hashed password
-    const isPasswordValid = await bcrypt.compare(password, staff.password);
-    
+    const isPasswordValid = await bcrypt.compare(trimmedPassword, staff.password);
+
+    // Debugging logs for verification (can be removed in production)
+    console.log('Plain Password:', trimmedPassword); 
+    console.log('Hashed Password:', staff.password); 
+    console.log('Is Password Valid:', isPasswordValid);
+
+    // If the password is invalid
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid credentials.' });
     }
 
     // At this point, the login is successful
-    // You can return the staff details or even generate a JWT token if needed for authentication
-    res.status(200).json({ message: 'Login successful', staff, status:200});
+    res.status(200).json({ message: 'Login successful', staff, status: 200 });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 module.exports = {
