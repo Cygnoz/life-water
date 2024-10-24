@@ -17,7 +17,8 @@ const addItem = async (req, res) => {
 
     // Save the item to the database
     await newItem.save();
-    res.status(201).json({ message: 'Item added successfully', data: newItem });
+    console.log('Item added successfully:', newItem);
+    res.status(201).json({ data: newItem });
   } catch (error) {
     res.status(500).json({ message: 'Failed to add item', error: error.message });
   }
