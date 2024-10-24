@@ -20,6 +20,8 @@ router.get('/staff/:id', staffController.getStaffById);
 router.put('/staff/:id',upload.single('profile'), staffController.editStaff);
 // Delete staff
 router.delete('/staff/:id', staffController.deleteStaff);
+//login staff(sales)
+router.post('/staff/login', staffController.loginSalesStaff);
  
  
 // VEHICLE
