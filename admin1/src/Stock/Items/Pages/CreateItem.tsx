@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import printer from "../../../assets/images/printer.svg";
 import vector from "../../../assets/images/Vector.svg";
 import trash from "../../../assets/images/trash.svg";
@@ -6,15 +6,39 @@ import split from "../../../assets/images/list-filter.svg";
 import plus from "../../../assets/circle-plus.svg";
 import search from "../../../assets/images/search.svg";
 import { Link, useNavigate } from 'react-router-dom';
+import { getItemsAPI } from '../../../services/StockAPI/StockAPI';
 
 const CreateItem: React.FC = () => {
-     const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
-     const navigate =useNavigate()
+  const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
+  const navigate = useNavigate();
 
-    
-     const handleEdit =()=>{
-       navigate('/edititem')
-     }
+  const [items, setItems] = useState<any[]>([]); // State to store fetched items
+  const [loading, setLoading] = useState(true); // State to manage loading state
+
+  useEffect(() => {
+    // Fetch items when the component mounts
+    const fetchItems = async () => {
+      try {
+        const data = await getItemsAPI();
+        setItems(data);
+      } catch (error) {
+        console.error('Error fetching items:', (error as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchItems();
+  }, []);
+
+  const handleEdit = (id: string) => {
+    navigate(`/edititem/${id}`);
+  };
+
+  const handleDelete = async (id: string) => {
+    // Implement delete functionality here
+    console.log('Delete item with id:', id);
+  };
 
   return (
     <div className="flex min-h-screen w-full">
@@ -26,11 +50,11 @@ const CreateItem: React.FC = () => {
             <p className="text-[#4B5C79]">Lorem ipsum dolor sit amet consectetur</p>
           </div>
           <div className="flex items-center">
-          <Link to={'/additem'}>
-            <button className="flex items-center gap-2 bg-[#820000] text-white px-3 py-2 rounded-md">
-              <img src={plus} alt="Add New Item" />
-              <p>Add New Item</p>
-            </button>
+            <Link to={'/additem'}>
+              <button className="flex items-center gap-2 bg-[#820000] text-white px-3 py-2 rounded-md">
+                <img src={plus} alt="Add New Item" />
+                <p>Add New Item</p>
+              </button>
             </Link>
           </div>
         </div>
@@ -80,53 +104,39 @@ const CreateItem: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="px-4 py-3 text-center">
-                    <input type="checkbox" />
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                  <img className="mx-auto object-cover w-11 h-11 rounded-full" src={defaultImage} alt="item" />
-                  </td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">John</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">100</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">234</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">1223</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="bg-[#F9DEDC] text-[#FA4545] px-2 py-1 rounded-lg">Out of stock</span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <button className="text-green-500 mr-2">
-                      <img  onClick={handleEdit} src={vector} alt="Edit" />
-                    </button>
-                    <button className="text-red-500">
-                      <img src={trash} alt="Delete" />
-                    </button>
-                  </td>
-                </tr>
-                {/* Repeat for other rows */}
-                <tr className="border-b">
-                  <td className="px-4 py-3 text-center">
-                    <input type="checkbox" />
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                  <img className="mx-auto object-cover w-11 h-11 rounded-full" src={defaultImage} alt="item" />
-                  </td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">Doe</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">100</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">657</td>
-                  <td className="px-4 py-3 text-center text-[#4B5C79]">7873</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className="bg-[#F9DEDC] text-[#FA4545] px-2 py-1 rounded-lg">Out of stock</span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <button  onClick={handleEdit} className="text-green-500 mr-2">
-                      <img src={vector} alt="Edit" />
-                    </button>
-                    <button  className="text-red-500">
-                      <img src={trash} alt="Delete" />
-                    </button>
-                  </td>
-                </tr>
+                {loading ? (
+                  <tr>
+                    <td colSpan={8} className="text-center py-4">Loading...</td>
+                  </tr>
+                ) : (
+                  items.map(item => (
+                    <tr key={item._id} className="border-b">
+                      <td className="px-4 py-3 text-center">
+                        <input type="checkbox" />
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <img className="mx-auto object-cover w-11 h-11 rounded-full" src={item.itemImage || defaultImage} alt="item" />
+                      </td>
+                      <td className="px-4 py-3 text-center text-[#4B5C79]">{item.itemName}</td>
+                      <td className="px-4 py-3 text-center text-[#4B5C79]">{item.purchasePrice}</td>
+                      <td className="px-4 py-3 text-center text-[#4B5C79]">{item.retailPrice}</td>
+                      <td className="px-4 py-3 text-center text-[#4B5C79]">{item.purchaseStock}</td>
+                      <td className="px-4 py-3 text-center">
+                        <span className={`px-2 py-1 rounded-lg ${item.status === 'Out of stock' ? 'bg-[#F9DEDC] text-[#FA4545]' : 'bg-[#E0F7FA] text-[#00796B]'}`}>
+                          {item.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button className="text-green-500 mr-2" onClick={() => handleEdit(item._id)}>
+                          <img src={vector} alt="Edit" />
+                        </button>
+                        <button className="text-red-500" onClick={() => handleDelete(item._id)}>
+                          <img src={trash} alt="Delete" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
