@@ -4,7 +4,7 @@
 // Add new staff
 const bcrypt = require('bcrypt');
 const Staff = require("../Models/StaffSchema"); // Ensure the path matches the casing
-const Login = require('../Models/LoginSchema');
+
 
 // Get all staff members
 const getAllStaff = async (req, res) => {
@@ -182,10 +182,54 @@ const deleteStaff = async (req, res) => {
   }
 };
 
+
+// Login for Sales staff
+const loginSalesStaff = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    console.log(req.body);
+    
+    // Ensure both username and password are provided
+    if (!username || !password) {
+      return res.status(400).json({ message: 'Username and password are required.' });
+    }
+
+    // Find the staff member with the provided username
+    const staff = await Staff.findOne({ username });
+    
+    // If staff not found
+    if (!staff) {
+      return res.status(404).json({ message: 'Staff not found.' });
+    }
+
+    // Only allow login if the staff's designation is 'Sales'
+    if (staff.designation !== 'Sales') {
+      return res.status(403).json({ message: 'Unauthorized. Only Sales staff can log in here.' });
+    }
+
+    // Compare the provided password with the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, staff.password);
+    
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials.' });
+    }
+
+    // At this point, the login is successful
+    // You can return the staff details or even generate a JWT token if needed for authentication
+    res.status(200).json({ message: 'Login successful', staff, status:200});
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
 module.exports = {
   addStaff,
   getAllStaff,
   getStaffById,
   editStaff,
-  deleteStaff
+  deleteStaff,
+  loginSalesStaff
 };
