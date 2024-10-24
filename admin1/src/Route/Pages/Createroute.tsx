@@ -38,7 +38,7 @@ const CreateRoute: React.FC = () => {
 
   // Fetch staff data on component mount
   useEffect(() => {
-    const fetchStaff = async () => {
+    const fetchRoute = async () => {
       try {
         const response = await getRoutesAPI();
         console.log("Full API Response:", response); // Check the response
@@ -49,7 +49,7 @@ const CreateRoute: React.FC = () => {
       }
     };
 
-    fetchStaff();
+    fetchRoute();
   }, []);
 
   useEffect(() => {
