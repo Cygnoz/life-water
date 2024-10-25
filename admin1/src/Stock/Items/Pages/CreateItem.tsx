@@ -6,7 +6,7 @@ import split from "../../../assets/images/list-filter.svg";
 import plus from "../../../assets/circle-plus.svg";
 import search from "../../../assets/images/search.svg";
 import { Link, useNavigate } from 'react-router-dom';
-import { getItemsAPI } from '../../../services/StockAPI/StockAPI';
+import { getItemsAPI,deleteItemAPI } from '../../../services/StockAPI/StockAPI';
 
 const CreateItem: React.FC = () => {
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
@@ -22,7 +22,11 @@ const CreateItem: React.FC = () => {
         const data = await getItemsAPI();
         setItems(data);
       } catch (error) {
-        console.error('Error fetching items:', (error as Error).message);
+        if (error instanceof Error) {
+          console.error('Error fetching items:', error.message);
+        } else {
+          console.error('Error fetching items:', error);
+        }
       } finally {
         setLoading(false);
       }
@@ -36,9 +40,24 @@ const CreateItem: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    // Implement delete functionality here
-    console.log('Delete item with id:', id);
+    const confirmDelete = window.confirm("Are you sure you want to delete this item?");
+    if (!confirmDelete) return;
+
+    try {
+      const response = await deleteItemAPI(id);
+      alert(response.message);
+      // Remove the deleted item from the state
+      setItems(prevItems => prevItems.filter(item => item._id !== id));
+      console.log('Deleted item with id:', id);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error deleting item:', error.message);
+      } else {
+        console.error('Error deleting item:', error);
+      }
+    }
   };
+  console.log('items', items);
 
   return (
     <div className="flex min-h-screen w-full">
@@ -145,5 +164,6 @@ const CreateItem: React.FC = () => {
     </div>
   );
 };
+
 
 export default CreateItem;
