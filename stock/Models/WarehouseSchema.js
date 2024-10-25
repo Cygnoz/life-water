@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const wStockSchema = new mongoose.Schema({
+  warehouse:{
+    type: String,
+    // required: true
+  },
   transferNumber: {
     type: String,
     // required: true,
@@ -21,33 +25,17 @@ const wStockSchema = new mongoose.Schema({
     //   required: true,
       min: 0
     },
-    totalQuantity: {
-      type: Number,
-    //   required: true,
-      min: 0
-    },
-    amount: {
-      type: Number,
-    //   required: true,
-      min: 0
-    }
   }],
-  totalAmount: {
+  totalQuantity: {
     type: Number,
-    // required: true,
-    default: 0
+  //   required: true,
+    min: 0
   },
   termsAndConditions: {
     type: String
   }
 });
 
-// Middleware to update totalAmount before saving
-wStockSchema.pre('save', function(next) {
-  this.totalAmount = this.items.reduce((sum, item) => sum + item.amount, 0);
-  this.updatedAt = new Date();
-  next();
-});
 
 const WStock = mongoose.model('WStock', wStockSchema);
 

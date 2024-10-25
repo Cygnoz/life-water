@@ -3,24 +3,18 @@ const Item = require('../Models/ItemSchema'); // Assuming you have an Item schem
 // Create a new item
 const addItem = async (req, res) => {
   try {
-    const { itemName, SKU, purchasePrice, retailPrice, description, itemImage } = req.body;
-
-    // Create a new item document
     const newItem = new Item({
-      itemName,
-      SKU,
-      purchasePrice,
-      retailPrice,
-      description,
-      itemImage // This should be a path or URL to the image
+      itemName: req.body.itemName,
+      SKU: req.body.SKU,
+      purchasePrice: req.body.purchasePrice,
+      retailPrice: req.body.retailPrice,
+      description: req.body.description,
+      itemImage: req.file ? req.file.path : null // Handle file upload
     });
-
-    // Save the item to the database
-    await newItem.save();
-    console.log('Item added successfully:', newItem);
-    res.status(201).json({ data: newItem });
+    const savedItem = await newItem.save();
+    res.status(201).json(savedItem);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add item', error: error.message });
+    res.status(500).json({ message: 'Error adding item', error });
   }
 };
 
