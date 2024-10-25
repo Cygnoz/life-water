@@ -1,12 +1,13 @@
  import rupee from '../assets/images/receipt-indian-rupee.svg';
  import dollar from '../assets/images/circle-dollar.svg';
+import { Link } from 'react-router-dom';
 
 
 // Define the props interface
 
 const Customers: React.FC = () => {
   return (
-    <div className="p-4 space-y-4 bg-[#F5F6FA] pb-64">
+    <div className="min-h-screen p-4 space-y-4 bg-[#F5F6FA] pb-64">
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col items-center p-4 bg-[#FFFFFF] rounded-lg shadow-md border border-gray-200 col-span-2">
           <div className="space-y-4">
@@ -54,10 +55,12 @@ const Customers: React.FC = () => {
       </div>
 
       {/* All Customers Button */}
-      <div className="flex justify-center ">
+      <div >
+        <Link to={'/viewcustomers'}>
         <button className="w-full md:w-96 py-3 bg-[#820000] text-white font-bold rounded-lg">
           All Customers
         </button>
+        </Link>
       </div>
     </div>
   );

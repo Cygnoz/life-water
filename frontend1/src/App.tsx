@@ -15,6 +15,8 @@ import CreditCollection from './components/CreditCollection';
 import Login from './login/Login';
 import StartRide from './pages/StartRide';
 import AddStartRide from './components/AddStartRide';
+import AddCustomer from './components/AddCustomer';
+import ViewCustomers from './pages/ViewCustomers';
 
 const App: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -38,6 +40,8 @@ const App: React.FC = () => {
           <Route path="/start" element={<StartRide />} />
           <Route path="/addstart" element={<AddStartRide />} />
           <Route path="/customers" element={<Customers />} />
+          <Route path="/addcustomers" element={<AddCustomer />} />
+          <Route path="/viewcustomers" element={<ViewCustomers/>} />
           <Route path="/return" element={<Returncustomer />} />
           <Route path="/visithistory" element={<Visithistory />} />
           <Route path="/addpayment" element={<Addreturncustomer />} />
