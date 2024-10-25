@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom"
 const Login: React.FC = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [image, setImage] = useState<string | null>(null);
+
   const navigate = useNavigate()
 
 
@@ -24,6 +26,8 @@ const Login: React.FC = () => {
     try {
       const response = await loginStaffAPI(loginData); // Send JSON object
       if(response.status ===200){
+        localStorage.setItem("username",username);
+       
         console.log("Login successful:", response);
         toast.success("Login successful!");
         setTimeout(() => {
