@@ -76,6 +76,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <img src={userprofile} alt="User Profile " className="w-[45px] h-[45px] mt-1"  />
         </div>
       </div>
+      
 
       {/* Sidebar for larger screens */}
       <div
