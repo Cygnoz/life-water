@@ -12,6 +12,7 @@ interface NewCustomerFormState {
   location: string;
   customerType: string;
   companyName: string;
+  
 }
 
 const AddCustomer: React.FC = () => {
