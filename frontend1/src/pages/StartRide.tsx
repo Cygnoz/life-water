@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import profile from '../assets/images/profile1.png'
 import arrow from '../assets/images/arrow.png'
-import start from '../assets/images/image 4.svg'
+import start from '../assets/images/start.png'
 
 
 const StartRide: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between bg-gray-100 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-between p-4">
       {/* Header */}
-      <header className="w-full flex justify-end items-center bg-gray-100  p-4">
+      <header className="w-full flex justify-end items-center p-4">
         <div className="flex items-center space-x-2">
           <div>
             <h2 className="text-lg font-semibold">Hello, User</h2>
