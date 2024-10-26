@@ -116,8 +116,8 @@ const AddStartRide: React.FC = () => {
           <div className="flex items-center space-x-2">
             <div>
               <h2 className="text-lg font-semibold">Hello, User</h2>
-              <p className="text-sm text-gray-500">Welcome</p>
-              <p className="text-xs text-green-500">Last login in: 0 min</p>
+              <p className="text-sm text-gray-500 font-semibold">Welcome</p>
+              <p className="text-xs text-green-500 font-semibold">Last login in: 0 min</p>
             </div>
             <img src={profile} alt="User Avatar" className="w-10 h-10 rounded-full" />
           </div>
