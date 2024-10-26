@@ -5,7 +5,7 @@ import { addActiveRouteAPI, getAllStaffsAPI, getSubRoutesAPI, getVehicleAPI } fr
 
 interface Route {
   _id: string;
-  subRoute: string; // Assuming sub-routes have a 'subRoute' property
+  subRoute: string;
   mainRoute: string;
 }
 
@@ -18,13 +18,15 @@ interface Staff {
 
 interface Vehicle {
   _id: string;
-  vehicleNo: string; // Assuming vehicle objects have a 'vehicleNo' property
+  vehicleNo: string;
 }
 
 const AddStartRide: React.FC = () => {
   const [routesList, setRouteList] = useState<Route[]>([]);
+  const [mainRouteList, setMainRouteList] = useState<string[]>([]);
+  const [selectedMainRoute, setSelectedMainRoute] = useState<string>('');
   const [selectedSubRoute, setSelectedSubRoute] = useState<string>('');
-  const [displayedMainRoute, setDisplayedMainRoute] = useState<string>('');
+  const [filteredSubRoutes, setFilteredSubRoutes] = useState<Route[]>([]);
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [vehicleList, setVehicleList] = useState<Vehicle[]>([]);
   const [openingStock, setOpeningStock] = useState<number | ''>('');
@@ -38,6 +40,10 @@ const AddStartRide: React.FC = () => {
       try {
         const response = await getSubRoutesAPI();
         setRouteList(response);
+
+        // Extract unique main routes
+        const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
+        setMainRouteList(uniqueMainRoutes);
       } catch (error) {
         console.error('Error fetching sub-route data:', error);
       }
@@ -59,17 +65,6 @@ const AddStartRide: React.FC = () => {
     fetchStaff();
   }, []);
 
-  const handleSubRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = event.target.value;
-    setSelectedSubRoute(selectedId);
-    const selectedRoute = routesList.find(route => route.subRoute === selectedId);
-    if (selectedRoute) {
-      setDisplayedMainRoute(selectedRoute?.mainRoute);
-    } else {
-      setDisplayedMainRoute('');
-    }
-  };
-
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
@@ -84,11 +79,23 @@ const AddStartRide: React.FC = () => {
     fetchVehicle();
   }, []);
 
+  // Update filtered sub-routes based on selected main route
+  const handleMainRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const mainRoute = event.target.value;
+    setSelectedMainRoute(mainRoute);
+    setFilteredSubRoutes(routesList.filter(route => route.mainRoute === mainRoute));
+    setSelectedSubRoute(''); // Reset sub-route selection
+  };
+
+  const handleSubRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubRoute(event.target.value);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault();
   
     const newActiveRoute = {
-      mainRoute: displayedMainRoute,
+      mainRoute: selectedMainRoute,
       subRoute: selectedSubRoute,
       helper: document.getElementById('helper')?.value,
       driver: document.getElementById('driver')?.value,
@@ -102,7 +109,7 @@ const AddStartRide: React.FC = () => {
     try {
       const data = await addActiveRouteAPI(newActiveRoute);
       console.log('ActiveRoute created successfully:', data);
-      navigate('/home'); // Navigate on success
+      navigate('/home');
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred while creating the ActiveRoute.');
@@ -116,8 +123,8 @@ const AddStartRide: React.FC = () => {
           <div className="flex items-center space-x-2">
             <div>
               <h2 className="text-lg font-semibold">Hello, User</h2>
-              <p className="text-sm text-gray-500 font-semibold">Welcome</p>
-              <p className="text-xs text-green-500 font-semibold">Last login in: 0 min</p>
+              <p className="text-sm text-gray-500">Welcome</p>
+              <p className="text-xs text-green-500">Last login in: 0 min</p>
             </div>
             <img src={profile} alt="User Avatar" className="w-10 h-10 rounded-full" />
           </div>
@@ -125,6 +132,27 @@ const AddStartRide: React.FC = () => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Main Route Selection */}
+          <div className="space-y-1">
+            <label htmlFor="main-route" className="text-sm font-medium text-gray-700">
+              Main Route
+            </label>
+            <select
+              id="main-route"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              value={selectedMainRoute}
+              onChange={handleMainRouteChange}
+            >
+              <option value="">Select Main Route</option>
+              {mainRouteList.map((mainRoute) => (
+                <option key={mainRoute} value={mainRoute}>
+                  {mainRoute}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sub Route Selection */}
           <div className="space-y-1">
             <label htmlFor="sub-route" className="text-sm font-medium text-gray-700">
               Sub Route
@@ -134,29 +162,15 @@ const AddStartRide: React.FC = () => {
               className="w-full p-2 border border-gray-300 rounded-lg"
               value={selectedSubRoute}
               onChange={handleSubRouteChange}
+              disabled={!selectedMainRoute} // Disable if no main route selected
             >
               <option value="">Select Sub Route</option>
-              {routesList.map((route) => (
+              {filteredSubRoutes.map((route) => (
                 <option key={route._id} value={route.subRoute}>
-                  {route?.subRoute}
+                  {route.subRoute}
                 </option>
               ))}
             </select>
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="main-route" className="text-sm font-medium text-gray-700">
-              Main Route
-            </label>
-            <input
-              type="text"
-              id="mainRoute"
-              value={displayedMainRoute}
-              readOnly // Prevent user from editing this field
-              className="w-full p-2 border border-gray-300 rounded-lg"
-            />
-
-            
           </div>
 
           <div className="space-y-1">
