@@ -127,8 +127,28 @@ const customerSchema = new mongoose.Schema({
   paymentMode: {
     type: String,
     enum: ['Cash', 'Credit']
+  },
+  location: {
+    address: {
+      type: String,
+      // required: true
+    },
+    coordinates: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point'
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        // required: true
+      }
+    }
   }
 },{ timestamps: true });
+
+customerSchema.index({ 'location.coordinates': '2dsphere' });
+
  
 module.exports = mongoose.model('Customer', customerSchema);
  

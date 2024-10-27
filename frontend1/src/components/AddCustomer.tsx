@@ -1,219 +1,322 @@
-import React, { useState } from 'react';
+"use client"
 
-interface NewCustomerFormState {
-  firstName: string;
-  lastName: string;
-  numberOfBottles: string;
-  rate: string;
-  paymentMode: string;
-  contactNumber: string;
-  whatsappNumber: string;
-  depositAmount: string;
-  location: string;
-  customerType: string;
-  companyName: string;
-  
+import React, { useState } from "react"
+import { addCustomerAPI } from "../services/customer/customerAPI"
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
+interface FormData {
+  customerType: "Business" | "Individual"
+  companyName: string
+  firstName: string
+  lastName: string
+  email: string
+  numberOfBottles: string
+  rate: string
+  paymentMode: "Cash" | "Credit"
+  contactNumber: string
+  whatsappNumber: string
+  depositAmount: string
+  location: {
+    address: string
+    coordinates: {
+      latitude: number | null
+      longitude: number | null
+    }
+  }
+}
+
+interface FormErrors {
+  [key: string]: string
 }
 
 const AddCustomer: React.FC = () => {
-  const [formData, setFormData] = useState<NewCustomerFormState>({
-    firstName: '',
-    lastName: '',
-    numberOfBottles: '',
-    rate: '',
-    paymentMode: '',
-    contactNumber: '',
-    whatsappNumber: '',
-    depositAmount: '',
-    location: '',
-    customerType:'',
-    companyName:''
-  });
+  const [formData, setFormData] = useState<FormData>({
+    customerType: "Individual",
+    companyName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    numberOfBottles: "",
+    rate: "",
+    paymentMode: "Cash",
+    contactNumber: "",
+    whatsappNumber: "",
+    depositAmount: "",
+    location: {
+      address: "",
+      coordinates: {
+        latitude: null,
+        longitude: null,
+      },
+    },
+  })
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [isGettingLocation, setIsGettingLocation] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    if (name === "location") {
+      setFormData((prevData) => ({
+        ...prevData,
+        location: {
+          ...prevData.location,
+          address: value,
+        },
+      }))
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }))
+    }
+  }
+
+  const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Geolocation is not supported by your browser"))
+        return
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position.coords),
+        (error) => reject(error)
+      )
+    })
+  }
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {}
+
+    if (formData.customerType === "Business" && !formData.companyName) {
+      newErrors.companyName = "Company name is required for business customers"
+    }
+    if (!formData.firstName) newErrors.firstName = "First name is required"
+    if (!formData.lastName) newErrors.lastName = "Last name is required"
+    if (isNaN(Number(formData.numberOfBottles)) || Number(formData.numberOfBottles) <= 0) {
+      newErrors.numberOfBottles = "Number of bottles must be a positive number"
+    }
+    if (isNaN(Number(formData.rate)) || Number(formData.rate) <= 0) {
+      newErrors.rate = "Rate must be a positive number"
+    }
+    if (formData.contactNumber.length < 10) newErrors.contactNumber = "Contact number must be at least 10 digits"
+    if (formData.whatsappNumber.length < 10) newErrors.whatsappNumber = "WhatsApp number must be at least 10 digits"
+    if (isNaN(Number(formData.depositAmount)) || Number(formData.depositAmount) < 0) {
+      newErrors.depositAmount = "Deposit amount must be a non-negative number"
+    }
+    if (!formData.location.address) newErrors.location = "Location is required"
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault()
+
+  //   if (validateForm()) {
+  //     try {
+  //       setIsGettingLocation(true)
+  //       const coords = await getCurrentLocation()
+
+  //       // Update formData with coordinates
+  //       const updatedFormData = {
+  //         ...formData,
+  //         location: {
+  //           ...formData.location,
+  //           coordinates: {
+  //             latitude: coords.latitude,
+  //             longitude: coords.longitude,
+  //           },
+  //         },
+  //       }
+
+  //       console.log("New customer form submitted with location:", updatedFormData)
+
+  //       // Here you would send updatedFormData to your API
+  //       console.log("Sending data:", updatedFormData)
+
+  //       const response = await addCustomerAPI(updatedFormData)
+  //       if (response?.status === 201) {
+  //         console.log("Customer added successfully")
+  //         toast.success(response?.message)
+  //         setIsGettingLocation(false)
+  //       } else {
+  //         console.log("Error adding customer:", response)
+  //         toast.error("something went wrong")
+  //       }
+
+  //       // Reset the form after successful submission
+  //       setFormData({
+  //         customerType: "Individual",
+  //         companyName: "",
+  //         firstName: "",
+  //         lastName: "",
+  //         email: "",
+  //         numberOfBottles: "",
+  //         rate: "",
+  //         paymentMode: "Cash",
+  //         contactNumber: "",
+  //         whatsappNumber: "",
+  //         depositAmount: "",
+  //         location: {
+  //           address: "",
+  //           coordinates: {
+  //             latitude: null,
+  //             longitude: null,
+  //           },
+  //         },
+  //       })
+  //       setErrors({})
+  //     } catch (error) {
+  //       console.error("Error submitting form:", error)
+  //       alert("Error: Unable to get location. Please ensure location services are enabled and try again.")
+  //     } finally {
+  //       setIsGettingLocation(false)
+  //     }
+  //   }
+  // }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic
-    console.log('New customer form submitted', formData);
+  
+    if (validateForm()) {
+      try {
+        setIsGettingLocation(true);
+        const coords = await getCurrentLocation();
+  
+        const updatedFormData = {
+          ...formData,
+          location: {
+            ...formData.location,
+            coordinates: {
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+            },
+          },
+        };
+  
+        const response = await addCustomerAPI(updatedFormData);
+        console.log("Response from API:", response); // Debug log
+  
+        if (response?.status === 201) {
+          toast.success("Customer added successfully");
+        } else {
+          toast.error("Something went wrong");
+        }
+  
+        
+        setErrors({});
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("Error: Unable to get location. Please ensure location services are enabled and try again.");
+      } finally {
+        setIsGettingLocation(false);
+      }
+    }
   };
+  
 
   return (
-    <div className='m-3 bg-[#F5F6FA]'>
-        <div className="max-w-md mx-auto p-6 bg-[#FFFFFF] shadow-md rounded-lg">
-      <h2 className="text-lg font-semibold text-center mb-4">New Customer</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-      <div>
-                <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>
-                <div className="flex space-x-4">
-                  <label className="flex items-center">
-                    <input type="radio" name="customerType" value="Business" checked={formData.customerType === "Business"} onChange={handleInputChange} className="mr-2" required />
-                    Business
-                  </label>
-                  <label className="flex items-center">
-                    <input type="radio" name="customerType" value="Individual" checked={formData.customerType === "Individual"} onChange={handleInputChange} className="mr-2" required />
-                    Individual
-                  </label>
-                </div>
-              </div>
-         
-        </div>
-        {formData.customerType === "Business" && (
-                <div>
-                  <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
-                  <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Company Name" required />
-                </div>
-              )}
-        {/* First Name */}
-        <div>
-          <label className="block text-gray-700">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter First Name"
-          />
-        </div>
-
-        {/* Last Name */}
-        <div>
-          <label className="block text-gray-700">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter Last Name"
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="text"
-            name="email"
-        
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter Last Name"
-          />
-        </div>
-
-        {/* Number of Bottles and Rate */}
-        <div className="flex space-x-2">
-          <div className="w-1/2">
-            <label className="block text-gray-700">Number of Bottles</label>
-            <input
-              type="text"
-              name="numberOfBottles"
-              value={formData.numberOfBottles}
-              onChange={handleInputChange}
-              className="w-full p-2 mt-1 border rounded-md"
-              placeholder="Number of Bottles"
-            />
+    <div className="m-3 bg-[#F5F6FA]">
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
+      <div className="max-w-md mx-auto p-6 bg-[#FFFFFF] shadow-md rounded-lg">
+        <h2 className="text-lg font-semibold text-center mb-4">New Customer</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>
+            <div className="flex space-x-4">
+              <label className="flex items-center">
+                <input type="radio" name="customerType" value="Individual" checked={formData.customerType === "Individual"} onChange={handleInputChange} className="mr-2" required />
+                Individual
+              </label>
+              <label className="flex items-center">
+                <input type="radio" name="customerType" value="Business" checked={formData.customerType === "Business"} onChange={handleInputChange} className="mr-2" required />
+                Business
+              </label>
+            </div>
           </div>
-          <div className="w-1/2">
-            <label className="block text-gray-700">Rate</label>
-            <input
-              type="text"
-              name="rate"
-              value={formData.rate}
-              onChange={handleInputChange}
-              className="w-full p-2 mt-1 border rounded-md"
-              placeholder="Rate"
-            />
+
+          {formData.customerType === "Business" && (
+            <div>
+              <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
+              <input type="text" name="companyName" value={formData.companyName} onChange={handleInputChange} className="w-full h-[36px] px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter Company Name" required />
+              {errors.companyName && <p className="text-red-500 text-sm">{errors.companyName}</p>}
+            </div>
+          )}
+
+          <div>
+            <label className="block text-gray-700">First Name</label>
+            <input type="text" name="firstName" value={formData.firstName} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter First Name" />
+            {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
           </div>
-        </div>
 
-        {/* Payment Mode */}
-        <div>
-          <label className="block text-gray-700">Payment Mode</label>
-          <select
-            name="paymentMode"
-            value={formData.paymentMode}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-          >
-            <option value="">Select Payment Mode</option>
-            <option value="Cash">Cash</option>
-            <option value="Credit">Credit</option>
-          </select>
-        </div>
+          <div>
+            <label className="block text-gray-700">Last Name</label>
+            <input type="text" name="lastName" value={formData.lastName} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Last Name" />
+            {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
+          </div>
 
-        {/* Contact Number */}
-        <div>
-          <label className="block text-gray-700">Contact Number</label>
-          <input
-            type="text"
-            name="contactNumber"
-            value={formData.contactNumber}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter Contact Number"
-          />
-        </div>
+          <div>
+            <label className="block text-gray-700">Email</label>
+            <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Email" />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          </div>
 
-        {/* Whatsapp Number */}
-        <div>
-          <label className="block text-gray-700">Whatsapp Number</label>
-          <input
-            type="text"
-            name="whatsappNumber"
-            value={formData.whatsappNumber}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter Whatsapp Number"
-          />
-        </div>
+          <div className="flex space-x-2">
+            <div className="w-1/2">
+              <label className="block text-gray-700">Number of Bottles</label>
+              <input type="text" name="numberOfBottles" value={formData.numberOfBottles} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Number of Bottles" />
+              {errors.numberOfBottles && <p className="text-red-500 text-sm">{errors.numberOfBottles}</p>}
+            </div>
+            <div className="w-1/2">
+              <label className="block text-gray-700">Rate</label>
+              <input type="text" name="rate" value={formData.rate} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Rate" />
+              {errors.rate && <p className="text-red-500 text-sm">{errors.rate}</p>}
+            </div>
+          </div>
 
-        {/* Deposit Amount */}
-        <div>
-          <label className="block text-gray-700">Deposit Amount</label>
-          <input
-            type="text"
-            name="depositAmount"
-            value={formData.depositAmount}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Deposit Amount"
-          />
-        </div>
+          <div>
+            <label className="block text-gray-700">Payment Mode</label>
+            <select name="paymentMode" value={formData.paymentMode} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md">
+              <option value="Cash">Cash</option>
+              <option value="Credit">Credit</option>
+            </select>
+            {errors.paymentMode && <p className="text-red-500 text-sm">{errors.paymentMode}</p>}
+          </div>
 
-        {/* Location */}
-        <div>
-          <label className="block text-gray-700">Location</label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            className="w-full p-2 mt-1 border rounded-md"
-            placeholder="Enter Location"
-          />
-        </div>
+          <div>
+            <label className="block text-gray-700">Contact Number</label>
+            <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Contact Number" />
+            {errors.contactNumber && <p className="text-red-500 text-sm">{errors.contactNumber}</p>}
+          </div>
 
-        {/* Save Button */}
-        <button
-          type="submit"
-          className="w-full bg-[#820000] text-white p-2 mt-4 rounded-md"
-        >
-          Save
-        </button>
-      </form>
+          <div>
+            <label className="block text-gray-700">Whatsapp Number</label>
+            <input type="text" name="whatsappNumber" value={formData.whatsappNumber} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Whatsapp Number" />
+            {errors.whatsappNumber && <p className="text-red-500 text-sm">{errors.whatsappNumber}</p>}
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Deposit Amount</label>
+            <input type="text" name="depositAmount" value={formData.depositAmount} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Deposit Amount" />
+            {errors.depositAmount && <p className="text-red-500 text-sm">{errors.depositAmount}</p>}
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Location</label>
+            <input type="text" name="location" value={formData.location.address} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Location" />
+            {errors.location && <p className="text-red-500 text-sm">{errors.location}</p>}
+          </div>
+
+          <button type="submit" disabled={isGettingLocation} className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}>
+            {isGettingLocation ? "Getting Location..." : "Save"}
+          </button>
+        </form>
+      </div>
     </div>
-    </div>
-  );
-};
+  )
+}
 
-export default AddCustomer;
+export default AddCustomer
