@@ -84,10 +84,30 @@ const deleteActiveRoute = async (req, res) => {
   }
 };
 
+// View a particular vehicle by Object ID
+const viewActiveRouteById = async (req, res) => {
+  try {
+    const { id } = req.params; // Using the vehicle's Object ID
+
+    const route = await ActiveRoute.findById(id);
+
+    if (!route) {
+      return res.status(404).json({ message: 'Route not found' });
+    }
+
+    return res.status(200).json({ route });
+    
+  } catch (error) {
+    console.error('Error fetching route:', error.message);
+    return res.status(500).json({ message: 'Error fetching route', error: error.message });
+  }
+};
+
 
 
 module.exports = {
   createActiveRoute,
   getActiveRoutes,
   deleteActiveRoute,
+  viewActiveRouteById
 };

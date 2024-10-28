@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASEURL } from "../Baseurl";
 
 
+
 export const getActiveRouteAPI = async () => {
     try {
       const response = await axios.get(`${BASEURL}/api/getActiveRoutes`, {
@@ -15,3 +16,19 @@ export const getActiveRouteAPI = async () => {
       throw new Error(error.response?.data?.message || 'Error fetching routes');
     }
   };
+
+  export const getActiveRouteByIdAPI = async (id: string | number) => {
+    try {
+        const response = await axios.get(`${BASEURL}/api/viewActiveRoute/${id}`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            timeout: 5000  // Optional timeout
+        });
+        return response.data;
+    } catch (error: any) {
+        console.error(`Error fetching route with ID ${id}:`, error.response?.data?.message || error.message);
+        throw new Error(error.response?.data?.message || `Error fetching route with ID ${id}`);
+    }
+};
+  
