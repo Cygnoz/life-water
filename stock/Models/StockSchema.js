@@ -1,45 +1,42 @@
 const mongoose = require('mongoose');
 
-const stockSchema = new mongoose.Schema({
+const wStockSchema = new mongoose.Schema({
+  warehouse:{
+    type: String,
+    // required: true
+  },
   transferNumber: {
     type: String,
-    required: true,
+    // required: true,
     unique: true
   },
   date: {
     type: Date,
-    required: true,
+    // required: true,
     default: Date.now
   },
-  mainRoute: {
-    type: String,
-  },
-  filledBottles: {
-    type: Number,
-    required: true
-  },
-  emptyBottles: {
-    type: Number,
-    default: 0
-  },
   items: [{
-    itemDetails: String,
-    quantity: Number,
-    totalQuantity: Number
+    itemName: {
+      type: String,
+    //   required: true
+    },
+    quantity: {
+      type: Number,
+    //   required: true,
+      min: 0
+    },
   }],
-  autoNotes: String,
-  termsAndConditions: String
+  totalQuantity: {
+    type: Number,
+  //   required: true,
+    min: 0
+  },
+  termsAndConditions: {
+    type: String
+  }
 });
 
-// Virtual for calculating total stock
-// stockSchema.virtual('calculatedTotalStock').get(function() {
-//   return this.items.reduce((total, item) => total + item.totalQuantity, 0);
-// });
 
-// //Pre-save hook to update totalStock
-// stockSchema.pre('save', function(next) {
-//   this.totalStock = this.calculatedTotalStock;
-//   next();
-// });
+const WStock = mongoose.model('WStock', wStockSchema);
 
-module.exports = mongoose.model('Stock', stockSchema);
+module.exports = WStock;
