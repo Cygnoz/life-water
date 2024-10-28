@@ -1,4 +1,4 @@
-const Stock = require('../Models/StockSchema');
+const Stock = require('../Models/StockloadedSchema');
 const Transfer = require('../Models/TransferSchema');
 
 const getAllStock = async (req, res) => {
