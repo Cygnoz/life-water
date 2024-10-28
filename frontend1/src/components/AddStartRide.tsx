@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import profile from '../assets/images/profile1.png';
+
 import { useNavigate } from 'react-router-dom';
 import { addActiveRouteAPI, getAllStaffsAPI, getSubRoutesAPI, getVehicleAPI } from '../services/StartRide/StartRide';
+import { BASEURL } from '../services/BaseURL';
 
 interface Route {
   _id: string;
@@ -34,6 +35,19 @@ const AddStartRide: React.FC = () => {
   const [totalStock, setTotalStock] = useState<number | ''>('');
   const [startingKm, setStartingKm] = useState<number | ''>('');
   const navigate = useNavigate();
+  const [storedUsername, setStoredUsername] = useState<string | null>(null);
+  const [storedProfile, setStoredProfile] = useState<string | null>(null);
+
+  // Retrieve username from session storage on component load
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("firstname");
+    const storedProfile = localStorage.getItem("profile");
+    if (savedUsername && storedProfile) {
+      console.log(savedUsername , storedProfile);
+      setStoredUsername(savedUsername);
+      setStoredProfile(storedProfile)
+    }
+  }, []);
 
   useEffect(() => {
     const fetchSubRoutes = async () => {
@@ -104,6 +118,7 @@ const AddStartRide: React.FC = () => {
       loadedStock,
       totalStock,
       startingKm,
+      Salesman:storedUsername
     };
   
     try {
@@ -120,14 +135,32 @@ const AddStartRide: React.FC = () => {
     <div className="flex items-center justify-center bg-gray-100 p-4 rounded-lg mt-3">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-md p-6">
         <header className="flex justify-end items-center mb-6">
-          <div className="flex items-center space-x-2">
-            <div>
-              <h2 className="text-lg font-semibold">Hello, User</h2>
-              <p className="text-sm text-gray-500">Welcome</p>
-              <p className="text-xs text-green-500">Last login in: 0 min</p>
+        <div className="flex items-center space-x-2">
+        <div className="">
+              <p className="text-[#000000] text-[14px] font-[700]">
+                Hello,
+                {storedUsername ? (
+                 <span> {storedUsername}</span>
+                ) : (
+                  <span>User</span>
+                )}
+              </p>
+              <p className="text-sm">Welcome</p>
             </div>
-            <img src={profile} alt="User Avatar" className="w-10 h-10 rounded-full" />
-          </div>
+            {storedProfile ? (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src={`${BASEURL}/uploads/${storedProfile}`} 
+      alt="Profile"
+    />
+  ) : (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src="path/to/default-image.jpg" 
+      alt="Default Profile"
+    />
+  )}
+        </div>
         </header>
 
         {/* Form */}

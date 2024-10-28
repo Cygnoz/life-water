@@ -23,6 +23,9 @@ const ActiveRouteSchema = new Schema({
         type:String,
         required:true
     },
+    Salesman:{
+        type:String,   
+    },
     openingStock:{
         type:String,
         required:true
