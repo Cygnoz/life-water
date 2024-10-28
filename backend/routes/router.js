@@ -8,6 +8,7 @@ const CustomerController = require("../controller/CustomerController")
 
 const upload = require("../middleware/Multermiddleware")
 const ActiveRouteController = require("../controller/ActiveRouteController")
+const EndRideController = require('../controller/EndRideController')
 
 // STAFF
 
@@ -74,5 +75,8 @@ router.delete("/customer/:id", CustomerController.deleteCustomerById)
 // Active Route
 router.post("/activroutes", ActiveRouteController.createActiveRoute)
 router.get("/getActiveRoutes", ActiveRouteController.getActiveRoutes)
+
+//endride
+router.post('/end-ride', EndRideController.endRide);
 
 module.exports = router

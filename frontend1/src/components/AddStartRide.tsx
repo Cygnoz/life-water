@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
-
+ 
 import { useNavigate } from 'react-router-dom';
 import { addActiveRouteAPI, getAllStaffsAPI, getSubRoutesAPI, getVehicleAPI } from '../services/StartRide/StartRide';
 import { BASEURL } from '../services/BaseURL';
-
+ 
 interface Route {
   _id: string;
   subRoute: string;
   mainRoute: string;
 }
-
+ 
 interface Staff {
   designation: string;
   _id: string;
   firstname: string;
   lastname: string;
 }
-
+ 
 interface Vehicle {
   _id: string;
   vehicleNo: string;
 }
-
+ 
 const AddStartRide: React.FC = () => {
   const [routesList, setRouteList] = useState<Route[]>([]);
   const [mainRouteList, setMainRouteList] = useState<string[]>([]);
@@ -37,7 +37,7 @@ const AddStartRide: React.FC = () => {
   const navigate = useNavigate();
   const [storedUsername, setStoredUsername] = useState<string | null>(null);
   const [storedProfile, setStoredProfile] = useState<string | null>(null);
-
+ 
   // Retrieve username from session storage on component load
   useEffect(() => {
     const savedUsername = localStorage.getItem("firstname");
@@ -48,13 +48,13 @@ const AddStartRide: React.FC = () => {
       setStoredProfile(storedProfile)
     }
   }, []);
-
+ 
   useEffect(() => {
     const fetchSubRoutes = async () => {
       try {
         const response = await getSubRoutesAPI();
         setRouteList(response);
-
+ 
         // Extract unique main routes
         const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
         setMainRouteList(uniqueMainRoutes);
@@ -62,10 +62,10 @@ const AddStartRide: React.FC = () => {
         console.error('Error fetching sub-route data:', error);
       }
     };
-
+ 
     fetchSubRoutes();
   }, []);
-
+ 
   useEffect(() => {
     const fetchStaff = async () => {
       try {
@@ -75,10 +75,10 @@ const AddStartRide: React.FC = () => {
         console.error("Error fetching staff data:", error);
       }
     };
-
+ 
     fetchStaff();
   }, []);
-
+ 
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
@@ -89,10 +89,10 @@ const AddStartRide: React.FC = () => {
         setVehicleList([]);
       }
     };
-
+ 
     fetchVehicle();
   }, []);
-
+ 
   // Update filtered sub-routes based on selected main route
   const handleMainRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const mainRoute = event.target.value;
@@ -100,14 +100,14 @@ const AddStartRide: React.FC = () => {
     setFilteredSubRoutes(routesList.filter(route => route.mainRoute === mainRoute));
     setSelectedSubRoute(''); // Reset sub-route selection
   };
-
+ 
   const handleSubRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubRoute(event.target.value);
   };
-
+ 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+ 
     const newActiveRoute = {
       mainRoute: selectedMainRoute,
       subRoute: selectedSubRoute,
@@ -120,17 +120,21 @@ const AddStartRide: React.FC = () => {
       startingKm,
       Salesman:storedUsername
     };
-  
+ 
     try {
       const data = await addActiveRouteAPI(newActiveRoute);
       console.log('ActiveRoute created successfully:', data);
+      const activerouteID = data?.data?._id;
+      localStorage.setItem("activerouteID", activerouteID)
+      console.log('activeroute set in localStorage');
+      
       navigate('/home');
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred while creating the ActiveRoute.');
     }
   };
-
+ 
   return (
     <div className="flex items-center justify-center bg-gray-100 p-4 rounded-lg mt-3">
       <div className="bg-white w-full max-w-lg rounded-lg shadow-md p-6">
@@ -148,21 +152,21 @@ const AddStartRide: React.FC = () => {
               <p className="text-sm">Welcome</p>
             </div>
             {storedProfile ? (
-    <img 
-      className="object-cover w-11 h-11 rounded-full" 
-      src={`${BASEURL}/uploads/${storedProfile}`} 
+    <img
+      className="object-cover w-11 h-11 rounded-full"
+      src={`${BASEURL}/uploads/${storedProfile}`}
       alt="Profile"
     />
   ) : (
-    <img 
-      className="object-cover w-11 h-11 rounded-full" 
-      src="path/to/default-image.jpg" 
+    <img
+      className="object-cover w-11 h-11 rounded-full"
+      src="path/to/default-image.jpg"
       alt="Default Profile"
     />
   )}
         </div>
         </header>
-
+ 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Main Route Selection */}
@@ -184,7 +188,7 @@ const AddStartRide: React.FC = () => {
               ))}
             </select>
           </div>
-
+ 
           {/* Sub Route Selection */}
           <div className="space-y-1">
             <label htmlFor="sub-route" className="text-sm font-medium text-gray-700">
@@ -205,7 +209,7 @@ const AddStartRide: React.FC = () => {
               ))}
             </select>
           </div>
-
+ 
           <div className="space-y-1">
             <label htmlFor="helper" className="text-sm font-medium text-gray-700">
               Helper
@@ -221,7 +225,7 @@ const AddStartRide: React.FC = () => {
                 ))}
             </select>
           </div>
-
+ 
           <div className="space-y-1">
             <label htmlFor="driver" className="text-sm font-medium text-gray-700">
               Driver
@@ -237,7 +241,7 @@ const AddStartRide: React.FC = () => {
                 ))}
             </select>
           </div>
-
+ 
           <div className="space-y-1">
             <label htmlFor="vehicle" className="text-sm font-medium text-gray-700">
               Select Vehicle Number
@@ -251,7 +255,7 @@ const AddStartRide: React.FC = () => {
               ))}
             </select>
           </div>
-
+ 
           {/* Stock Section */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -279,7 +283,7 @@ const AddStartRide: React.FC = () => {
               />
             </div>
           </div>
-
+ 
           {/* Stock Hand and KM */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
@@ -307,7 +311,7 @@ const AddStartRide: React.FC = () => {
               />
             </div>
           </div>
-
+ 
           {/* Submit Button */}
           <div className="flex justify-center">
             <button
@@ -322,5 +326,5 @@ const AddStartRide: React.FC = () => {
     </div>
   );
 };
-
+ 
 export default AddStartRide;
