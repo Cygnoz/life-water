@@ -3,6 +3,7 @@ const router = express.Router();
 const stockController = require('../controller/StockController');
 const itemController = require('../controller/ItemController');
 const warehouseController = require('../controller/WarehouseController');
+const orderController = require('../controller/OrderController');
 
 const upload = require('../middleware/Multermiddleware')
 
@@ -21,5 +22,12 @@ router.delete('/item/:id', itemController.deleteItem);
 //Warehouse
 router.post('/warehouse', warehouseController.createStock);
 router.get('/warehouse', warehouseController.getAllStock);
+
+
+//Orders
+router.post('/orders', orderController.createOrder);
+router.get('/orders/:id', orderController.viewOrder);
+router.get('/orders', orderController.viewAllOrders);
+router.delete('/orders/:id', orderController.deleteOrder);
 
 module.exports = router;
