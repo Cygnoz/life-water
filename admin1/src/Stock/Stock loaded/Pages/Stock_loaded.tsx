@@ -7,6 +7,7 @@ import dot from "../../../assets/ellipsis-vertical.svg";
 import printer from "../../../assets/images/printer.svg";
 import split from "../../../assets/images/list-filter.svg";
 import search from "../../../assets/images/search.svg";
+import { Link } from "react-router-dom";
 
 const StockLoaded: React.FC = () => {
   return (
@@ -25,10 +26,12 @@ const StockLoaded: React.FC = () => {
                 </p>
               </div>
               <div className="flex justify-between">
+                <Link to={'/addstockloaded'}>
                 <button className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md">
                   <img src={plus} alt="" />
                   <p>Add New Stock</p>
                 </button>
+                </Link>
                 
               </div>
             </div>

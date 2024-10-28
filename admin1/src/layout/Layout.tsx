@@ -64,6 +64,9 @@ import EditCoupon from '../Sales/Pages/EditCoupon';
 import Invoice from '../Sales/Pages/Invoice';
 import Receipt from '../Sales/Pages/Receipt';
 import Salesman from '../Sales/Pages/Salesman';
+import AddStockloaded from '../Stock/Stock loaded/Components/AddStockloaded';
+import AddInternalStock from '../Stock/Internal transfer/Components/AddInternalStock';
+import AddUnloadStock from '../Stock/Unload stock/Components/AddUnloadStock';
 
 
 const App: React.FC = () => {
@@ -134,6 +137,7 @@ const App: React.FC = () => {
 
                    {/* INTERNAL TRANSFER */}
                    <Route path='/internaltransfer' element={<CreateInternalTransfer/>}/>
+                   <Route path='/addinternaltransfer' element={<AddInternalStock/>}/>
 
                    {/* ITEMS */}
                    <Route path='/additem' element={<AddItem/>}/>
@@ -142,9 +146,11 @@ const App: React.FC = () => {
 
                    {/* STOCK LOADED */}
                    <Route path='/stockloaded' element={<StockLoaded/>}/>
+                   <Route path='/addstockloaded' element={<AddStockloaded/>}/>
 
                    {/* UNLOAD STOCK */}
                    <Route path='/unloadstock' element={<UnloadedAdd/>}/>
+                   <Route path='/addunloadstock' element={<AddUnloadStock/>}/>
 
                    {/* WAREHOSUE STOCK */}
                    <Route path='/addWstock' element={<AddWStock/>}/>

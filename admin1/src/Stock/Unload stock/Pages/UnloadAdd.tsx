@@ -4,6 +4,7 @@ import search from "../../../assets/images/search.svg"
 
 
 import plus from '../../../assets/circle-plus.svg'
+import { Link } from 'react-router-dom';
  
 const UnloadedAdd: React.FC = () => {
   return (
@@ -17,14 +18,17 @@ const UnloadedAdd: React.FC = () => {
               <p className='text-gray-500 ms-2 my-2'>Lorem ipsum dolor sit amet</p>
             </div>
             <div className="flex justify-between">
-              <button
+             <Link to={'/addunloadstock'}>
+             <button
                 
                 className="flex justify-between items-center gap-2 bg-[#820000] text-white px-5 py-2 rounded-md"
               >
                 <img src={plus} alt="" />
                 <p>Add New</p>
               </button>
-
+             
+             </Link>
+              
               
              
             </div>

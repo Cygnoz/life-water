@@ -11,7 +11,7 @@ import { getAllCustomersAPI } from '../services/CustomerAPI/Customer';
 import { BASEURL } from '../services/Baseurl';
 import { getAllStaffsAPI } from '../services/AllApi';
 import { getItemsAPI } from '../services/StockAPI/StockAPI';
-import downarrow from '../assets/images/downarrow.svg'
+import downarrow from '../assets/images/Vector.png'
 
 
 
@@ -494,7 +494,7 @@ const filteredCustomers = customers.filter((customer) =>
                               ) : (
                                 <div className="cursor-pointer flex appearance-none items-center justify-center h-9 text-zinc-400 bg-white text-sm">
                                   <p>Type or click</p>&nbsp;&nbsp;
-                                  <p><img src={downarrow} alt="" /></p>
+                                  <p><img src={downarrow} alt="" width={12}/></p>
                                 </div>
                               )}
                             </div>
