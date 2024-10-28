@@ -32,7 +32,7 @@ export const addItemAPI = async (formData: FormData): Promise<ApiResponse> => {
 };
 
 // Function to get all items
-export const getItemsAPI = async (): Promise<ApiResponse> => {
+export const getItemsAPI = async (): Promise<any> => {
   try {
     const response = await commonAPI('GET', `${STOCK_BASEURL}/api/item`, null);
     return response; // Ensure the response matches the expected ApiResponse structure
