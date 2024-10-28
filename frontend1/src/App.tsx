@@ -19,6 +19,7 @@ import AddCustomer from './components/AddCustomer';
 import ViewCustomers from './pages/ViewCustomers';
 import EndRide from './pages/EndRide';
 import Dashboard from './pages/Dashboard';
+import Maps from './pages/Map';
 // import Routed from './pages/Route';
 
 const App: React.FC = () => {
@@ -56,7 +57,7 @@ const App: React.FC = () => {
           <Route path="/couponcustomer" element={<CouponCustomer />} />
           <Route path="/creditcollection" element={<CreditCollection />} />
           <Route path="/endride" element={<EndRide />} />
-          {/* <Route path="/route" element={<Routed />} /> */}
+          <Route path="/route" element={<Maps />} />
         
         </Routes>
       </div>
