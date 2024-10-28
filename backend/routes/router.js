@@ -75,6 +75,8 @@ router.delete("/customer/:id", CustomerController.deleteCustomerById)
 // Active Route
 router.post("/activroutes", ActiveRouteController.createActiveRoute)
 router.get("/getActiveRoutes", ActiveRouteController.getActiveRoutes)
+router.get("/viewActiveRoute/:id", ActiveRouteController.viewActiveRouteById)
+
 
 //endride
 router.post('/end-ride', EndRideController.endRide);

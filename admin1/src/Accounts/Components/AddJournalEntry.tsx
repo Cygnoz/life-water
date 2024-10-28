@@ -15,6 +15,7 @@ interface Item {
   amount: number;
 }
 
+
 interface OrderDetails {
   customer: string;
   salesman: string;
