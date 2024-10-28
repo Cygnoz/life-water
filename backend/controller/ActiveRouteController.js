@@ -3,7 +3,7 @@ const ActiveRoute = require('../Models/ActiveRoute'); // Adjust the path accordi
 // POST method to create a new ActiveRoute
 const createActiveRoute = async (req, res) => {
   try {
-    const { mainRoute, subRoute, helper, driver, vehicleNo, openingStock, loadedStock, totalStock, startingKm } = req.body;
+    const { mainRoute, subRoute, helper, driver, vehicleNo, openingStock, loadedStock, totalStock, startingKm ,Salesman } = req.body;
 
     // Create a new ActiveRoute instance
     const newActiveRoute = new ActiveRoute({
@@ -16,6 +16,7 @@ const createActiveRoute = async (req, res) => {
       loadedStock,
       totalStock,
       startingKm,
+      Salesman
     });
 
     // Save the new ActiveRoute to the database
@@ -54,7 +55,39 @@ const getActiveRoutes = async (req, res) => {
     });
   }
 };
+
+const deleteActiveRoute = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find and delete the ActiveRoute with the specified ID
+    const deletedActiveRoute = await ActiveRoute.findByIdAndDelete(id);
+
+    // Check if the ActiveRoute was found and deleted
+    if (!deletedActiveRoute) {
+      return res.status(404).json({
+        message: 'ActiveRoute not found',
+      });
+    }
+
+    // Send a success response if deletion was successful
+    res.status(200).json({
+      message: 'ActiveRoute deleted successfully',
+      data: deletedActiveRoute,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: 'An error occurred while deleting the ActiveRoute',
+      error: error.message,
+    });
+  }
+};
+
+
+
 module.exports = {
   createActiveRoute,
   getActiveRoutes,
+  deleteActiveRoute,
 };

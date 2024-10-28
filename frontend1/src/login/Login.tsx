@@ -9,41 +9,38 @@ import { useNavigate } from "react-router-dom"
 const Login: React.FC = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [image, setImage] = useState<string | null>(null);
+  
 
   const navigate = useNavigate()
-
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   
-    // Prepare a simple JSON object
     const loginData = { username, password };
   
-    console.log(username);
-    console.log(password);
-  
     try {
-      const response = await loginStaffAPI(loginData); // Send JSON object
-      if(response.status ===200){
-        localStorage.setItem("username",username);
-       
-        
-        console.log("Login successful:", response);
+      const response = await loginStaffAPI(loginData);
+      if (response.status === 200) {
+        const { firstname, _id ,profile } = response.staff; // Extract firstname and _id
+        localStorage.setItem("username", username);
+        localStorage.setItem("firstname", firstname); // Store firstname in localStorage
+        localStorage.setItem("profile", profile); // Store firstname in localStorage
+        localStorage.setItem("_id", _id); // Store _id in localStorage
+  
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/start");
-        },2000)
-      }else{
+        }, 2000);
+      } else {
         console.log("Login failed:", response);
+        toast.error("Login failed. Please check your credentials.");
       }
-
     } catch (error: any) {
       console.error("Login failed:", error);
- 
       toast.error("Login failed. Please check your credentials.");
     }
   };
+  
   
   
 

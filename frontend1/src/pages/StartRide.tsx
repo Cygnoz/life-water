@@ -1,26 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import profile from '../assets/images/profile1.png'
 import arrow from '../assets/images/arrow.png'
 import start from '../assets/images/start.png'
+import { BASEURL } from '../services/BaseURL';
 
 
 const StartRide: React.FC = () => {
+  const [storedUsername, setStoredUsername] = useState<string | null>(null);
+  const [storedProfile, setStoredProfile] = useState<string | null>(null);
+
+  // Retrieve username from session storage on component load
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("firstname");
+    const storedProfile = localStorage.getItem("profile");
+    if (savedUsername && storedProfile) {
+      console.log(savedUsername , storedProfile);
+      setStoredUsername(savedUsername);
+      setStoredProfile(storedProfile)
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-between p-4">
       {/* Header */}
       <header className="w-full flex justify-end items-center p-4">
         <div className="flex items-center space-x-2">
-          <div>
-            <h2 className="text-lg font-semibold">Hello, User</h2>
-            <p className="text-sm text-gray-500">Welcome</p>
-            <p className="text-xs text-green-500">Last login in: 0 min</p>
-          </div>
-          <img
-            src={profile}
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full"
-          />
+        <div className="">
+              <p className="text-[#000000] text-[14px] font-[700]">
+                Hello,
+                {storedUsername ? (
+                 <span> {storedUsername}</span>
+                ) : (
+                  <span>User</span>
+                )}
+              </p>
+              <p className="text-sm">Welcome</p>
+            </div>
+            {storedProfile ? (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src={`${BASEURL}/uploads/${storedProfile}`} 
+      alt="Profile"
+    />
+  ) : (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src="path/to/default-image.jpg" 
+      alt="Default Profile"
+    />
+  )}
         </div>
       </header>
 

@@ -92,7 +92,7 @@ const ActiveRoute: React.FC = () => {
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{index + 1}</td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.mainRoute}</td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.subRoute}</td>
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.salesMan}</td>
+                    <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.Salesman}</td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.helper}</td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.vehicleNo}</td>
                     <td className="p-2 text-[14px] text-center text-[#4B5C79]">{route.totalStock}</td>

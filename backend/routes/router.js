@@ -3,7 +3,7 @@ const router = express.Router()
 const staffController = require("../controller/staffController")
 const vehicleController = require("../controller/VehicleController")
 const mainRouteController = require("../controller/RouteController")
-// const subrouteController = require('../controller/SubRouteController');
+const subrouteController = require('../controller/SubRouteController');
 const CustomerController = require("../controller/CustomerController")
 
 const upload = require("../middleware/Multermiddleware")
@@ -38,30 +38,30 @@ router.delete("/deletevehicle/:id", vehicleController.deleteVehicle)
 
 // // ROUTE
 
-// // Route endpoints
-// router.post('/addRoute', routeController.addRoute);
-// router.delete('/delRoute/:id', routeController.deleteRoute);    // Delete route by ObjectId
-// router.put('/updateRoute/:id', routeController.updateRoute);       // Update route by ObjectId
-// router.get('/getAllRoutes' ,routeController.getAllRoutes)        // View all routes
-// router.get('/getroute/:id', routeController.viewRouteById);     // View route by ObjectId
+// Route endpoints
+router.post('/addRoute', mainRouteController.addRoute);
+router.delete('/delRoute/:id', mainRouteController.deleteRoute);    // Delete route by ObjectId
+router.put('/updateRoute/:id', mainRouteController.updateRoute);       // Update route by ObjectId
+router.get('/getAllRoutes' ,mainRouteController.getAllRoutes)        // View all routes
+router.get('/getroute/:id', mainRouteController.viewRouteById);     // View route by ObjectId
 
-// // subroute
-// router.post('/addSRoute', subrouteController.addSubroute);
-// router.put('/updateSRoute/:id', subrouteController.editSubroute);
-// router.delete('/delSRoute/:id', subrouteController.deleteSubroute);
-// router.get('/viewSRoute', subrouteController.viewAllSubroutes);
-// router.get('/viewSRoute/:id', subrouteController.viewSubroute);
-// router.get('/getSRoute/:id', subrouteController.getSubroutebyID);
+// subroute
+router.post('/addSRoute', subrouteController.addSubroute);
+router.put('/updateSRoute/:id', subrouteController.editSubroute);
+router.delete('/delSRoute/:id', subrouteController.deleteSubroute);
+router.get('/viewSRoute', subrouteController.viewAllSubroutes);
+router.get('/viewSRoute/:id', subrouteController.viewSubroute);
+router.get('/getSRoute/:id', subrouteController.getSubroutebyID);
 
 // MainRoute routes
-router.post("/main-route", mainRouteController.addRoute)
-router.get("/main-route", mainRouteController.getAllRoutes)
-router.get("/main-route/:id", mainRouteController.viewRouteById)
-router.put("/main-route/:id", mainRouteController.updateRoute)
-router.delete("/main-route/:id", mainRouteController.deleteRoute)
+// router.post("/main-route", mainRouteController.addRoute)
+// router.get("/main-route", mainRouteController.getAllRoutes)
+// router.get("/main-route/:id", mainRouteController.viewRouteById)
+// router.put("/main-route/:id", mainRouteController.updateRoute)
+// router.delete("/main-route/:id", mainRouteController.deleteRoute)
 
 // SubRoute route to add a sub-route to a main route
-router.post("/main-route/:mainRouteId/sub-route", mainRouteController.addSubRoute)
+// router.post("/main-route/:mainRouteId/sub-route", mainRouteController.addSubRoute)
 
 //customer
 router.post("/addcustomer", upload.single("logo"), CustomerController.createCustomer)

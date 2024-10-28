@@ -13,8 +13,9 @@ import pay from "../assets/images/pay.svg";
 import endride from "../assets/images/endride.svg";
 import hstory from "../assets/images/history.svg";
 import rout from "../assets/images/rout.svg";
+
+import { BASEURL } from "../services/BaseURL";
 import { useNavigate } from "react-router-dom";
-import userprofile from "../assets/images/profile1.png";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -28,20 +29,26 @@ const Sidebar: React.FC<SidebarProps> = ({
   const [pagetitle, setPageTitle] = useState(""); // State to store the current title
   const navigate = useNavigate();
   const [storedUsername, setStoredUsername] = useState<string | null>(null);
+  const [storedProfile, setStoredProfile] = useState<string | null>(null);
 
   // Retrieve username from session storage on component load
   useEffect(() => {
-    const savedUsername = localStorage.getItem("username");
-    if (savedUsername) {
-      console.log(savedUsername);
+    const savedUsername = localStorage.getItem("firstname");
+    const storedProfile = localStorage.getItem("profile");
+    if (savedUsername && storedProfile) {
+      console.log(savedUsername , storedProfile);
       setStoredUsername(savedUsername);
+      setStoredProfile(storedProfile)
     }
   }, []);
+
+  
   const handleNavigation = (path: string, pagetitle: string) => {
     setPageTitle(pagetitle); // Update the page title based on the clicked sidebar item
     navigate(path);
     handleToggleSidebar();
   };
+console.log(storedProfile);
 
   return (
     <>
@@ -58,7 +65,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         )}
         <h1 className="font-bold">{pagetitle}</h1>{" "}
         {/* Display the current title */}
-        <div className="w-25 flex gap-2">
+        <div className="w-25 flex gap-2 pt-2">
           {pagetitle === "End Ride" || pagetitle === "Customers" || pagetitle === "Orders"? (
             <div className="">
               <p className="text-[#000000] text-[14px] font-[700]">
@@ -70,10 +77,21 @@ const Sidebar: React.FC<SidebarProps> = ({
                 )}
               </p>
               <p className="text-sm">Welcome</p>
-              <p className="text-sm text-green-500 ">last login</p>
             </div>
           ) : null}
-          <img src={userprofile} alt="User Profile " className="w-[45px] h-[45px] mt-1"  />
+         {storedProfile ? (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src={`${BASEURL}/uploads/${storedProfile}`} 
+      alt="Profile"
+    />
+  ) : (
+    <img 
+      className="object-cover w-11 h-11 rounded-full" 
+      src="path/to/default-image.jpg" 
+      alt="Default Profile"
+    />
+  )}
         </div>
       </div>
       
@@ -229,7 +247,7 @@ const Sidebar: React.FC<SidebarProps> = ({
               </span>
             </li>
             <li
-              onClick={() => handleNavigation("/end-ride", "End Ride")}
+              onClick={() => handleNavigation("/endride", "End Ride")}
               className="flex items-center p-2 gap-4 mb-1 hover:text-white hover:bg-gradient-to-r from-[#820000] to-[#2c353b] rounded-2xl"
             >
               <img src={endride} alt="End Ride" className="w-6 h-6" />
