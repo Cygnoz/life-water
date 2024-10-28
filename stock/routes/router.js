@@ -20,8 +20,11 @@ router.put('/item/:id', itemController.updateItem);
 router.delete('/item/:id', itemController.deleteItem);
 
 //Warehouse
-router.post('/warehouse', warehouseController.createStock);
-router.get('/warehouse', warehouseController.getAllStock);
+router.post('/wstock', warehouseController.createStock);
+router.get('/wstock', warehouseController.getAllStock);
+
+router.post('/warehouse', warehouseController.addWarehouse);
+router.get('/warehouse', warehouseController.getWarehouses);
 
 
 //Orders

@@ -1,42 +1,23 @@
 const mongoose = require('mongoose');
 
-const wStockSchema = new mongoose.Schema({
-  warehouse:{
-    type: String,
-    // required: true
-  },
-  transferNumber: {
-    type: String,
-    // required: true,
-    unique: true
-  },
-  date: {
-    type: Date,
-    // required: true,
-    default: Date.now
-  },
-  items: [{
-    itemName: {
-      type: String,
-    //   required: true
+const warehouseSchema = new mongoose.Schema({
+    warehouseName: {
+        type: String,
+        // required: true,
+        trim: true
     },
-    quantity: {
-      type: Number,
-    //   required: true,
-      min: 0
+    contactNo: {
+        type: String,
+        // required: true,
+        trim: true
     },
-  }],
-  totalQuantity: {
-    type: Number,
-  //   required: true,
-    min: 0
-  },
-  termsAndConditions: {
-    type: String
-  }
+    address: {
+        type: String,
+        // required: true,
+        trim: true
+    }
 });
 
+const Warehouse = mongoose.model('Warehouse', warehouseSchema);
 
-const WStock = mongoose.model('WStock', wStockSchema);
-
-module.exports = WStock;
+module.exports = Warehouse;
