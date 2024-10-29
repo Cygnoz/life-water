@@ -1,9 +1,16 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { addCustomerAPI } from "../services/customer/customerAPI"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { getSubRoutesAPI } from '../services/StartRide/StartRide';
+
+
+
+// const GOOGLE_MAPS_API_KEY = 'AIzaSyBsK-rqRbm2JJ3Z1194zK4ZtE0YURAeoSY'
+
+
 
 interface FormData {
   customerType: "Business" | "Individual"
@@ -17,6 +24,8 @@ interface FormData {
   contactNumber: string
   whatsappNumber: string
   depositAmount: string
+  subRoute:string
+  mainRoute:string
   location: {
     address: string
     coordinates: {
@@ -24,6 +33,12 @@ interface FormData {
       longitude: number | null
     }
   }
+}
+
+interface Route {
+  _id: string;
+  subRoute: string;
+  mainRoute: string;
 }
 
 interface FormErrors {
@@ -43,6 +58,8 @@ const AddCustomer: React.FC = () => {
     contactNumber: "",
     whatsappNumber: "",
     depositAmount: "",
+    mainRoute:"",
+    subRoute:"",
     location: {
       address: "",
       coordinates: {
@@ -54,6 +71,14 @@ const AddCustomer: React.FC = () => {
 
   const [errors, setErrors] = useState<FormErrors>({})
   const [isGettingLocation, setIsGettingLocation] = useState(false)
+  const [selectedMainRoute, setSelectedMainRoute] = useState<string>('');
+  const [selectedSubRoute, setSelectedSubRoute] = useState<string>('');
+  const [filteredSubRoutes, setFilteredSubRoutes] = useState<Route[]>([]);
+  const [routesList, setRouteList] = useState<Route[]>([]);
+  const [mainRouteList, setMainRouteList] = useState<any[]>([]);
+  
+
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -72,6 +97,35 @@ const AddCustomer: React.FC = () => {
       }))
     }
   }
+
+
+  const handleMainRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const mainRoute = event.target.value;
+    setSelectedMainRoute(mainRoute);
+    setFilteredSubRoutes(routesList.filter(route => route.mainRoute === mainRoute));
+    setSelectedSubRoute(''); // Reset sub-route selection
+  };
+ 
+  const handleSubRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSubRoute(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchSubRoutes = async () => {
+      try {
+        const response = await getSubRoutesAPI();
+        setRouteList(response);
+ 
+        // Extract unique main routes
+        const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
+        setMainRouteList(uniqueMainRoutes);
+      } catch (error) {
+        console.error('Error fetching sub-route data:', error);
+      }
+    };
+ 
+    fetchSubRoutes();
+  }, []);
 
   const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
     return new Promise((resolve, reject) => {
@@ -112,71 +166,7 @@ const AddCustomer: React.FC = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault()
-
-  //   if (validateForm()) {
-  //     try {
-  //       setIsGettingLocation(true)
-  //       const coords = await getCurrentLocation()
-
-  //       // Update formData with coordinates
-  //       const updatedFormData = {
-  //         ...formData,
-  //         location: {
-  //           ...formData.location,
-  //           coordinates: {
-  //             latitude: coords.latitude,
-  //             longitude: coords.longitude,
-  //           },
-  //         },
-  //       }
-
-  //       console.log("New customer form submitted with location:", updatedFormData)
-
-  //       // Here you would send updatedFormData to your API
-  //       console.log("Sending data:", updatedFormData)
-
-  //       const response = await addCustomerAPI(updatedFormData)
-  //       if (response?.status === 201) {
-  //         console.log("Customer added successfully")
-  //         toast.success(response?.message)
-  //         setIsGettingLocation(false)
-  //       } else {
-  //         console.log("Error adding customer:", response)
-  //         toast.error("something went wrong")
-  //       }
-
-  //       // Reset the form after successful submission
-  //       setFormData({
-  //         customerType: "Individual",
-  //         companyName: "",
-  //         firstName: "",
-  //         lastName: "",
-  //         email: "",
-  //         numberOfBottles: "",
-  //         rate: "",
-  //         paymentMode: "Cash",
-  //         contactNumber: "",
-  //         whatsappNumber: "",
-  //         depositAmount: "",
-  //         location: {
-  //           address: "",
-  //           coordinates: {
-  //             latitude: null,
-  //             longitude: null,
-  //           },
-  //         },
-  //       })
-  //       setErrors({})
-  //     } catch (error) {
-  //       console.error("Error submitting form:", error)
-  //       alert("Error: Unable to get location. Please ensure location services are enabled and try again.")
-  //     } finally {
-  //       setIsGettingLocation(false)
-  //     }
-  //   }
-  // }
+ 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,6 +185,8 @@ const AddCustomer: React.FC = () => {
               longitude: coords.longitude,
             },
           },
+          mainRoute: selectedMainRoute, // Add mainRoute
+          subRoute: selectedSubRoute,   // Add subRoute
         };
   
         const response = await addCustomerAPI(updatedFormData);
@@ -302,6 +294,47 @@ const AddCustomer: React.FC = () => {
             <label className="block text-gray-700">Deposit Amount</label>
             <input type="text" name="depositAmount" value={formData.depositAmount} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Deposit Amount" />
             {errors.depositAmount && <p className="text-red-500 text-sm">{errors.depositAmount}</p>}
+          </div>
+
+                    {/* Main Route Selection */}
+                    <div className="space-y-1">
+            <label htmlFor="main-route" className="text-sm font-medium text-gray-700">
+              Main Route
+            </label>
+            <select
+              id="main-route"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              value={selectedMainRoute}
+              onChange={handleMainRouteChange}
+            >
+              <option value="">Select Main Route</option>
+              {mainRouteList.map((mainRoute) => (
+                <option key={mainRoute} value={mainRoute}>
+                  {mainRoute}
+                </option>
+              ))}
+            </select>
+          </div>
+ 
+          {/* Sub Route Selection */}
+          <div className="space-y-1">
+            <label htmlFor="sub-route" className="text-sm font-medium text-gray-700">
+              Sub Route
+            </label>
+            <select
+              id="sub-route"
+              className="w-full p-2 border border-gray-300 rounded-lg"
+              value={selectedSubRoute}
+              onChange={handleSubRouteChange}
+              disabled={!selectedMainRoute} // Disable if no main route selected
+            >
+              <option value="">Select Sub Route</option>
+              {filteredSubRoutes.map((route) => (
+                <option key={route._id} value={route.subRoute}>
+                  {route.subRoute}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
