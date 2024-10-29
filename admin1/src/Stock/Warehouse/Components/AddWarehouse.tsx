@@ -15,6 +15,8 @@ const AddWarehouse: React.FC = () => {
   });
 
 const navigate=useNavigate()
+const [success, setSuccess] = useState<string | null>(null);
+console.log(success);
 
   // Handler to update form state
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -56,18 +58,21 @@ const navigate=useNavigate()
   
     // Call the API and handle the response
     const response = await addWarehouseAPI(formDataToSend);
-    if (response.message) {
-      toast.success('Warehouse added successfully!');
-      navigate("/cw")
-      // Optionally reset form or navigate
-      setFormData({ warehouseName: '', contactNo: '', address: '' });
-      console.log(formDataToSend);
-      console.log(response);
-      
-      
-    } else {
-      toast.error('Failed to add warehouse.');
-    }
+if (response && response.message) {
+  toast.success('Warehouse added successfully!');
+  setTimeout(() => {
+    setSuccess(null);
+    navigate("/warehouse");
+  }, 3000);
+
+  // Optionally reset form or navigate
+  setFormData({ warehouseName: '', contactNo: '', address: '' });
+  console.log(formDataToSend);
+  console.log(response);
+} else {
+  toast.error('Failed to add warehouse.');
+}
+
   };
   
 
@@ -89,12 +94,12 @@ const navigate=useNavigate()
       />
       {/* First Row: Heading and Icon */}
       <div className="flex gap-4 items-center w-full max-w-8xl mb-6">
-        <Link to={'/cw'}>
+        <Link to={'/warehouse'}>
           <div className="icon-placeholder">
             <img className='bg-gray-200 rounded-full p-2' src={back} alt="Back" />
           </div>
         </Link>
-        <h2 className="text-2xl font-bold">Create New Warehouse</h2>
+        <h2 className="text-[#303F58] text-[20px] font-bold">Create New Warehouse</h2>
       </div>
 
       {/* Second Row: Form Container */}

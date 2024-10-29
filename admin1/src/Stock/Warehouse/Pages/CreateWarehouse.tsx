@@ -3,6 +3,7 @@ import split from '../../../assets/images/list-filter.svg';
 import search from "../../../assets/images/search.svg";
 import plus from "../../../assets/circle-plus.svg";
 import trash from "../../../assets/images/trash.svg";
+import { toast,} from 'react-toastify';
 
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -35,18 +36,25 @@ const CreateWarehouse: React.FC = () => {
 
   // Delete function to remove a warehouse by its ID
   const handleDelete = async (id: string) => {
+    // Confirm deletion with the user
+    const isConfirmed = window.confirm("Are you sure you want to delete this warehouse?");
+    if (!isConfirmed) return;
+  
     try {
       await deleteWarehouseIdAPI(id); // Call the delete API function
       setWarehouses((prevWarehouses) =>
         prevWarehouses.filter((warehouse) => warehouse._id !== id)
       ); // Remove deleted warehouse from state
+  
+      // Display success toast
+      toast.success(`Warehouse deleted successfully.`);
       console.log(`Warehouse with ID ${id} deleted successfully.`);
     } catch (error: any) {
       setError(error.message || 'Failed to delete warehouse');
+      toast.error('Failed to delete warehouse.');
       console.error('Failed to delete warehouse:', error);
     }
   };
-
 
   return (
     <div>
@@ -57,7 +65,7 @@ const CreateWarehouse: React.FC = () => {
           <p className="text-[#4B5C79]">Lorem ipsum dolor sit amet consectetur</p>
         </div>
         <div className="flex">
-          <Link to={'/addw'}>
+          <Link to={'/addwarehouse'}>
             <button className="flex items-center gap-2 bg-[#820000] text-white px-5 py-2 rounded-md">
               <img src={plus} alt="Add New" />
               <p>Add New Warehouse</p>
