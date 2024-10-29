@@ -67,6 +67,8 @@ import Salesman from '../Sales/Pages/Salesman';
 import AddStockloaded from '../Stock/Stock loaded/Components/AddStockloaded';
 import AddInternalStock from '../Stock/Internal transfer/Components/AddInternalStock';
 import AddUnloadStock from '../Stock/Unload stock/Components/AddUnloadStock';
+import AddWarehouse from '../Stock/Warehouse/Components/AddWarehouse';
+import CreateWarehouse from '../Stock/Warehouse/Pages/CreateWarehouse';
 
 
 const App: React.FC = () => {
@@ -192,6 +194,10 @@ const App: React.FC = () => {
             <Route path='/invoice' element={<Invoice/>}/>
             <Route path='/reciept' element={<Receipt/>}/>
             <Route path='/salesman' element={<Salesman/>}/>
+            <Route path='/addwarehouse' element={<AddWarehouse/>}/>
+            <Route path='/warehouse' element={<CreateWarehouse/>}/>
+
+
 
 
 

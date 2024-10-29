@@ -25,6 +25,8 @@ router.get('/wstock', warehouseController.getAllStock);
 
 router.post('/warehouse', warehouseController.addWarehouse);
 router.get('/warehouse', warehouseController.getWarehouses);
+router.delete('/warehouse/:id', warehouseController.deleteWarehouse);
+
 
 
 //Orders
