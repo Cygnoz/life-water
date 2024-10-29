@@ -7,6 +7,7 @@ const createOrder = async (req, res) => {
       orderNumber,
       customer,
       salesman,
+      warehouse,
       date,
       paymentMode,
       items,
@@ -16,7 +17,7 @@ const createOrder = async (req, res) => {
     } = req.body;
 
     // Validate required fields
-    if (!customer || !salesman || !items || !paymentMode) {
+    if (!customer || !salesman || !warehouse || !items || !paymentMode) {
       return res.status(400).json({
         success: false,
         message: 'Please provide all required fields'
@@ -28,6 +29,7 @@ const createOrder = async (req, res) => {
       orderNumber,
       customer,
       salesman,
+      warehouse,
       date: date || Date.now(),
       paymentMode,
       items,
