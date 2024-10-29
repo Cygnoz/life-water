@@ -80,5 +80,6 @@ router.get("/viewActiveRoute/:id", ActiveRouteController.viewActiveRouteById)
 
 //endride
 router.post('/end-ride', EndRideController.endRide);
+router.get('/getallendride', EndRideController.getEndRide);
 
 module.exports = router

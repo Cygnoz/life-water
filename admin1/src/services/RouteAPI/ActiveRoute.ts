@@ -32,3 +32,13 @@ export const getActiveRouteAPI = async () => {
     }
 };
   
+
+export const getAllEndRidesAPI = async () => {
+  try {
+    const response = await axios.get(`${BASEURL}/api/getallendride`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching rides:", error);
+    return [];
+  }
+};

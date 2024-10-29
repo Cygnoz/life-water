@@ -157,6 +157,8 @@ const App: React.FC = () => {
                    {/* WAREHOSUE STOCK */}
                    <Route path='/addWstock' element={<AddWStock/>}/>
                    <Route path='/warstock' element={<CreateWStock/>}/>
+                   <Route path='/addwarehouse' element={<AddWarehouse/>}/>
+                   <Route path='/warehouse' element={<CreateWarehouse/>}/>
 
                         {/* REPORTS */}
                         <Route path='/balancesheet' element={<BalanceSheet/>}/>
@@ -194,8 +196,7 @@ const App: React.FC = () => {
             <Route path='/invoice' element={<Invoice/>}/>
             <Route path='/reciept' element={<Receipt/>}/>
             <Route path='/salesman' element={<Salesman/>}/>
-            <Route path='/addwarehouse' element={<AddWarehouse/>}/>
-            <Route path='/warehouse' element={<CreateWarehouse/>}/>
+            
 
 
 

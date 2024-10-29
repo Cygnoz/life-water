@@ -21,6 +21,22 @@ const EndRideSchema = new Schema({
     type: String,
     required: true,
   },
+  salesMan: {
+    type: String,
+  },
+  driver: {
+    type: String,
+  },
+  vehicleNo: {
+    type: String,
+  },
+  mainRoute: {
+    type: String,
+  },
+  stock: {
+    type: String,
+  },
+
   expenses: [ExpenseSchema], // Array of expense items
   activeRouteId: {
     type: Schema.Types.ObjectId,

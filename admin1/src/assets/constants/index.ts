@@ -100,9 +100,15 @@ const navlist = [
         subRoute: "/item",
       },
       {
+        headName: "Warehouse",
+        subRoute: "/warehouse",
+      },
+      {
         headName: "W Stock",
         subRoute: "/warstock",
       },
+
+      
       
     ],
   },  {
