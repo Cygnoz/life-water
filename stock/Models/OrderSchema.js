@@ -19,6 +19,10 @@ const orderSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     required: true
   },
+  warehouse:{
+    type: String,
+    required: true
+  },
 
   // Order details
   date: {

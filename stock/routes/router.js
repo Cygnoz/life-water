@@ -4,6 +4,7 @@ const stockController = require('../controller/StockController');
 const itemController = require('../controller/ItemController');
 const warehouseController = require('../controller/WarehouseController');
 const orderController = require('../controller/OrderController');
+const unloadController = require('../controller/UnloadController');
 
 const upload = require('../middleware/Multermiddleware')
 
@@ -28,11 +29,14 @@ router.get('/warehouse', warehouseController.getWarehouses);
 router.delete('/warehouse/:id', warehouseController.deleteWarehouse);
 
 
-
 //Orders
 router.post('/orders', orderController.createOrder);
 router.get('/orders/:id', orderController.viewOrder);
 router.get('/orders', orderController.viewAllOrders);
 router.delete('/orders/:id', orderController.deleteOrder);
+
+//Unloading
+router.post('/unload', unloadController.addUnload);
+router.get('/unload', unloadController.getAllUnloads);
 
 module.exports = router;
