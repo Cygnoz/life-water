@@ -67,6 +67,23 @@ const addWarehouse = async (req, res) => {
       });
     }
 
+    // Additional validation (optional)
+    // Check if warehouseName is too long
+    if (warehouseName.length > 100) {
+      return res.status(400).json({
+        success: false,
+        message: 'Warehouse Name cannot exceed 100 characters'
+      });
+    }
+
+    // Check if contactNo is a valid phone number (basic validation)
+    // if (!/^\d{10}$/.test(contactNo)) { // Adjust regex based on your needs
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: 'Contact Number must be a valid 10-digit number'
+    //   });
+    // }
+
     // Create new warehouse entry
     const warehouse = new Warehouse({
       warehouseName,
@@ -78,15 +95,20 @@ const addWarehouse = async (req, res) => {
 
     res.status(201).json({
       success: true,
+      message: 'Warehouse created successfully',
       data: warehouse
     });
   } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Error adding warehouse:', error);
+
     res.status(500).json({
       success: false,
-      message: error.message
+      message: 'An error occurred while creating the warehouse. Please try again.'
     });
   }
 };
+
 
 // Function to list all warehouses
 const getWarehouses = async (req, res) => {
@@ -101,9 +123,25 @@ const getWarehouses = async (req, res) => {
 };
 
 
+
+// Function to delete an warehouse by ID
+const deleteWarehouse = async (req, res) => {
+  try {
+    const deleteWarehouse = await Warehouse.findByIdAndDelete(req.params.id);
+    if (!deleteWarehouse) {
+      return res.status(404).json({ message: 'warehouse not found' });
+    }
+    res.status(200).json({ message: 'warehouse deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting warehouse', error });
+  }
+};
+
+
 module.exports = {
   createStock,
   getAllStock,
   addWarehouse,
-  getWarehouses
+  getWarehouses,
+  deleteWarehouse
 };
