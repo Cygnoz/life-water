@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import plus from '../assets/images/pluscircle.svg';
-import { endRideAPI } from '../services/EndRide/EndRide'; // Ensure the path is correct for your project
+import { endRideAPI } from '../services/EndRide/EndRide';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,13 +16,25 @@ const EndRide: React.FC = () => {
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, remarks: '', amount: '' },
   ]);
-  const [storedID, setStoredID] = useState<string | null>(null);
 
+  // State variables for data retrieved from localStorage
+  const [storedID, setStoredID] = useState<string | null>(null);
+  const [storedUsername, setStoredUsername] = useState<string | null>(null);
+  const [storeddriver, setStoreddriver] = useState<string | null>(null);
+  const [storedvehicle, setStoredVehicle] = useState<string | null>(null);
+  const [storedmainRoute, setStoredMainRoute] = useState<string | null>(null);
+  const [storedstock, setStoredStock] = useState<string | null>(null);
+ 
+
+  // Retrieve data from localStorage on component load
   useEffect(() => {
-    const activeRouteId = localStorage.getItem("activerouteID");
-    if (activeRouteId) {
-      setStoredID(activeRouteId);
-    }
+    setStoredID(localStorage.getItem("activeRouteId"));
+    setStoredUsername(localStorage.getItem("firstname"));
+    setStoreddriver(localStorage.getItem("driver"));
+    setStoredVehicle(localStorage.getItem("vehicleNo"));
+    setStoredMainRoute(localStorage.getItem("mainRoute"));
+    setStoredStock(localStorage.getItem("stock"));
+  
   }, []);
 
   const addExpense = () => {
@@ -42,33 +54,39 @@ const EndRide: React.FC = () => {
     e.preventDefault();
 
     if (!storedID) {
-      toast.error("No active route ID found."); // Use Toastify for error
+      toast.error("No active route ID found.");
       return;
     }
 
     const payload = {
       activeRouteId: storedID,
+      salesMan: storedUsername,
+      driver: storeddriver,
+      vehicleNo: storedvehicle,
+      mainRoute: storedmainRoute,
+      stock: storedstock,
+    
       endingKM: parseFloat(endingKM),
       travelledKM: parseFloat(travelledKM),
       expenses: expenses.map(({ remarks, amount }) => ({
         remarks,
-        amount: amount.toString(), // Convert amount to string
+        amount: amount.toString(),
       })),
     };
-    
 
     try {
       const response = await endRideAPI(payload);
       console.log('End ride response:', response);
-      toast.success('Ride ended successfully'); // Use Toastify for success
-      setEndingKM("")
-      setTravelledKM("")
-      setExpenses([ { id: 1, remarks: '', amount: '' },])
+      toast.success('Ride ended successfully');
+      setEndingKM("");
+      setTravelledKM("");
+      setExpenses([{ id: 1, remarks: '', amount: '' }]);
     } catch (error) {
       console.error('Error ending ride:', error);
-      toast.error('Failed to end the ride'); // Use Toastify for error
+      toast.error('Failed to end the ride');
     }
   };
+console.log(storeddriver , storedmainRoute ,storedstock ,storedvehicle);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen items-center justify-center">
@@ -122,7 +140,7 @@ const EndRide: React.FC = () => {
           Submit
         </button>
       </form>
-      <ToastContainer /> {/* Add ToastContainer to your JSX */}
+      <ToastContainer />
     </div>
   );
 };
