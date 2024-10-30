@@ -5,15 +5,15 @@ const Warehouse = require('../Models/WarehouseSchema'); // Adjust the path as ne
 // Function to add a new unload document
 const addUnload = async (req, res) => {
     try {
-      const { mainRoute, warehouse, date, transferNumber, items, autoNotes, termsAndConditions } = req.body;
+      const { mainRoute, warehouseName, date, transferNumber, items, autoNotes, termsAndConditions } = req.body;
         // Check if the warehouse exists in the database
-        const warehouseExists = await Warehouse.findOne({ warehouseName: warehouse });
+        const warehouseExists = await Warehouse.findOne({ warehouseName: warehouseName });
         if (!warehouseExists) {
             return res.status(404).json({ message: 'Warehouse not found' });
         }
       const newUnload = new Unload({
         mainRoute,
-        warehouse,
+        warehouseName,
         date,
         transferNumber,
         items,
@@ -24,7 +24,7 @@ const addUnload = async (req, res) => {
       const savedUnload = await newUnload.save();
   
       // Update warehouse stock
-      await updateWarehouseStock({ warehouseName: warehouse, items });
+      await updateWarehouseStock({ warehouseName: warehouseName, items });
   
       res.status(201).json(savedUnload);
     } catch (error) {
