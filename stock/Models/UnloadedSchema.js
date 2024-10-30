@@ -6,7 +6,7 @@ const unloadSchema = new mongoose.Schema({
   mainRoute: {
     type: String,
   },
-  Warehouse: {
+  warehouseName: {
     type: String,
   },
   date: {
