@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASEURL } from "../BaseURL";
+import { commonAPI } from "../CommonApi";
 // import { commonAPI } from "../CommonApi";
 
 interface CustomerFormData {
@@ -42,5 +43,19 @@ export const addCustomerAPI = async (customerData: CustomerFormData): Promise<Ap
       throw new Error(error.response.data.message); // Forward custom error message
     }
     throw error; // Rethrow the error to be caught in the component
+  }
+};
+
+export const getACustomerAPI = async (id: string): Promise<ApiResponse> => {
+  try {
+    // Use `id` to fetch the customer by their ID
+    const response = await commonAPI('GET', `${BASEURL}/api/customer/${id}`, null, {
+      // No need to specify headers for GET requests
+    });
+
+    return response; // Ensure the response matches the expected ApiResponse structure
+  } catch (error: any) {
+    console.error("Error fetching customer data:", error); // Log the full error for debugging
+    return { message: error.message || "An unexpected error occurred." }; // Fallback error message
   }
 };
