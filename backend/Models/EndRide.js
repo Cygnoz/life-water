@@ -36,7 +36,9 @@ const EndRideSchema = new Schema({
   stock: {
     type: String,
   },
-
+  subRoute: {
+  type:  String
+  },
   expenses: [ExpenseSchema], // Array of expense items
   activeRouteId: {
     type: Schema.Types.ObjectId,

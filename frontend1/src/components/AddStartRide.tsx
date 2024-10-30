@@ -124,13 +124,14 @@ const AddStartRide: React.FC = () => {
     try {
       const response = await addActiveRouteAPI(newActiveRoute);
       console.log('ActiveRoute created successfully:', response);
-      const { driver , vehicleNo , mainRoute , loadedStock , Salesman} = response?.data
+      const { driver , vehicleNo , mainRoute , loadedStock , Salesman, subRoute} = response?.data
       const  activeRouteId = response?.data?._id
       localStorage.setItem("activeRouteId", activeRouteId)
       localStorage.setItem("driver", driver); // Replace driverValue with the actual driver data
       localStorage.setItem("vehicleNo", vehicleNo); // Replace vehicleNoValue with the actual vehicle number
       localStorage.setItem("mainRoute", mainRoute); // Replace mainRouteValue with the actual route data
       localStorage.setItem("stock", loadedStock); // Replace stockValue with the actual stock data
+      localStorage.setItem("subRoute",subRoute);
     
   
 
