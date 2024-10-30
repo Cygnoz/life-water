@@ -2,7 +2,7 @@ const ActiveRoute = require('../Models/ActiveRoute');
 const EndRide = require('../Models/EndRide');
 
 const endRide = async (req, res) => {
-  const { endingKM, travelledKM, expenses, activeRouteId, salesMan, driver, vehicleNo, mainRoute, stock } = req.body;
+  const { endingKM, travelledKM, expenses, activeRouteId, salesMan, driver, vehicleNo, mainRoute, stock ,subRoute } = req.body;
 
   if (!activeRouteId) {
     return res.status(400).json({ message: "Active Route ID is required." });
@@ -22,6 +22,7 @@ const endRide = async (req, res) => {
       vehicleNo,
       mainRoute,
       stock,
+      subRoute,
     });
 
     // Save the new EndRide entry and log success

@@ -24,6 +24,7 @@ const EndRide: React.FC = () => {
   const [storedvehicle, setStoredVehicle] = useState<string | null>(null);
   const [storedmainRoute, setStoredMainRoute] = useState<string | null>(null);
   const [storedstock, setStoredStock] = useState<string | null>(null);
+  const [storedSubRoute, setStoredSubRoute] = useState<string | null>(null);
  
 
   // Retrieve data from localStorage on component load
@@ -34,6 +35,7 @@ const EndRide: React.FC = () => {
     setStoredVehicle(localStorage.getItem("vehicleNo"));
     setStoredMainRoute(localStorage.getItem("mainRoute"));
     setStoredStock(localStorage.getItem("stock"));
+    setStoredSubRoute(localStorage.getItem("subRoute"))
   
   }, []);
 
@@ -65,6 +67,7 @@ const EndRide: React.FC = () => {
       vehicleNo: storedvehicle,
       mainRoute: storedmainRoute,
       stock: storedstock,
+      subRoute:storedSubRoute,
     
       endingKM: parseFloat(endingKM),
       travelledKM: parseFloat(travelledKM),
