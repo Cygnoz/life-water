@@ -37,7 +37,7 @@ const Maps: React.FC = () => {
       console.log('Customers:', customers.map(c => c.location.address.toLowerCase())); // Log addresses
 
       const foundCustomer = customers.find((customer) =>
-        customer.location.address.toLowerCase() === trimmedAddress
+        customer.location.address?.toLowerCase() === trimmedAddress
       );
 
       if (foundCustomer) {
