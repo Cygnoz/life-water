@@ -5,7 +5,8 @@ import { addCustomerAPI } from "../services/customer/customerAPI"
 import { ToastContainer, toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { getSubRoutesAPI } from '../services/StartRide/StartRide';
-
+import { Link } from "react-router-dom"
+import backbutton from '../assets/images/nav-item.png'
 
 
 // const GOOGLE_MAPS_API_KEY = 'AIzaSyBsK-rqRbm2JJ3Z1194zK4ZtE0YURAeoSY'
@@ -213,8 +214,18 @@ const AddCustomer: React.FC = () => {
   return (
     <div className="m-3 bg-[#F5F6FA]">
       <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
-      <div className="max-w-md mx-auto p-6 bg-[#FFFFFF] shadow-md rounded-lg">
-        <h2 className="text-lg font-semibold text-center mb-4">New Customer</h2>
+      
+      <div className="p-6 bg-[#FFFFFF] shadow-md rounded-lg">
+      <div className="flex items-center mb-4">
+  <Link to={"/viewcustomers"}>
+    <button className="w-[40px] h-[40px] rounded-full p-1 flex items-center justify-center">
+      <img src={backbutton} alt="Back" className="w-full h-full" />
+    </button>
+  </Link>
+  <h2 className="text-lg font-semibold text-center flex-1">New Customer</h2>
+</div>
+
+     
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>

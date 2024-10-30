@@ -7,8 +7,10 @@ interface Customer {
   lastName: string;
   location: {
     address: string;
-    coordinates: [number, number]; // [longitude, latitude]
-  };
+    coordinates:{
+      coordinates:[number, number]// [longitude, latitude]
+    } ;
+}
 }
 
 const Maps: React.FC = () => {

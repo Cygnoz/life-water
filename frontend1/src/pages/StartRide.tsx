@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import profile from '../assets/images/profile1.png'
 import arrow from '../assets/images/arrow.png'
 import start from '../assets/images/start.png'
 import { BASEURL } from '../services/BaseURL';
