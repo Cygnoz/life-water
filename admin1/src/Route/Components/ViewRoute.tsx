@@ -272,7 +272,7 @@ const ViewRoute: React.FC = () => {
             <img src={user} alt="" />
           </div>
           <div className="ml-4">
-            <div className="text-white">Most Visited alesman</div>
+            <div className="text-white">Most Visited Sales Man</div>
             <div className="text-lg text-white font-bold">
               {mostVisitedSalesman || "N/A"}
             </div>
