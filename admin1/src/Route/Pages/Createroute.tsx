@@ -285,11 +285,12 @@ const CreateRoute: React.FC = () => {
                     </td>
                     <td className="no-print p-2 text-[14px] text-center text-[#4B5C79]">
                       <button
-                        onClick={() => handleView(route.id)}
+                        onClick={() => handleView(route._id)}
                         className="text-blue-500"
                       >
                         <img src={eye} alt="View" />
                       </button>
+                      
                       <button onClick={() => handleEdit(route._id)} className="text-red-500 ml-2">
                         <img src={vector} alt="Edit" />
                       </button>
