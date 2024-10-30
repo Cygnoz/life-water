@@ -1,4 +1,4 @@
-const WStock = require('../Models/StockSchema');
+const WStock = require('../Models/WStockSchema');
 const Warehouse = require('../Models/WarehouseSchema');
 
 // Create new stock entry
@@ -13,8 +13,9 @@ const createStock = async (req, res) => {
         message: 'Missing required fields'
       });
     }
-
-    // Create new stock entry
+    const warehouseExists = await WStock.findOne({ warehouseName: warehouse });
+    if (!warehouseExists) {
+            // Create new stock entry
     const wStock = new WStock({
       warehouse,
       transferNumber,
@@ -29,6 +30,11 @@ const createStock = async (req, res) => {
       success: true,
       data: wStock
     });
+    }
+    else{
+      await updateWarehouseStock({ warehouseName: warehouse, items });
+    }
+
   } catch (error) {
     res.status(500).json({
       success: false,
