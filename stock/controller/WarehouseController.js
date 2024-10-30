@@ -138,10 +138,76 @@ const deleteWarehouse = async (req, res) => {
 };
 
 
+// Function to update warehouse stock
+const updateWarehouseStock = async ({ warehouseName, items }) => {
+  try {
+    console.log(`Updating stock for warehouse: ${warehouseName}`); // Debugging log
+    const warehouse = await Warehouse.findOne({ warehouseName });
+    if (!warehouse) {
+      console.error(`Warehouse not found: ${warehouseName}`); // Debugging log
+      return { success: false, message: 'Warehouse not found' };
+    }
+
+    // Ensure stock field is initialized
+    if (!warehouse.stock) {
+      warehouse.stock = [];
+    }
+
+    // Check if warehouse exists in WStock
+    const wStock = await WStock.findOne({ warehouse: warehouseName });
+    if (wStock) {
+      // Warehouse exists, update existing items
+      items.forEach(item => {
+        const existingItem = wStock.items.find(stockItem => stockItem.itemName === item.itemName);
+        if (existingItem) {
+          existingItem.quantity += item.quantity;
+        } else {
+          wStock.items.push({ itemName: item.itemName, quantity: item.quantity });
+        }
+      });
+      await wStock.save();
+      console.log(`Stock updated for warehouse in WStock: ${warehouseName}`); // Debugging log
+    } else {
+      // Warehouse does not exist, insert new document
+      const newWStock = new WStock({
+        warehouse: warehouseName,
+        transferNumber: `TR-${Date.now()}`, // Generate a unique transfer number
+        date: new Date(),
+        items: items.map(item => ({
+          itemName: item.itemName,
+          quantity: item.quantity
+        })),
+        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+        termsAndConditions: 'Default terms and conditions' // You can customize this as needed
+      });
+      await newWStock.save();
+      console.log(`New stock inserted for warehouse in WStock: ${warehouseName}`); // Debugging log
+    }
+
+    // Update warehouse stock in Warehouse collection
+    items.forEach(item => {
+      const existingItem = warehouse.stock.find(stockItem => stockItem.product === item.product && stockItem.itemName === item.itemName);
+      if (existingItem) {
+        existingItem.quantity += item.quantity;
+      } else {
+        warehouse.stock.push({ product: item.product, itemName: item.itemName, quantity: item.quantity });
+      }
+    });
+
+    await warehouse.save();
+    console.log(`Stock updated for warehouse: ${warehouseName}`); // Debugging log
+  } catch (error) {
+    console.error('Error updating warehouse stock:', error);
+    throw error;
+  }
+};
+
+
 module.exports = {
   createStock,
   getAllStock,
   addWarehouse,
   getWarehouses,
-  deleteWarehouse
+  deleteWarehouse,
+  updateWarehouseStock
 };

@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
+const Counter = require('./Counter'); // Import the counter model
  
 const customerSchema = new mongoose.Schema({
+  customerID: {
+    type: String,
+    unique: true
+  },
   customerType: {
     type: String,
     enum: ['Business', 'Individual'],
@@ -137,7 +142,7 @@ const customerSchema = new mongoose.Schema({
       type: {
         type: String,
         enum: ['Point'],
-        default: 'Point'
+        // default: 'Point'
       },
       coordinates: {
         type: [Number], // [longitude, latitude]
@@ -148,6 +153,24 @@ const customerSchema = new mongoose.Schema({
 },{ timestamps: true });
 
 customerSchema.index({ 'location.coordinates': '2dsphere' });
+
+// Pre-save hook to auto-generate customerID
+customerSchema.pre('save', async function (next) {
+  if (!this.isNew) return next(); // Only generate ID for new documents
+
+  try {
+    const counter = await Counter.findOneAndUpdate(
+      { id: 'customerID' },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    this.customerID = `LW-${String(counter.seq).padStart(3, '0')}`; // Format: LW-001, LW-002, etc.
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
  
 module.exports = mongoose.model('Customer', customerSchema);

@@ -128,8 +128,13 @@ const addCustomerFromSalesman = async (req, res) => {
       contactNumber,
       whatsappNumber,
       depositAmount,
+      mainRoute,
+      subRoute,
       location
     } = req.body;
+
+    console.log(req.body);
+    
 
     console.log('Coordinates:', location.coordinates);
 
@@ -156,6 +161,8 @@ const addCustomerFromSalesman = async (req, res) => {
       mobileNo: contactNumber,
       whatsappNo: whatsappNumber,
       depositAmount,
+      mainRoute,
+      subRoute,
       location: transformedLocation
     });
 
