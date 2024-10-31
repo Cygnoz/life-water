@@ -16,6 +16,9 @@ const createOrder = async (req, res) => {
       status
     } = req.body;
 
+    console.log(req.body);
+    
+
     // Validate required fields
     if (!customer || !salesman || !warehouse || !items || !paymentMode) {
       return res.status(400).json({
