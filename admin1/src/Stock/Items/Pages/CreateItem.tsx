@@ -7,7 +7,8 @@ import plus from "../../../assets/circle-plus.svg";
 import search from "../../../assets/images/search.svg";
 import { Link, useNavigate } from 'react-router-dom';
 import { getItemsAPI,deleteItemAPI } from '../../../services/StockAPI/StockAPI';
-import { STOCK_BASEURL } from '../../../services/Baseurl';
+import { BASEURL, STOCK_BASEURL } from '../../../services/Baseurl';
+
 
 const CreateItem: React.FC = () => {
   const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
@@ -59,6 +60,7 @@ const CreateItem: React.FC = () => {
     }
   };
   console.log('items', items);
+
 
   return (
     <div className="flex min-h-screen w-full">
@@ -135,7 +137,12 @@ const CreateItem: React.FC = () => {
                         <input type="checkbox" />
                       </td>
                       <td className="px-4 py-3 text-center">
-                        <img className="mx-auto object-cover w-11 h-11 rounded-full" src={item.itemImage ? `${STOCK_BASEURL}/uploads/${item.itemImage}` : defaultImage} alt={`${item.itemName}}`} />
+                      <img 
+  className="mx-auto object-cover w-11 h-11 rounded-full"
+  src={item.itemImage ? `${STOCK_BASEURL}/${item.itemImage.replace(/\\/g, '/')}` : defaultImage} 
+  alt={`${item.itemName}`} 
+/>
+
                       </td>
                       <td className="px-4 py-3 text-center text-[#4B5C79]">{item.itemName}</td>
                       <td className="px-4 py-3 text-center text-[#4B5C79]">{item.purchasePrice}</td>
