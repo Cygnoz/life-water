@@ -1,5 +1,6 @@
 const MainRoute = require("../Models/RouteSchema");
 const mongoose = require('mongoose');
+const SubRoute = require('../Models/SubrouteSchema');
  
  
 // Add a new route
@@ -95,19 +96,47 @@ const viewRouteById = async (req, res) => {
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: 'Invalid route ID format' });
+      return res.status(400).json({
+        success: false, 
+        message: 'Invalid route ID format'
+      });
     }
 
-    const route = await MainRoute.findById(id)
+    // Find main route
+    const route = await MainRoute.findById(id);
     if (!route) {
       console.log(`No route found for ID: ${id}`);
-      return res.status(404).json({ message: 'Route not found' });
+      return res.status(404).json({
+        success: false,
+        message: 'Route not found'
+      });
     }
 
-    return res.status(200).json({ route });
+    // Find associated subroutes using route name
+    const subroutes = await SubRoute.find({ mainRoute: route.mainRoute });
+    console.log('Subroutes:', subroutes);
+    console.log('Route:', route);
+    
+    
+
+    // Combine data
+    const routeData = {
+      mainRoute: route,
+      subroutes: subroutes
+    };
+
+    return res.status(200).json({
+      success: true,
+      data: routeData
+    });
+
   } catch (error) {
     console.error('Error fetching route:', error);
-    return res.status(500).json({ message: 'Error fetching route', error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: 'Error fetching route',
+      error: error.message
+    });
   }
 };
 

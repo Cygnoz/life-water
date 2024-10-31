@@ -1,9 +1,10 @@
-const Stock = require('../Models/StockloadedSchema');
+const LoadedStock = require('../Models/StockloadedSchema');
 const Transfer = require('../Models/TransferSchema');
+const WarehouseStock = require('../Models/WStockSchema');
 
 const getAllStock = async (req, res) => {
   try {
-    const stocks = await Stock.find().sort({ date: -1 });
+    const stocks = await LoadedStock.find().sort({ date: -1 });
     res.json(stocks);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -11,28 +12,88 @@ const getAllStock = async (req, res) => {
 };
 
 const addStock = async (req, res) => {
-  const stock = new Stock({
-    transferNumber: req.body.transferNumber,
-    date: req.body.date,
-    mainRoute: req.body.mainRoute,
-    filledBottles: req.body.filledBottles,
-    items: req.body.items,
-    autoNotes: req.body.autoNotes,
-    termsAndConditions: req.body.termsAndConditions
-  });
-
   try {
-    const newStock = await stock.save();
-    res.status(201).json(newStock);
+    const {mainRoute, warehouse, date, transferNumber, items, autoNotes, termsAndConditions} = req.body;
+
+    // Check if warehouse exists
+    const warehouseExists = await WarehouseStock.findOne({ warehouse: warehouse });
+    if (!warehouseExists) {
+      return res.status(404).json({ 
+        success: false,
+        message: `Warehouse '${warehouse}' not found` 
+      });
+    }
+    else{
+      // await updateWarehouseStock({ warehouseName: warehouse, items });
+      const updateResult = await updateWarehouseStock({ warehouseName: warehouse, items });
+      if (!updateResult.success) {
+        return res.status(400).json({
+        success: false,
+        message: updateResult.message
+        });
+      }
+      console.log(items);
+      
+      const stock = new LoadedStock({
+        transferNumber,
+        date,
+        mainRoute,
+        items: items.map(item => ({
+          itemName: item.itemName,
+          quantity: item.quantity
+        })),
+        autoNotes,
+        termsAndConditions
+      });
+      const newStock = await stock.save();
+      res.status(201).json({
+        success: true,
+        data: newStock
+      });
+    }
+
+    // // Check and update stock for each item
+    // for (const itemName of items) {
+    //   const warehouseItem = warehouseExists.inventory.find(
+    //     inv => inv.itemId.toString() === itemName.itemId.toString()
+    //   );
+
+    //   if (!warehouseItem) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       message: `Item ${item.itemName} not found in warehouse inventory`
+    //     });
+    //   }
+
+    //   if (warehouseItem.quantity < item.quantity) {
+    //     return res.status(400).json({
+    //       success: false,
+    //       message: `Insufficient stock for ${item.itemName}. Available: ${warehouseItem.quantity}, Requested: ${item.quantity}`
+    //     });
+    //   }
+
+    //   // Reduce stock quantity
+    //   warehouseItem.quantity -= item.quantity;
+    // }
+
+    // // Save updated warehouse inventory
+    // await warehouseExists.save();
+
+    // Create new stock entry
+
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error('Error adding stock:', error);
+    res.status(400).json({ 
+      success: false,
+      message: error.message 
+    });
   }
 };
 
 const getStockStats = async (req, res) => {
   try {
-    // Aggregate total filled and empty bottles for each route and each day
-    const totalStockLoad = await Stock.aggregate([
+    const totalStockLoad = await LoadedStock.aggregate([
       {
         $group: {
           _id: {
@@ -44,11 +105,10 @@ const getStockStats = async (req, res) => {
         }
       },
       {
-        $sort: { "_id.date": 1 } // Sort by date
+        $sort: { "_id.date": 1 }
       }
     ]);
 
-    // Transform the result to the desired format
     const result = totalStockLoad.map(item => ({
       route: item._id.mainRoute,
       date: item._id.date,
@@ -56,51 +116,60 @@ const getStockStats = async (req, res) => {
       totalEmptyBottles: item.totalEmptyBottles
     }));
 
-    res.json(result);
+    res.json({
+      success: true,
+      data: result
+    }); 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: error.message 
+    });
   }
 };
-
-module.exports = getStockStats;
 
 const internalTransfer = async (req, res) => {
   const { fromTransferNumber, toTransferNumber, filledBottles } = req.body;
 
   try {
-    // Find the stock entry for the fromRoute using fromTransferNumber
-    const fromStock = await Stock.findOne({ transferNumber: fromTransferNumber });
+    const fromStock = await LoadedStock.findOne({ transferNumber: fromTransferNumber });
     if (!fromStock) {
-      return res.status(404).json({ error: 'From transfer number not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'From transfer number not found' 
+      });
     }
 
-    // Find the stock entry for the toRoute using toTransferNumber
-    const toStock = await Stock.findOne({ transferNumber: toTransferNumber });
+    const toStock = await LoadedStock.findOne({ transferNumber: toTransferNumber });
     if (!toStock) {
-      return res.status(404).json({ error: 'To transfer number not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'To transfer number not found' 
+      });
     }
 
-    // Check if there are enough filled bottles to transfer
     if (fromStock.filledBottles < filledBottles) {
-      return res.status(400).json({ error: `Not enough filled bottles in transfer number ${fromTransferNumber} to transfer` });
+      return res.status(400).json({ 
+        success: false,
+        message: `Not enough filled bottles in transfer number ${fromTransferNumber} to transfer` 
+      });
     }
 
-    // Check if there are enough empty bottles to return
     if (toStock.emptyBottles < filledBottles) {
-      return res.status(400).json({ error: `Not enough empty bottles in transfer number ${toTransferNumber} to return` });
+      return res.status(400).json({ 
+        success: false,
+        message: `Not enough empty bottles in transfer number ${toTransferNumber} to return` 
+      });
     }
 
-    // Perform the transfer
     fromStock.filledBottles -= filledBottles;
     fromStock.emptyBottles += filledBottles;
     toStock.filledBottles += filledBottles;
     toStock.emptyBottles -= filledBottles;
 
-    // Save the updated stock entries
     await fromStock.save();
     await toStock.save();
 
-    // Log the transfer (if using transfer logs)
     const transferLog = new Transfer({
       fromRoute: fromStock.mainRoute,
       toRoute: toStock.mainRoute,
@@ -109,17 +178,144 @@ const internalTransfer = async (req, res) => {
     });
     await transferLog.save();
 
-    res.status(200).json({ message: 'Internal transfer completed successfully' });
+    res.status(200).json({ 
+      success: true,
+      message: 'Internal transfer completed successfully' 
+    });
   } catch (error) {
     console.error('Error performing internal transfer:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ 
+      success: false,
+      message: 'Internal server error' 
+    });
   }
 };
 
+const updateWarehouseStock = async ({ warehouseName, items }) => {
+  try {
+    // Find warehouse
+    const warehouse = await WarehouseStock.findOne({ warehouse: warehouseName });
+    
+    if (!warehouse) {
+      console.error(`Warehouse not found....: ${warehouseName}`);
+      return { success: false, message: 'Warehouse not found' };
+    }
+
+    // Check and update each item
+    for (const item of items) {
+      const existingItem = warehouse.items.find(
+        stockItem => stockItem.itemName === item.itemName
+      );
+
+      if (!existingItem) {
+        return { 
+          success: false, 
+          message: `Item ${item.itemName} not found in warehouse stock` 
+        };
+      }
+    console.log(existingItem.itemName,existingItem.quantity);
+
+      if (existingItem.quantity < item.quantity) {
+        return { 
+          success: false, 
+          message: `Insufficient stock for ${item.itemName}. Available: ${existingItem.quantity}, Requested: ${item.quantity}` 
+        };
+      }
+
+      // Reduce the quantity
+      existingItem.quantity -= item.quantity;
+    }
+
+    // Update total quantity
+    // warehouse.totalQuantity = warehouse.items.reduce(
+    //   (sum, item) => sum + item.quantity, 
+    //   0
+    // );
+
+    // Save changes
+    await warehouse.save();
+    console.log(`Stock updated for warehouse: ${warehouseName}`);
+    
+    return {
+      success: true,
+      message: 'Stock updated successfully',
+      data: warehouse
+    };
+
+  } catch (error) {
+    console.error('Error updating warehouse stock:', error);
+    throw error;
+  }
+};
+
+// Function to update warehouse stock
+// const updateWarehouseStock = async ({ warehouseName, items }) => {
+//   try {
+//     console.log(`Updating stock for warehouse: ${warehouseName}`); // Debugging log
+//     const warehouse = await WarehouseStock.findOne({ warehouseName });
+//     if (!warehouse) {
+//       console.error(`Warehouse not found: ${warehouseName}`); // Debugging log
+//       return { success: false, message: 'Warehouse not found' };
+//     }
+
+//     // Ensure stock field is initialized
+//     if (!warehouse.stock) {
+//       warehouse.stock = [];
+//     }
+
+//     // Check if warehouse exists in WStock
+//     const wStock = await WarehouseStock.findOne({ warehouse: warehouseName });
+//     if (wStock) {
+//       // Warehouse exists, update existing items
+//       items.forEach(item => {
+//         const existingItem = wStock.items.find(stockItem => stockItem.itemName === item.itemName);
+//         if (existingItem) {
+//           existingItem.quantity -= item.quantity;
+//         } else {
+//             return { success: false, message: `Item ${item.itemName} not found in warehouse stock` };
+//         }
+//       });
+//       await wStock.save();
+//       console.log(`Stock updated for warehouse in WStock: ${warehouseName}`); // Debugging log
+//     } else {
+//       // Warehouse does not exist, insert new document
+//       const newWStock = new WarehouseStock({
+//         warehouse: warehouseName,
+//         transferNumber: `TR-${Date.now()}`, // Generate a unique transfer number
+//         date: new Date(),
+//         items: items.map(item => ({
+//           itemName: item.itemName,
+//           quantity: item.quantity
+//         })),
+//         totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
+//         termsAndConditions: 'Default terms and conditions' // You can customize this as needed
+//       });
+//       await newWStock.save();
+//       console.log(`New stock inserted for warehouse in WStock: ${warehouseName}`); // Debugging log
+//     }
+
+//     // Update warehouse stock in Warehouse collection
+//     items.forEach(item => {
+//       const existingItem = warehouse.stock.find(stockItem => stockItem.product === item.product && stockItem.itemName === item.itemName);
+//       if (existingItem) {
+//         existingItem.quantity += item.quantity;
+//       } else {
+//         warehouse.stock.push({ product: item.product, itemName: item.itemName, quantity: item.quantity });
+//       }
+//     });
+
+//     await warehouse.save();
+//     console.log(`Stock updated for warehouse: ${warehouseName}`); // Debugging log
+//   } catch (error) {
+//     console.error('Error updating warehouse stock:', error);
+//     throw error;
+//   }
+// };
+
 
 module.exports = {
-    getAllStock,
-    addStock,
-    getStockStats,
-    internalTransfer
+  getAllStock,
+  addStock,
+  getStockStats,
+  internalTransfer
 };
