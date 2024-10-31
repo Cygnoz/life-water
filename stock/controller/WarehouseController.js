@@ -148,65 +148,75 @@ const deleteWarehouse = async (req, res) => {
 const updateWarehouseStock = async ({ warehouseName, items }) => {
   try {
     console.log(`Updating stock for warehouse: ${warehouseName}`); // Debugging log
+
+    // Find the warehouse document
     const warehouse = await Warehouse.findOne({ warehouseName });
     if (!warehouse) {
-      console.error(`Warehouse not found: ${warehouseName}`); // Debugging log
+      console.error(`Warehouse not found: ${warehouseName}`);
       return { success: false, message: 'Warehouse not found' };
     }
 
-    // Ensure stock field is initialized
+    // Initialize stock if undefined
     if (!warehouse.stock) {
       warehouse.stock = [];
     }
 
-    // Check if warehouse exists in WStock
+    // Check if warehouse stock entry exists in WStock
     const wStock = await WStock.findOne({ warehouse: warehouseName });
     if (wStock) {
-      // Warehouse exists, update existing items
+      // Update existing items or add new items
       items.forEach(item => {
         const existingItem = wStock.items.find(stockItem => stockItem.itemName === item.itemName);
         if (existingItem) {
-          existingItem.quantity += item.quantity;
+          existingItem.quantity = Number(existingItem.quantity) + Number(item.quantity); // Ensure numeric addition
         } else {
-          wStock.items.push({ itemName: item.itemName, quantity: item.quantity });
+          wStock.items.push({ itemName: item.itemName, quantity: Number(item.quantity) });
         }
       });
       await wStock.save();
-      console.log(`Stock updated for warehouse in WStock: ${warehouseName}`); // Debugging log
+      console.log(`Stock updated for warehouse in WStock: ${warehouseName}`);
     } else {
-      // Warehouse does not exist, insert new document
+      // Insert a new document if the warehouse does not exist in WStock
       const newWStock = new WStock({
         warehouse: warehouseName,
         transferNumber: `TR-${Date.now()}`, // Generate a unique transfer number
         date: new Date(),
         items: items.map(item => ({
           itemName: item.itemName,
-          quantity: item.quantity
+          quantity: Number(item.quantity)
         })),
-        totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-        termsAndConditions: 'Default terms and conditions' // You can customize this as needed
+        totalQuantity: items.reduce((sum, item) => sum + Number(item.quantity), 0),
+        termsAndConditions: 'Default terms and conditions'
       });
       await newWStock.save();
-      console.log(`New stock inserted for warehouse in WStock: ${warehouseName}`); // Debugging log
+      console.log(`New stock inserted for warehouse in WStock: ${warehouseName}`);
     }
 
-    // Update warehouse stock in Warehouse collection
+    // Update the stock in the main Warehouse collection
     items.forEach(item => {
-      const existingItem = warehouse.stock.find(stockItem => stockItem.product === item.product && stockItem.itemName === item.itemName);
+      const existingItem = warehouse.stock.find(stockItem => 
+        stockItem.product === item.product && stockItem.itemName === item.itemName
+      );
       if (existingItem) {
-        existingItem.quantity += item.quantity;
+        existingItem.quantity = Number(existingItem.quantity) + Number(item.quantity); // Ensure numeric addition
       } else {
-        warehouse.stock.push({ product: item.product, itemName: item.itemName, quantity: item.quantity });
+        warehouse.stock.push({
+          product: item.product,
+          itemName: item.itemName,
+          quantity: Number(item.quantity)
+        });
       }
     });
 
     await warehouse.save();
-    console.log(`Stock updated for warehouse: ${warehouseName}`); // Debugging log
+    console.log(`Stock updated for warehouse: ${warehouseName}`);
+    return { success: true, message: 'Stock updated successfully' };
   } catch (error) {
     console.error('Error updating warehouse stock:', error);
     throw error;
   }
 };
+
 
 
 module.exports = {
