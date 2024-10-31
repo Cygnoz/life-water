@@ -4,7 +4,6 @@ import split from '../../assets/images/list-filter.svg';
 import search from '../../assets/images/search.svg';
 import { getAllEndRidesAPI } from '../../services/RouteAPI/ActiveRoute';
 
-// Define an interface for the Ride object
 interface RideData {
   _id: string;
   createdAt: string;
@@ -18,14 +17,15 @@ interface RideData {
 
 const Ride: React.FC = () => {
   const [rides, setRides] = useState<RideData[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Search term state
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getAllEndRidesAPI();
-        setRides(response.data as RideData[]); // Cast data to RideData array
-        console.log(response.data);
+        setRides(response.data as RideData[]);
       } catch (error) {
         console.error("Failed to fetch rides data:", error);
       }
@@ -33,7 +33,6 @@ const Ride: React.FC = () => {
     fetchData();
   }, []);
 
-  // Filter rides based on search term in salesMan or driver fields
   const filteredRides = rides.filter((ride) => {
     const searchText = searchTerm.toLowerCase();
     return (
@@ -41,6 +40,21 @@ const Ride: React.FC = () => {
       ride?.driver?.toLowerCase().includes(searchText)
     );
   });
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredRides.length / itemsPerPage);
+  const paginatedRides = filteredRides.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
   return (
     <div className="mt-2">
@@ -65,8 +79,8 @@ const Ride: React.FC = () => {
                 boxShadow: 'none',
               }}
               placeholder="Search by Salesman or Driver"
-              value={searchTerm} // Bind search input to state
-              onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -97,12 +111,14 @@ const Ride: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredRides.map((ride, index) => (
+            {paginatedRides.map((ride, index) => (
               <tr className="border-b" key={ride._id}>
                 <td className="px-6 py-4">
                   <input type="checkbox" />
                 </td>
-                <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                  {(currentPage - 1) * itemsPerPage + index + 1}
+                </td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">
                   {ride.createdAt ? new Date(ride.createdAt).toLocaleDateString() : 'N/A'}
                 </td>
@@ -116,6 +132,27 @@ const Ride: React.FC = () => {
             ))}
           </tbody>
         </table>
+
+        {/* Pagination Controls */}
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
