@@ -30,11 +30,12 @@ interface ApiResponse {
 
 // API function to add an unload entry
 export const addUnloadAPI = async (unloadData: UnloadData): Promise<ApiResponse> => {
-  try {
-    const response = await axios.post<ApiResponse>(`${STOCK_BASEURL}/api/unload`, unloadData);
-    return response.data; // Return the data from the response
-  } catch (error: any) {
-    console.error('Error adding unload:', error);
-    return { message: error.response?.data?.message || 'An unexpected error occurred.', error: error.message };
-  }
-};
+    try {
+      const response = await axios.post<ApiResponse>(`${STOCK_BASEURL}/api/addunload`, unloadData);
+      return response.data; // Return the data from the response
+    } catch (error: any) {
+      console.error('Error adding unload:', error);
+      return { message: error.response?.data?.message || 'An unexpected error occurred.', error: error.message };
+    }
+  };
+  
