@@ -10,6 +10,8 @@ import { useEffect, useRef, useState } from 'react';
 import { deleteSubRouteAPI, getSubRoutesAPI } from '../../services/RouteAPI/subRouteAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
+import eye from '../../assets/images/eye.svg'
+
 
 interface Route {
   id: string;
@@ -78,6 +80,10 @@ function SubRoute({}: Props) {
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value); // Update search query state
+  };
+
+  const handleView = (): void => {
+    navigate('/route/viewsubroute');
   };
 
 
@@ -185,12 +191,16 @@ function SubRoute({}: Props) {
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.mainRoute}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{route.description}</td>
                 <td className="no-print p-2 text-[14] text-center text-[#4B5C79]">
+                <button onClick={() => handleView()} className="text-red-500 mx-2 ml-2">
+                    <img src={eye} alt="" />
+                  </button>
                   <button onClick={() => handleEdit(route._id)} className="text-blue-500 mx-2 items-center">
                     <img src={pen} alt="" />
                   </button>
                   <button onClick={() => handleDelete(route._id)} className="text-red-500 ml-2">
                     <img src={trash} alt="" />
                   </button>
+                 
                 </td>
               </tr>
             ))}
