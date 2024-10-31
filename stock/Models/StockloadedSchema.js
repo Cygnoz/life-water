@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const stockSchema = new mongoose.Schema({
   transferNumber: {
     type: String,
-    required: true,
-    unique: true
+    // required: true,
+    // unique: true
   },
   date: {
     type: Date,
@@ -14,16 +14,16 @@ const stockSchema = new mongoose.Schema({
   mainRoute: {
     type: String,
   },
-  filledBottles: {
-    type: Number,
-    required: true
-  },
-  emptyBottles: {
-    type: Number,
-    default: 0
-  },
+  // filledBottles: {
+  //   type: Number,
+  //   required: true
+  // },
+  // emptyBottles: {
+  //   type: Number,
+  //   default: 0
+  // },
   items: [{
-    itemDetails: String,
+    itemName: String,
     quantity: Number,
     totalQuantity: Number
   }],
