@@ -13,6 +13,8 @@ import { getSubRoutesAPI } from "../../services/RouteAPI/subRouteAPI";
 import { getAllEndRidesAPI } from "../../services/RouteAPI/ActiveRoute";
 import search from "../../assets/images/search.svg";
 import vector from "../../assets/images/Vector.svg";
+import map1 from "../../assets/images/map-pin.svg";
+import SubRoute from "../Pages/SubRoute";
 
 interface Route {
   _id: string;
@@ -24,7 +26,9 @@ interface Route {
   subRoute: string;
   stock: number;
   sold?: number; // Assuming sold might be optional
+  subrouteCode: string;
 }
+
 interface Ride {
   _id: string;
   endingKM: string;
@@ -49,9 +53,10 @@ interface Ride {
 const ViewRoute: React.FC = () => {
   const [activeSection, setActiveSection] = useState("routeDetail");
   const [routeData, setRouteData] = useState<any>(null);
+  const [route, setRoute] = useState<any>(null);
+
   const [error, setError] = useState("");
   const { id } = useParams(); // Assumes route ID is passed as a URL parameter
-  const [routeList, setRouteList] = useState<Route[]>([]);
   const [mainRouteList, setMainRouteList] = useState<Route[]>([]);
   const [rides, setRides] = useState([]);
   const [mostVisitedSalesman, setMostVisitedSalesman] = useState<string | null>(
@@ -69,15 +74,22 @@ const ViewRoute: React.FC = () => {
   );
 
   const navigate = useNavigate();
+
+  // State initialization
+
   useEffect(() => {
     const fetchRouteData = async () => {
       try {
-        const data = await getRouteByIdAPI(id as string);
-        setRouteData(data);
-        console.log(routeData);
-        localStorage.setItem("MainRoute", routeData?.route.mainRoute);
-        setMainRoute(routeData?.route.mainRoute);
-        console.log(data);
+        const response = await getRouteByIdAPI(id as string);
+        setRouteData(response.data); // Store the full data
+        console.log("Full route data:", response.data);
+
+        // Set mainRoute and subroutes directly from response data
+        setMainRoute(response.data.mainRoute);
+        setMainRouteList(response.data.subroutes); // No need to filter
+        setRoute(response.data.mainRoute.mainRoute);
+        console.log("Main Route:", response.data.mainRoute);
+        console.log("Sub Routes:", response.data.subroutes);
       } catch (err: any) {
         setError(err.message || "Failed to load route data");
         console.log(error, "er");
@@ -87,33 +99,12 @@ const ViewRoute: React.FC = () => {
     fetchRouteData();
   }, [id]);
 
-  useEffect(() => {
-    const fetchMainRoutes = async () => {
-      try {
-        const response: Route[] = await getSubRoutesAPI();
-        setRouteList(response); // Set the full list of routes
-        const mainRoute = routeData?.route.mainRoute;
-
-        // Filter only sub-routes under the specified main route
-        const filteredRoutes = routeList.filter(
-          (route) => route.mainRoute === mainRoute
-        );
-        setMainRouteList(filteredRoutes); // Set the filtered list
-        console.log(filteredRoutes);
-      } catch (error) {
-        console.error("Error fetching main route data:", error);
-      }
-    };
-
-    fetchMainRoutes();
-  }, [routeData?.route.mainRoute]);
-
   // Specify the main route you want to filter by
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const targetMainRoute = routeData?.route.mainRoute;
+        const targetMainRoute = route;
         if (!targetMainRoute) {
           console.warn("Main route is undefined");
           return;
@@ -191,7 +182,7 @@ const ViewRoute: React.FC = () => {
     };
 
     fetchData();
-  }, [routeData?.route.mainRoute]);
+  }, [route]);
 
   useEffect(() => {
     const fetchRide = async () => {
@@ -203,29 +194,31 @@ const ViewRoute: React.FC = () => {
         const routes = Array.isArray(response.data) ? response.data : response;
 
         setRideList(routes); // Set the full list of routes
+        console.log("All Routes:", routes);
 
-        // Get main route from routeData
-        const mainRoute = routeData?.route.mainRoute;
-        if (!mainRoute) {
+        // Ensure that `routeData` is loaded before filtering
+        if (!routeData?.mainRoute?.mainRoute) {
           console.warn("Main route is undefined");
           return;
         }
 
+        // Get main route from routeData
+        const mainRoute = routeData.mainRoute.mainRoute;
+
         // Filter routes based on specified main route
         const filteredRoutes = routes.filter(
-          (route) => route.mainRoute === mainRoute
+          (ride) => ride.mainRoute === mainRoute
         );
         console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
 
         setMainRideList(filteredRoutes); // Update state with filtered routes
-        console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
       } catch (error) {
         console.error("Error fetching main route data:", error);
       }
     };
 
     fetchRide();
-  }, [routeData?.route.mainRoute]); // Add dependency on routeData.mainRoute
+  }, [routeData?.mainRoute?.mainRoute]); // Add dependency on `routeData.mainRoute.mainRoute`
 
   const handleEdit = (routeId: string): void => {
     navigate(`/route/editmainroute/${routeId}`);
@@ -243,7 +236,7 @@ const ViewRoute: React.FC = () => {
         </div>
         <div className="flex justify-between">
           <button
-            onClick={() => handleEdit(routeData?.route._id)}
+            onClick={() => handleEdit(mainroute?._id)}
             className=" justify-between items-center font-[600] text-white gap-2 bg-[#820000]  flex px-5 py-2 shadow rounded-md"
           >
             <img src={vector} alt="" />
@@ -335,8 +328,7 @@ const ViewRoute: React.FC = () => {
           }`}
           onClick={() => setActiveSection("subRoute")}
         >
-          <img src={history} alt="" className="mr-2" />
-          Sub Route
+          <img className="me-2" src={map1} alt="" /> Sub Route
         </button>
         <button
           className={`w-[221px] font-bold p-2  rounded-lg flex items-center ${
@@ -357,21 +349,16 @@ const ViewRoute: React.FC = () => {
           <div className="grid grid-cols-4 gap-4">
             <div>
               <p className="font-semibold">Main Route</p>
-              <p>{routeData?.route.mainRoute || "N/A"}</p>
+              <p>{mainroute?.mainRoute || "N/A"}</p>
             </div>
-            <div>
-              <p className="font-semibold">Sub Routes</p>
-              {mainRouteList.map((route) => (
-                <p key={route.subRoute}>{route.subRoute}</p>
-              ))}
-            </div>
+
             <div>
               <p className="font-semibold">Main Route Code</p>
-              <p>{routeData?.route.routeCode || "N/A"}</p>
+              <p> {mainroute?.routeCode || "N/A"}</p>
             </div>
             <div>
               <p className="font-semibold">Description</p>
-              <p>{routeData?.route.description || "N/A"}</p>
+              <p>{mainroute?.description || "No description provided"}</p>
             </div>
           </div>
         </div>
@@ -470,9 +457,63 @@ const ViewRoute: React.FC = () => {
           </table>
         </div>
       )}
+
       {activeSection === "subRoute" && (
-        <div className="bg-white p-6 rounded-lg shadow">
-          <p className="font-semibold">No Sub Route </p>
+        <div className="">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="flex justify-between items-center mb-4">
+              <div className="absolute ml-3 ">
+                <img src={search} alt="search" className="h-5 w-5" />
+              </div>
+              <input
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(28, 28, 28, 0.04)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Sub Route"
+              />
+            </div>
+            <table className="w-full text-left">
+              <thead className=" bg-[#fdf8f0]">
+                <tr className="border-b">
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sl No
+                  </th>
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sub Route
+                  </th>
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sub Route Code
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {mainRouteList.length > 0 ? (
+                  mainRouteList.map((subroute, index) => (
+                    <tr className="border-b" key={subroute._id}>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {index + 1}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {subroute.subRoute || "N/A"}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {subroute.subrouteCode || "N/A"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className="text-center p-4 text-gray-500">
+                      No sub-routes available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
