@@ -1,20 +1,46 @@
+import React, { useEffect, useState } from 'react';
 import printer from '../../assets/images/printer.svg';
 import split from '../../assets/images/list-filter.svg';
 import search from '../../assets/images/search.svg';
-import { useEffect, useState } from 'react';
 import { getAllEndRidesAPI } from '../../services/RouteAPI/ActiveRoute';
 
+// Define an interface for the Ride object
+interface RideData {
+  _id: string;
+  createdAt: string;
+  salesMan: string;
+  driver: string;
+  vehicleNo: string;
+  mainRoute: string;
+  stock: number;
+  sold: number;
+}
+
 const Ride: React.FC = () => {
-  const [rides, setRides] = useState([]);
+  const [rides, setRides] = useState<RideData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Search term state
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getAllEndRidesAPI();
-      setRides(data.data); // Ensure data structure matches the array format expected
-      console.log(data);
+      try {
+        const response = await getAllEndRidesAPI();
+        setRides(response.data as RideData[]); // Cast data to RideData array
+        console.log(response.data);
+      } catch (error) {
+        console.error("Failed to fetch rides data:", error);
+      }
     };
     fetchData();
   }, []);
+
+  // Filter rides based on search term in salesMan or driver fields
+  const filteredRides = rides.filter((ride) => {
+    const searchText = searchTerm.toLowerCase();
+    return (
+      ride?.salesMan?.toLowerCase().includes(searchText) ||
+      ride?.driver?.toLowerCase().includes(searchText)
+    );
+  });
 
   return (
     <div className="mt-2">
@@ -38,15 +64,17 @@ const Ride: React.FC = () => {
                 outline: 'none',
                 boxShadow: 'none',
               }}
-              placeholder="Search Ride"
+              placeholder="Search by Salesman or Driver"
+              value={searchTerm} // Bind search input to state
+              onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
             />
           </div>
 
           <div className="flex w-[60%] justify-end">
-            <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
+            <button className="flex border text-[14px] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
               <img src={split} className="mt-1 me-1" alt="" />Sort By
             </button>
-            <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
+            <button className="flex border text-[14px] text-[#565148] border-[#565148] px-4 py-2 rounded-lg">
               <img src={printer} className="mt-1 me-1" alt="" />Print
             </button>
           </div>
@@ -69,13 +97,15 @@ const Ride: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {rides.map((ride, index) => (
+            {filteredRides.map((ride, index) => (
               <tr className="border-b" key={ride._id}>
                 <td className="px-6 py-4">
                   <input type="checkbox" />
                 </td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
-                <td className="p-2 text-[14] text-center text-[#4B5C79]">{ride.date || 'N/A'}</td>
+                <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                  {ride.createdAt ? new Date(ride.createdAt).toLocaleDateString() : 'N/A'}
+                </td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{ride.salesMan}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{ride.driver}</td>
                 <td className="p-2 text-[14] text-center text-[#4B5C79]">{ride.vehicleNo}</td>
