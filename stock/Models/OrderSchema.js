@@ -12,16 +12,18 @@ const orderSchema = new mongoose.Schema({
   
   // References
   customer: {
-    type: Schema.Types.ObjectId,
-    required: true
+    type:String,
+    // type: Schema.Types.ObjectId,
+    // required: true
   },
   salesman: {
-    type: Schema.Types.ObjectId,
-    required: true
+    type:String,
+    // type: Schema.Types.ObjectId,
+    // required: true
   },
   warehouse:{
     type: String,
-    required: true
+    // required: true
   },
 
   // Order details
