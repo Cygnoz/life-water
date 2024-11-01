@@ -62,6 +62,9 @@ export default function Component() {
             type="monotone"
             dataKey="value"
             stroke="#4A5568"
+            isAnimationActive={true}       // Enables or disables animation
+            animationDuration={1500}       // Sets the duration of the animation (in milliseconds)
+            animationEasing="ease-in-out"  // Sets the easing function (options include "ease", "linear", "ease-in", etc.)
             strokeWidth={2}
             dot={{ r: 4 }}
           />
