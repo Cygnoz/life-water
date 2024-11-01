@@ -72,6 +72,7 @@ import CreateWarehouse from '../Stock/Warehouse/Pages/CreateWarehouse';
 import ViewActiveRoute from '../Route/Components/ViewActiveRoute';
 
 import ViewSubRoute from '../Route/Components/ViewSubRoute';
+import MyComponent from '../dashboard/pages/DashBoard';
 
 
 
