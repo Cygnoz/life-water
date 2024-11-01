@@ -1,20 +1,16 @@
 import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
-import trash from '../../../assets/images/trash.svg'
-import circleplus from '../../../assets/images/Icon.svg'
-import printer from '../../../assets/images/printer.svg'
-import back from '../../../assets/images/backbutton.svg'
+import trash from '../../../assets/images/trash.svg';
+import circleplus from '../../../assets/images/Icon.svg';
+import printer from '../../../assets/images/printer.svg';
+import back from '../../../assets/images/backbutton.svg';
 import { Link } from 'react-router-dom';
-// import cimage from '../assets/images/Ellipse 43.svg'
-// import icondown from '../../../assets/images/Icon down.svg'
-// import search from '../../../assets/images/search.svg'
-// import { getAllCustomersAPI } from '../services/CustomerAPI/Customer';
-// import { BASEURL } from '../services/Baseurl';
-// import { getAllStaffsAPI } from '../services/AllApi';
 import { getItemsAPI } from '../../../services/StockAPI/StockAPI';
-import downarrow from '../../../assets/images/Vector.png'
+import downarrow from '../../../assets/images/Vector.png';
 import { getRoutesAPI } from '../../../services/RouteAPI/RouteAPI';
 import { getWarehouseAPI } from '../../../services/WarehouseAPI/WarehouseAPI';
 import { addUnloadAPI } from '../../../services/StockAPI/UnloadAPI';
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 interface Route {
   id: string;
@@ -29,6 +25,7 @@ interface Item {
   product: string;
   quantity: number;
   rate: number;
+  
   amount: number;
 }
 
@@ -42,47 +39,88 @@ interface UnloadDetails {
   termsAndConditions: string;
 }
 
-
 const AddUnloadStock: React.FC = () => {
   const [orderDetails, setOrderDetails] = useState<UnloadDetails>({
     mainRoute: '',
     warehouseName: '',
     date: '',
     transferNumber: 'IN-3748',
-    items: [{ product: '', quantity: 0, rate: 0, amount: 0 }],
+    items: [{ product: '', quantity: 0, rate: 0, amount: 0}],
     autoNotes: '',
     termsAndConditions: '',
   });
 
-//add unload
-
-const handleAddUnload = async () => {
-  const unloadData: UnloadDetails = {
-    mainRoute: orderDetails.mainRoute,
-    warehouseName: orderDetails.warehouseName,
-    date: orderDetails.date,
-    transferNumber: orderDetails.transferNumber,
-    items: orderDetails.items,
-    autoNotes: orderDetails.autoNotes,
-    termsAndConditions: orderDetails.termsAndConditions,
-  };
-console.log(unloadData);
-
+  // Function to get the ObjectId of the product by its name
+// Function to get the ObjectId of the product by its name
+const getProductIdByName = async (productName: string) => {
   try {
-    const response = await addUnloadAPI(unloadData);
+    const response = await getItemsAPI(); // Fetch the list of items
 
-    if (response?.message) {
-      console.log('Unload added successfully:', response);
+    // Check if the response is defined and is an array
+    if (response && Array.isArray(response)) {
+      const item = response.find((item: any) => item.itemName === productName); // Update to match the response structure
+      return item ? item._id : null; // Return the ObjectId if found
     } else {
-      console.error('Failed to add unload:', response);
+      console.error('Unexpected response structure:', response);
+      return null; // Handle unexpected response structure
     }
   } catch (error) {
-    console.error('Error while adding unload:', error);
+    console.error('Error fetching product ID:', error);
+    return null;
   }
-};   
+};
 
 
+  // Function to add unload
+  const handleAddUnload = async () => {
+    // Format items to include all required fields by the API
+    const formattedItems = await Promise.all(
+      orderDetails.items.map(async (item) => {
+        const productId = await getProductIdByName(item.product);
+        if (!productId) {
+          throw new Error(`Product not found: ${item.product}`);
+        }
+        return {
+          _id: productId,
+          product: item.product,
+          quantity: item.quantity,
+          rate: (item.rate || 0).toString(),    // Convert rate to string
+          amount: (item.amount || 0).toString() // Convert amount to string
+        };
+      })
+    );
+    
+    console.log("hlo",orderDetails);
+    
 
+    const unloadData: UnloadDetails = {
+      mainRoute: orderDetails.mainRoute,
+      warehouseName: orderDetails.warehouseName,
+      date: new Date(orderDetails.date).toISOString(), // Ensuring date is in ISO format
+      transferNumber: orderDetails.transferNumber,
+      items: formattedItems, // Include the formatted items
+      autoNotes: orderDetails.autoNotes,
+      termsAndConditions: orderDetails.termsAndConditions,
+    };
+
+    console.log('Unload Data:', unloadData); // For debugging
+
+    try {
+      const response = await addUnloadAPI(unloadData);
+
+      if (response?.message) {
+        toast.success("stock unloaded successfully")
+        console.log('Failed to add unload:', response);
+      } else {
+        console.log('Unload failed:', response);
+        toast.error("stock unloade failed")
+
+        
+      }
+    } catch (error) {
+      console.error('Error while adding unload:', error);
+    }
+  };
 
 
 
@@ -119,7 +157,8 @@ console.log(unloadData);
     const rate = Number(item.purchasePrice) || 0;
 
     newRows[index] = {
-      product: item.itemName,
+      product: item.
+      itemName,
       quantity: quantity,
       rate: rate,
       amount: (rate * quantity),
@@ -229,7 +268,14 @@ useEffect(() => {
 }, []);
 
 const handleRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  setSelectedRoute(event.target.value); // Update selected route
+  const selectedMainRoute = event.target.value;
+  
+  // Update both the selected route and orderDetails
+  setSelectedRoute(selectedMainRoute);
+  setOrderDetails((prevOrderDetails) => ({
+    ...prevOrderDetails,
+    mainRoute: selectedMainRoute,
+  }));
 };
 
 //get warehouse
@@ -250,6 +296,7 @@ useEffect(() => {
       const response = await getWarehouseAPI();
       setWarehouses(response.warehouses);
       console.log('Warehouses set:', response); // Verify the data
+      
     } catch (error: any) {
       console.error('Failed to fetch warehouses:', error);
     }
@@ -258,9 +305,18 @@ useEffect(() => {
 }, []);
 
 const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  setSelectedWarehouse(e.target.value);
+  const selectedWarehouseId = e.target.value;
+  
+  // Find the selected warehouse object based on the selected ID
+  const selectedWarehouse = warehouses.find((warehouse) => warehouse._id === selectedWarehouseId);
+  
+  // Set both the selected warehouse and update orderDetails with warehouseName
+  setSelectedWarehouse(selectedWarehouseId);
+  setOrderDetails((prevOrderDetails) => ({
+    ...prevOrderDetails,
+    warehouseName: selectedWarehouse ? selectedWarehouse.warehouseName : '',
+  }));
 };
-
 
 
 
@@ -275,6 +331,8 @@ const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
           {/* Main content */}
           <div className="flex-1 min-h-screen">
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={true} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="colored" />
+
             <div className="flex gap-1 items-center w-full max-w-8xl ms-1 mt-1">
               <Link to="/unloadstock">
                 <img className="bg-gray-200 rounded-full p-1" src={back} alt="Back" />
@@ -287,40 +345,44 @@ const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   {/* main route selection */}
                   <div>
-      <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">Main Route</label>
-      <select
-        name="mainRoute"
-        value={selectedRoute}
-        onChange={handleRouteChange}
-        className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      >
-        <option value="" disabled>Select main route</option>
-        {routesList.map((route) => (
-          <option key={route._id} value={route.mainRoute}>
-            {route.mainRoute}
-          </option>
-        ))}
-      </select>
-    </div>
+    <label className="block mb-2 font-normal text-[14px] leading-[16.94px] text-[#303F58]">
+      Main Route
+    </label>
+    <select
+      name="mainRoute"
+      value={selectedRoute}
+      onChange={handleRouteChange}
+      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    >
+      <option value="" disabled>Select main route</option>
+      {routesList.map((route) => (
+        <option key={route._id} value={route.mainRoute}>
+          {route.mainRoute}
+        </option>
+      ))}
+    </select>
+  </div>
 
 
     <div>
-         <label className="block mb-2 font-[400px] text-[#303F58] text-[14px]">Warehouse</label>
-      <select
-        name="warehouse"
-        value={selectedWarehouse}
-        onChange={handleWarehouseSelection}
-        className="w-full p-2 border rounded-md text-[14px] font-normal"
-      >
-        <option value="" className="font-normal text-[#8F99A9]">Select Warehouse</option>
-        {warehouses.map((warehouse) => (
-          <option key={warehouse._id} value={warehouse._id} className="font-normal">
-            {warehouse.warehouseName}
-          </option>
-        ))}
-      </select>
-     </div>
- 
+    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">
+      Warehouse
+    </label>
+    <select
+      name="warehouse"
+      value={selectedWarehouse}
+      onChange={handleWarehouseSelection}
+      className="w-full p-2 border rounded-md text-[14px] font-normal"
+    >
+      <option value="" className="font-normal text-[#8F99A9]">Select Warehouse</option>
+      {warehouses.map((warehouse) => (
+        <option key={warehouse._id} value={warehouse._id} className="font-normal">
+          {warehouse.warehouseName}
+        </option>
+      ))}
+    </select>
+  </div>
+
 
                 </div>
 
@@ -452,10 +514,6 @@ const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
 
                 <br /><br />
-
-
-
-
 
 
 

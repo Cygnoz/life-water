@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import printer from "../../assets/images/printer.svg";
 import split from "../../assets/images/list-filter.svg";
 import search from "../../assets/images/search.svg";
-import back from "../../assets/images/backbutton.svg";
 import eye from "../../assets/images/eye.svg";
 
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { getActiveRouteAPI } from "../../services/RouteAPI/ActiveRoute";
 
 const ActiveRoute: React.FC = () => {
   const [activeRoutes, setActiveRoutes] = useState<any[]>([]); // Add a type assertion for clarity
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
+
   const navigate = useNavigate();
   useEffect(() => {
     const fetchActiveRoutes = async () => {
@@ -28,10 +29,21 @@ const ActiveRoute: React.FC = () => {
     fetchActiveRoutes();
   }, []);
 
+  
+
   const handleView = (routeId: string): void => {
     navigate(`/route/viewactiveroute/${routeId}`);
   };
 
+
+   // Filter activeRoutes based on searchTerm
+   const filteredRoutes = activeRoutes.filter((route) => {
+    const searchText = searchTerm.toLowerCase();
+    return (
+      route?.Salesman?.toLowerCase().includes(searchText) ||
+      route?.helper?.toLowerCase().includes(searchText)
+    );
+  });
   return (
     <div className="">
       
@@ -59,6 +71,9 @@ const ActiveRoute: React.FC = () => {
                 boxShadow: "none",
               }}
               placeholder="Search Route"
+              value={searchTerm} // Bind search input to state
+              onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+           
             />
           </div>
           <div className="flex w-[60%] justify-end">
@@ -111,8 +126,8 @@ const ActiveRoute: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {activeRoutes.length > 0 ? (
-              activeRoutes.map((route, index) => (
+            {filteredRoutes.length > 0 ? (
+              filteredRoutes.map((route, index) => (
                 <tr className="border-b" key={route.id}>
                   <td className="px-6 py-4">
                     <input type="checkbox" />

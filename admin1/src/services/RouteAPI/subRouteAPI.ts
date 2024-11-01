@@ -75,4 +75,19 @@ export const editSubRouteAPI = async (id: string,formData:string) => {
   }
 };
 
+// Function to get a subroute by ID
 
+export const getSubRouteByIdAPI = async (id: string) => {
+  try {
+    const response = await axios.get(`${BASEURL}/api/viewSRoute/${id}`);
+    return response.data; // Assuming your server returns data in this format
+  } catch (error:unknown) {
+     if (axios.isAxiosError(error)) {
+      console.error('Error fetching subroute by ID:', error.response?.data?.message || error.message);
+      throw new Error(error.response?.data?.message || 'Error fetching subroute');
+    } else {
+      console.error('Error fetching subroute by ID:', error);
+      throw new Error('An unexpected error occurred while fetching the subroute by ID.');
+    }
+  }
+};

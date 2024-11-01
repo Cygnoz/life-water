@@ -36,7 +36,7 @@ router.get('/orders', orderController.viewAllOrders);
 router.delete('/orders/:id', orderController.deleteOrder);
 
 //Unloading
-router.post('/unload', unloadController.addUnload);
+router.post('/addunload', unloadController.addUnload);
 router.get('/unload', unloadController.getAllUnloads);
 
 module.exports = router;

@@ -13,6 +13,10 @@ import { getSubRoutesAPI } from "../../services/RouteAPI/subRouteAPI";
 import { getAllEndRidesAPI } from "../../services/RouteAPI/ActiveRoute";
 import search from "../../assets/images/search.svg";
 import vector from "../../assets/images/Vector.svg";
+import map1 from "../../assets/images/map-pin.svg";
+import SubRoute from "../Pages/SubRoute";
+import { getActiveRouteAPI } from "../../services/RouteAPI/ActiveRoute";
+
 
 interface Route {
   _id: string;
@@ -20,14 +24,18 @@ interface Route {
   salesMan: string;
   driver: string;
   vehicleNo: string;
+  createdAt: string;
   mainRoute: string;
   subRoute: string;
   stock: number;
   sold?: number; // Assuming sold might be optional
+  subrouteCode: string;
 }
+
 interface Ride {
   _id: string;
   endingKM: string;
+  createdAt: string;
   travelledKM: string;
   salesMan: string | null;
   date?: string;
@@ -49,9 +57,10 @@ interface Ride {
 const ViewRoute: React.FC = () => {
   const [activeSection, setActiveSection] = useState("routeDetail");
   const [routeData, setRouteData] = useState<any>(null);
+  const [route, setRoute] = useState<any>(null);
+
   const [error, setError] = useState("");
   const { id } = useParams(); // Assumes route ID is passed as a URL parameter
-  const [routeList, setRouteList] = useState<Route[]>([]);
   const [mainRouteList, setMainRouteList] = useState<Route[]>([]);
   const [rides, setRides] = useState([]);
   const [mostVisitedSalesman, setMostVisitedSalesman] = useState<string | null>(
@@ -68,16 +77,30 @@ const ViewRoute: React.FC = () => {
     null
   );
 
+  const [activeRoutes, setActiveRoutes] = useState<any[]>([]); // Add a type assertion for clarity
+
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
+
+  const [searchTerms, setSearchTerms] = useState<string>(""); // Search term state
+
+
   const navigate = useNavigate();
+
+  // State initialization
+
   useEffect(() => {
     const fetchRouteData = async () => {
       try {
-        const data = await getRouteByIdAPI(id as string);
-        setRouteData(data);
-        console.log(routeData);
-        localStorage.setItem("MainRoute", routeData?.route.mainRoute);
-        setMainRoute(routeData?.route.mainRoute);
-        console.log(data);
+        const response = await getRouteByIdAPI(id as string);
+        setRouteData(response.data); // Store the full data
+        console.log("Full route data:", response.data);
+
+        // Set mainRoute and subroutes directly from response data
+        setMainRoute(response.data.mainRoute);
+        setMainRouteList(response.data.subroutes); // No need to filter
+        setRoute(response.data.mainRoute.mainRoute);
+        console.log("Main Route:", response.data.mainRoute);
+        console.log("Sub Routes:", response.data.subroutes);
       } catch (err: any) {
         setError(err.message || "Failed to load route data");
         console.log(error, "er");
@@ -87,33 +110,12 @@ const ViewRoute: React.FC = () => {
     fetchRouteData();
   }, [id]);
 
-  useEffect(() => {
-    const fetchMainRoutes = async () => {
-      try {
-        const response: Route[] = await getSubRoutesAPI();
-        setRouteList(response); // Set the full list of routes
-        const mainRoute = routeData?.route.mainRoute;
-
-        // Filter only sub-routes under the specified main route
-        const filteredRoutes = routeList.filter(
-          (route) => route.mainRoute === mainRoute
-        );
-        setMainRouteList(filteredRoutes); // Set the filtered list
-        console.log(filteredRoutes);
-      } catch (error) {
-        console.error("Error fetching main route data:", error);
-      }
-    };
-
-    fetchMainRoutes();
-  }, [routeData?.route.mainRoute]);
-
   // Specify the main route you want to filter by
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const targetMainRoute = routeData?.route.mainRoute;
+        const targetMainRoute = route;
         if (!targetMainRoute) {
           console.warn("Main route is undefined");
           return;
@@ -191,7 +193,7 @@ const ViewRoute: React.FC = () => {
     };
 
     fetchData();
-  }, [routeData?.route.mainRoute]);
+  }, [route]);
 
   useEffect(() => {
     const fetchRide = async () => {
@@ -203,33 +205,90 @@ const ViewRoute: React.FC = () => {
         const routes = Array.isArray(response.data) ? response.data : response;
 
         setRideList(routes); // Set the full list of routes
+        console.log("All Routes:", routes);
 
-        // Get main route from routeData
-        const mainRoute = routeData?.route.mainRoute;
-        if (!mainRoute) {
+        // Ensure that `routeData` is loaded before filtering
+        if (!routeData?.mainRoute?.mainRoute) {
           console.warn("Main route is undefined");
           return;
         }
 
+        // Get main route from routeData
+        const mainRoute = routeData.mainRoute.mainRoute;
+
         // Filter routes based on specified main route
         const filteredRoutes = routes.filter(
-          (route) => route.mainRoute === mainRoute
+          (ride) => ride.mainRoute === mainRoute
         );
         console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
 
         setMainRideList(filteredRoutes); // Update state with filtered routes
-        console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
       } catch (error) {
         console.error("Error fetching main route data:", error);
       }
     };
 
     fetchRide();
-  }, [routeData?.route.mainRoute]); // Add dependency on routeData.mainRoute
+  }, [routeData?.mainRoute?.mainRoute]); // Add dependency on `routeData.mainRoute.mainRoute`
+
+
+  useEffect(() => {
+    const fetchActiveRoutes = async () => {
+      try {
+        const response = await getActiveRouteAPI();
+
+        // Ensure the data is an array, or handle it accordingly
+        const routes = Array.isArray(response.data) ? response.data : [];
+        setActiveRoutes(routes); // Store the fetched data in state
+        console.log(routes);
+      } catch (error) {
+        console.error("Failed to fetch active routes:", error);
+      }
+    };
+
+    fetchActiveRoutes();
+  }, []);
+
+
 
   const handleEdit = (routeId: string): void => {
     navigate(`/route/editmainroute/${routeId}`);
   };
+
+  const totalStockData = activeRoutes.reduce(
+    (acc, route) => {
+      const stock = Number(route.totalStock) || 0;  // Convert to number, fallback to 0 if NaN
+      acc.totalSum += stock;
+      acc.breakdown.push(stock);
+      return acc;
+    },
+    { totalSum: 0, breakdown: [] }
+  );
+
+
+
+  // Filter mainRideList based on searchTerm in salesMan and driver
+  const filteredRides = mainRideList.filter((ride) => {
+    const searchText = searchTerm.toLowerCase();
+    return (
+      ride?.salesMan?.toLowerCase().includes(searchText) ||
+      ride?.driver?.toLowerCase().includes(searchText) ||
+      ride?.vehicleNo?.toLowerCase().includes(searchText)
+    );
+  });
+
+  // Filter mainRouteList based on searchTerm in salesMan and driver
+  const filteredRoutes = mainRouteList.filter((route) => {
+    const searchText = searchTerms.toLowerCase();
+    return (
+      route?.subRoute?.toLowerCase().includes(searchText) ||
+      route?.mainRoute?.toLowerCase().includes(searchText)
+    );
+  });
+
+  const totalStockSum = totalStockData.totalSum;
+
+
   return (
     <div className="px-6 py-3">
       <div className="flex justify-between gap-3 items-center w-full max-w-8xl mb-3 ">
@@ -243,7 +302,7 @@ const ViewRoute: React.FC = () => {
         </div>
         <div className="flex justify-between">
           <button
-            onClick={() => handleEdit(routeData?.route._id)}
+            onClick={() => handleEdit(mainroute?._id)}
             className=" justify-between items-center font-[600] text-white gap-2 bg-[#820000]  flex px-5 py-2 shadow rounded-md"
           >
             <img src={vector} alt="" />
@@ -272,7 +331,7 @@ const ViewRoute: React.FC = () => {
             <img src={user} alt="" />
           </div>
           <div className="ml-4">
-            <div className="text-white">Most Visited alesman</div>
+            <div className="text-white">Most Visited Sales Man</div>
             <div className="text-lg text-white font-bold">
               {mostVisitedSalesman || "N/A"}
             </div>
@@ -299,51 +358,46 @@ const ViewRoute: React.FC = () => {
           <div className="ml-4">
             <div className="text-white"> Bottle Stock</div>
 
-            <div className="text-lg text-white font-bold">23</div>
+            <div className="text-lg text-white font-bold"> {totalStockSum || "N/A"}</div>
           </div>
         </div>
       </div>
 
       <div className="flex space-x-7 mb-4">
         <button
-          className={`w-[221px] font-bold p-2 rounded-lg flex items-center ${
-            activeSection === "routeDetail"
+          className={`w-[221px] font-bold p-2 rounded-lg flex items-center ${activeSection === "routeDetail"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-          }`}
+            }`}
           onClick={() => setActiveSection("routeDetail")}
         >
           <img src={user2} alt="" className="mr-2" />
           Route Detail
         </button>
         <button
-          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${
-            activeSection === "rideHistory"
+          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${activeSection === "rideHistory"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-          }`}
+            }`}
           onClick={() => setActiveSection("rideHistory")}
         >
           <img src={history} alt="" className="mr-2" />
           Ride History
         </button>
         <button
-          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${
-            activeSection === "subRoute"
+          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${activeSection === "subRoute"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-          }`}
+            }`}
           onClick={() => setActiveSection("subRoute")}
         >
-          <img src={history} alt="" className="mr-2" />
-          Sub Route
+          <img className="me-2" src={map1} alt="" /> Sub Route
         </button>
         <button
-          className={`w-[221px] font-bold p-2  rounded-lg flex items-center ${
-            activeSection === "currentStock"
+          className={`w-[221px] font-bold p-2  rounded-lg flex items-center ${activeSection === "currentStock"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-          }`}
+            }`}
           onClick={() => setActiveSection("currentStock")}
         >
           <img src={dollar} alt="" className="mr-2" />
@@ -357,21 +411,16 @@ const ViewRoute: React.FC = () => {
           <div className="grid grid-cols-4 gap-4">
             <div>
               <p className="font-semibold">Main Route</p>
-              <p>{routeData?.route.mainRoute || "N/A"}</p>
+              <p>{mainroute?.mainRoute || "N/A"}</p>
             </div>
-            <div>
-              <p className="font-semibold">Sub Routes</p>
-              {mainRouteList.map((route) => (
-                <p key={route.subRoute}>{route.subRoute}</p>
-              ))}
-            </div>
+
             <div>
               <p className="font-semibold">Main Route Code</p>
-              <p>{routeData?.route.routeCode || "N/A"}</p>
+              <p> {mainroute?.routeCode || "N/A"}</p>
             </div>
             <div>
               <p className="font-semibold">Description</p>
-              <p>{routeData?.route.description || "N/A"}</p>
+              <p>{mainroute?.description || "No description provided"}</p>
             </div>
           </div>
         </div>
@@ -391,6 +440,12 @@ const ViewRoute: React.FC = () => {
                 boxShadow: "none",
               }}
               placeholder="Search Ride"
+
+
+              value={searchTerm} // Bind search input to state
+              onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
+
+
             />
           </div>
           <table className="w-full text-left">
@@ -427,14 +482,14 @@ const ViewRoute: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {mainRideList.length > 0 ? (
-                mainRideList.map((ride, index) => (
+              {filteredRides.length > 0 ? (
+                filteredRides.map((ride, index) => (
                   <tr className="border-b" key={ride._id}>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
                       {index + 1}
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      {ride.date || "N/A"}
+                      {ride.createdAt ? new Date(ride.createdAt).toLocaleDateString() : 'N/A'}
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
                       {ride.salesMan}
@@ -470,9 +525,66 @@ const ViewRoute: React.FC = () => {
           </table>
         </div>
       )}
+
       {activeSection === "subRoute" && (
-        <div className="bg-white p-6 rounded-lg shadow">
-          <p className="font-semibold">No Sub Route </p>
+        <div className="">
+          <div className="bg-white p-6 rounded-lg shadow">
+            <div className="flex justify-between items-center mb-4">
+              <div className="absolute ml-3 ">
+                <img src={search} alt="search" className="h-5 w-5" />
+              </div>
+              <input
+                className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+                style={{
+                  backgroundColor: "rgba(28, 28, 28, 0.04)",
+                  outline: "none",
+                  boxShadow: "none",
+                }}
+                placeholder="Search Sub Route"
+                value={searchTerms} // Bind search input to state
+                onChange={(e) => setSearchTerms(e.target.value)} // Update searchTerm on input change
+
+              />
+            </div>
+            <table className="w-full text-left">
+              <thead className=" bg-[#fdf8f0]">
+                <tr className="border-b">
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sl No
+                  </th>
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sub Route
+                  </th>
+                  <th className="p-2 text-[12px] text-center text-[#303F58]">
+                    Sub Route Code
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRoutes.length > 0 ? (
+                  filteredRoutes.map((subroute, index) => (
+                    <tr className="border-b" key={subroute._id}>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {index + 1}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {subroute.subRoute || "N/A"}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {subroute.subrouteCode || "N/A"}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={9} className="text-center p-4 text-gray-500">
+                      No sub-routes available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

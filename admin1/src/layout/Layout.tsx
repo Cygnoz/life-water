@@ -70,7 +70,9 @@ import AddUnloadStock from '../Stock/Unload stock/Components/AddUnloadStock';
 import AddWarehouse from '../Stock/Warehouse/Components/AddWarehouse';
 import CreateWarehouse from '../Stock/Warehouse/Pages/CreateWarehouse';
 import ViewActiveRoute from '../Route/Components/ViewActiveRoute';
-import MyComponent from '../dashboard/pages/DashBoard';
+
+import ViewSubRoute from '../Route/Components/ViewSubRoute';
+
 
 
 const App: React.FC = () => {
@@ -123,6 +125,7 @@ const App: React.FC = () => {
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
               <Route path='/route/editsubroute/:id' element={<EditSubRoute />} />
               <Route path='/route/viewactiveroute/:id' element={<ViewActiveRoute />} />
+              <Route path='/route/viewsubroute/:id' element={<ViewSubRoute />} />
 
 
 
