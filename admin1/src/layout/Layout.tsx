@@ -70,7 +70,9 @@ import AddUnloadStock from '../Stock/Unload stock/Components/AddUnloadStock';
 import AddWarehouse from '../Stock/Warehouse/Components/AddWarehouse';
 import CreateWarehouse from '../Stock/Warehouse/Pages/CreateWarehouse';
 import ViewActiveRoute from '../Route/Components/ViewActiveRoute';
+
 import ViewSubRoute from '../Route/Components/ViewSubRoute';
+
 
 
 const App: React.FC = () => {
@@ -94,6 +96,11 @@ const App: React.FC = () => {
           <SubHeader selectedNav={selectedNav} subhead={subhead} /> {/* Pass selectedNav to SubHeader */}
           <div  className='h-screen bg-[#f6f6f6]'>
             <Routes>
+
+
+              {/* dashboard */}
+
+              <Route path='/dashboard' element={<MyComponent />} />
 
                {/* ORDERS */}
               <Route path='/orders' element={<CreateOrder />} />
