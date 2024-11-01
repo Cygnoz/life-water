@@ -70,7 +70,9 @@ import AddUnloadStock from '../Stock/Unload stock/Components/AddUnloadStock';
 import AddWarehouse from '../Stock/Warehouse/Components/AddWarehouse';
 import CreateWarehouse from '../Stock/Warehouse/Pages/CreateWarehouse';
 import ViewActiveRoute from '../Route/Components/ViewActiveRoute';
-import MyComponent from '../dashboard/pages/DashBoard';
+
+import ViewSubRoute from '../Route/Components/ViewSubRoute';
+
 
 
 const App: React.FC = () => {
