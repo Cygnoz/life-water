@@ -17,7 +17,8 @@ router.put('/internaltransfer', stockController.internalTransfer);
 //Item
 router.post('/item',upload.single('itemImage'), itemController.addItem);
 router.get('/item', itemController.getItems);
-router.put('/item/:id', itemController.updateItem);
+router.put('/edititem/:id', upload.single('itemImage'), itemController.updateItem); 
+router.get('/getitem/:id', itemController.getItemById);
 router.delete('/item/:id', itemController.deleteItem);
 
 //Warehouse

@@ -42,10 +42,22 @@ export const getItemsAPI = async (): Promise<any> => {
   }
 };
 
+// Function to get a single item by ID
+export const getItemByIdAPI = async (id: string): Promise<any> => {
+  try {
+    const response = await commonAPI('GET', `${STOCK_BASEURL}/api/getitem/${id}`, null);
+    return response; // Ensure the response matches the expected ApiResponse structure
+  } catch (error: any) {
+    console.error('Error fetching item by ID:', error);
+    return { message: error.message || 'An unexpected error occurred.' }; // Fallback error message
+  }
+};
+
+
 // Function to update an item by ID
 export const updateItemAPI = async (id: string, formData: FormData): Promise<ApiResponse> => {
   try {
-    const response = await commonAPI('PUT', `${STOCK_BASEURL}/api/item/${id}`, formData, {
+    const response = await commonAPI('PUT', `${STOCK_BASEURL}/api/edititem/${id}`, formData, {
       // No need to specify Content-Type for FormData
     });
     return response; // Ensure response matches the expected ApiResponse structure
