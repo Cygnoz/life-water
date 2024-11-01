@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import searchIcon from '../assets/images/search (2).svg';
 import plusIcon from '../assets/images/pluscircle.svg';
 import phone from '../assets/images/phone.png';
-
+import close from '../assets/images/x-mark.svg'
 import { getAllCustomersAPI } from '../services/customers/customers';
 import { BASEURL } from '../services/BaseURL';
 import { Box, Modal, Typography } from '@mui/material';
@@ -17,10 +17,16 @@ interface Customer {
   ratePerBottle: number;
   noOfBottles: number;
   logo: string;
+  mobileNo:string;
+  customerID:string;
+  subRoute:string;
+  mainRoute:string;
   paymentMode: string;
   location: {
     address: string;
-    coordinates: [number, number]; // [longitude, latitude]
+    coordinates:{
+      coordinates:[number, number]// [longitude, latitude]
+    } ; 
   };
 }
 
@@ -101,12 +107,12 @@ const ViewCustomers: React.FC = () => {
                     alt={`${customer.firstName} ${customer.lastName}`}
                   />
                   <div>
-                    <div className="font-bold">
+                    <div className="font-bold mb-1">
                       {customer.firstName} {customer.lastName}
                     </div>
-                    <div className="text-sm text-gray-600">Due Amount: ₹{dueAmount}</div>
+                    <div className="text-sm mb-1">Due Amount: <span className="text-red-700 font-bold">{dueAmount}</span></div>
                     <div className="text-sm">
-                      Payment Mode - <span className="text-red-700 font-semibold">{customer.paymentMode}</span>
+                      Payment Mode - <span className="text-red-700 font-bold">{customer.paymentMode}</span>
                     </div>
                   </div>
                 </div>
@@ -131,7 +137,7 @@ const ViewCustomers: React.FC = () => {
       width: { xs: '90%', sm: '75%', md: '50%', lg: '40%' },
       maxWidth: '600px',
       bgcolor: 'white',
-      p: 4,
+      p: 1,
       borderRadius: 2,
       boxShadow: 24,
       m: 'auto',
@@ -139,24 +145,37 @@ const ViewCustomers: React.FC = () => {
       textAlign: 'center', // Center-aligns all content inside the Box
     }}
   >
+   <div className="flex justify-end mb-5">
+    <button onClick={handleClose} className='bg-red-200 text-red p-2 rounded-full '>
+      <img src={close} alt="" />
+    </button>
+   </div>
     <Typography 
       id="modal-title" 
       variant="h6" 
       component="h2" 
       fontWeight="bold"
     >
-      {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : ''}
+     <span className='text-red-700'> {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : ''}</span>
+      
     </Typography>
+    <Typography
+      id="modal-title" 
+      variant="h6" 
+      component="h2" 
+     >Customer ID : <span className='text-green-500'> {selectedCustomer?.customerID}</span></Typography>
 
     <Typography id="modal-description" sx={{ mt: 2 }}>
       {selectedCustomer && (
         <>
-          <p><strong>Deposit Amount:</strong> ₹{selectedCustomer.depositAmount}</p>
-          <p><strong>Rate Per Bottle:</strong> ₹{selectedCustomer.ratePerBottle}</p>
-          <p><strong>No of Bottles:</strong> {selectedCustomer.noOfBottles}</p>
-          <p>
-            <strong>Phone:</strong> {selectedCustomer.mobileNo}
-          </p>
+          <p className='mb-2'><strong>Phone:</strong> {selectedCustomer.mobileNo}</p>
+          <p className='mb-2'><strong>Main Route:</strong> {selectedCustomer.mainRoute}</p>
+          <p className='mb-2'><strong>Sub Route:</strong> {selectedCustomer.subRoute}</p>
+          <p className='mb-2'><strong>Deposit Amount:</strong> {selectedCustomer.depositAmount}</p>
+          <p className='mb-2'><strong>Rate Per Bottle:</strong> {selectedCustomer.ratePerBottle}</p>
+          <p className='mb-2'><strong>No of Bottles:</strong> {selectedCustomer.noOfBottles}</p>
+          
+          
           <button 
             className="bg-red-800 text-white p-2 rounded-md mt-2 mx-auto" // Center-aligns the button with mx-auto
             onClick={() => setShowLocation(true)} // Set showLocation to true to display iframe
@@ -172,7 +191,7 @@ const ViewCustomers: React.FC = () => {
       <div className=" mt-4">
         <iframe
           src={`https://www.google.com/maps?q=${selectedCustomer.location.coordinates.coordinates[1]},${selectedCustomer.location.coordinates.coordinates[0]}&output=embed`}
-          className="w-full h-[500px]"
+          className="w-full h-[400px]"
           allowFullScreen
           loading="lazy"
         ></iframe>

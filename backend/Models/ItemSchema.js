@@ -26,7 +26,7 @@ const itemSchema = new mongoose.Schema({
     type: String,  // Store image URL or path
     required: false
   }
-}, { timestamps: true });
+}, { timestamps: true } );
 
 const Item = mongoose.model('Item', itemSchema);
 

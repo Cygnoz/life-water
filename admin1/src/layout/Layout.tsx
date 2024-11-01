@@ -123,6 +123,7 @@ const App: React.FC = () => {
               <Route path='/route/newsubroute' element={<CreateSubRoute />} />
               <Route path='/route/editsubroute/:id' element={<EditSubRoute />} />
               <Route path='/route/viewactiveroute/:id' element={<ViewActiveRoute />} />
+              <Route path='/route/viewsubroute/:id' element={<ViewSubRoute />} />
 
 
 

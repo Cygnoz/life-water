@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect, useRef } from 'react';
+import React, { useState, ChangeEvent, useEffect, useRef, FormEvent } from 'react';
 import trash from '../assets/images/trash.svg'
 import circleplus from '../assets/images/Icon.svg'
 import printer from '../assets/images/printer.svg'
@@ -12,11 +12,14 @@ import { BASEURL } from '../services/Baseurl';
 import { getAllStaffsAPI } from '../services/AllApi';
 import { getItemsAPI } from '../services/StockAPI/StockAPI';
 import downarrow from '../assets/images/Vector.png'
-
+import { addOrderAPI } from '../services/OrderAPI/OrderAPI';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import { getWarehouseAPI } from '../services/WarehouseAPI/WarehouseAPI';
 
 
 interface Item {
-  product: string;
+  itemName: string;
   quantity: number;
   rate: number;
   amount: number;
@@ -25,12 +28,13 @@ interface Item {
 interface OrderDetails {
   customer: string;
   salesman: string;
+  warehouse:string,
   date: string;
   orderNumber: string;
   paymentMode: string;
   items: Item[];
   notes: string;
-  terms: string;
+  termsAndCondition: string;
 }
 
 
@@ -38,32 +42,35 @@ const NewOrder: React.FC = () => {
   const [orderDetails, setOrderDetails] = useState<OrderDetails>({
     customer: '',
     salesman: '',
+    warehouse:'',
     date: '',
-    orderNumber: 'IN-3748',
+    orderNumber: '',
     paymentMode: '',
-    items: [{ product: '', quantity: 0, rate: 0, amount: 0 }],
+    items: [{ itemName: '', quantity: 0, rate: 0, amount: 0 }],
     notes: '',
-    terms: '',
+    termsAndCondition: '',
   });
+  console.log(orderDetails);
+  
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [openDropdownType, setOpenDropdownType] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
 
 
   const [rows, setRows] = useState<Item[]>([
-    { product: "", quantity: 0, rate: 0, amount: 0 },
+    { itemName: "", quantity: 0, rate: 0, amount: 0 },
   ]);
 
 
   const addRow = () => {
-    setRows([...rows, { product: "", quantity: 0, rate: 0, amount: 0 }]);
+    setRows([...rows, { itemName: "", quantity: 0, rate: 0, amount: 0 }]);
   };
 
   const removeRow = (index: number) => {
     if (rows.length > 1) {
       setRows(rows.filter((_, i) => i !== index));
     } else {
-      setRows([{ product: "", quantity: 0, rate: 0, amount: 0 }]);
+      setRows([{ itemName: "", quantity: 0, rate: 0, amount: 0 }]);
     }
   };
 
@@ -74,7 +81,7 @@ const NewOrder: React.FC = () => {
     const rate = Number(item.purchasePrice) || 0;
 
     newRows[index] = {
-      product: item.itemName,
+      itemName: item.itemName,
       quantity: quantity,
       rate: rate,
       amount: (rate * quantity),
@@ -117,7 +124,10 @@ const NewOrder: React.FC = () => {
   // Update order details
   const updateOrder = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setOrderDetails({ ...orderDetails, [name]: value });
+    setOrderDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value,
+    }));
   };
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -218,17 +228,22 @@ const filteredCustomers = customers.filter((customer) =>
   
   // Fetch staff data on component mount
   useEffect(() => {
-    const fetchStaff = async () => {
-      try {
-        const response = await getAllStaffsAPI();
-        setStaffList(response as any); // Store full staff list
-        setFilteredStaffList(response as any) ; // Initially, display all staff
-      } catch (error) {
-        console.error("Error fetching staff data:", error);
-      }
-    };
-    fetchStaff();
-  }, []);
+  const fetchStaff = async () => {
+    try {
+      const response = await getAllStaffsAPI();
+      const salesmanList = (response as Staff[]).filter(
+        (staff) => staff.designation.toLowerCase() === "sales"
+      ); // Filter only salesmen
+      setStaffList(salesmanList); // Store full list of salesmen
+      setFilteredStaffList(salesmanList); // Initially, display all salesmen
+    } catch (error) {
+      console.error("Error fetching staff data:", error);
+    }
+  };
+
+  fetchStaff();
+}, []);
+
   
   // Filter Salesman based on search term
   useEffect(() => {
@@ -277,6 +292,92 @@ const filteredCustomers = customers.filter((customer) =>
   console.log(items,'items');
 
 
+ // select warehouse
+ interface WarehouseItem {
+  _id: string;
+  warehouseName: string;
+}
+
+const [warehouses, setWarehouses] = useState<WarehouseItem[]>([]);
+const [selectedWarehouse, setSelectedWarehouse] = useState<string>('');
+
+useEffect(() => {
+  const fetchWarehouse = async () => {
+    try {
+      const response = await getWarehouseAPI();
+      setWarehouses(response.warehouses);
+      console.log('Warehouses set:', response); // Verify the data
+    } catch (error: any) {
+      console.error('Failed to fetch warehouses:', error);
+    }
+  };
+  fetchWarehouse();
+}, []);
+
+const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const warehouseValue = e.target.value;
+  setOrderDetails((prevDetails) => ({
+    ...prevDetails,
+    warehouse: warehouseValue,
+  }));
+};
+
+  // const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+        // Create the request body as a JSON object
+        const requestBody = {
+            customer: orderDetails.customer,
+            salesman: orderDetails.salesman,
+            warehouse: orderDetails.warehouse,
+            date: orderDetails.date, // Use the original date without formatting if your backend handles it
+            orderNumber: orderDetails.orderNumber,
+            paymentMode: orderDetails.paymentMode,
+            notes: orderDetails.notes,
+            termsAndCondition: orderDetails.termsAndCondition,
+            items: orderDetails.items.map(item => ({
+                itemName: item.itemName,
+                quantity: item.quantity,
+                price: item.rate, // Ensure this matches your backend schema
+                amount: item.amount,
+            })),
+        };
+
+        console.log("Request Body to be sent:", requestBody);
+
+        // Call the API function with the JSON body
+        const response = await addOrderAPI(requestBody);
+
+        // Assuming your response format has a success property
+        if (response.success) {
+            toast.success('Order added successfully!');
+            // Reset the form or handle the response
+            setOrderDetails({
+                customer: '',
+                salesman: '',
+                warehouse: '',
+                date: '',
+                orderNumber: '',
+                paymentMode: '',
+                items: [{ itemName: '', quantity: 0, rate: 0, amount: 0 }],
+                notes: '',
+                termsAndCondition: '',
+            });
+        } else {
+            toast.error('Failed to add order: ' + response.message);
+        }
+    } catch (error) {
+        console.error("Error submitting order:", error);
+        toast.error('An error occurred while submitting the order.');
+    } finally {
+        setLoading(false);
+    }
+};
+
+
 
   // const defaultImage = "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png"
   return (
@@ -284,6 +385,18 @@ const filteredCustomers = customers.filter((customer) =>
       {/* <div className='flex bg-gray-50 '> */}
 
         <div className=" flex max-h-screen ">
+        <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
 
 
           {/* Main content */}
@@ -300,9 +413,9 @@ const filteredCustomers = customers.filter((customer) =>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   {/* Customer Selection */}
                   <div className="mb-2">
-      <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Customer</label>
+      <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Customer</label>
       <div className="relative w-full" onClick={toggleCustomerDropdown}>
-        <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+        <div className="items-center flex appearance-none w-full h-9  bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
           <span className="font-normal">
             {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : "Select Customer"}
           </span>
@@ -360,9 +473,9 @@ const filteredCustomers = customers.filter((customer) =>
 
                   {/* Salesman Selection */}
                   <div>
-    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Select Salesman</label>
+    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Salesman</label>
     <div className="relative w-full" onClick={toggleSalesmanDropdown}>
-      <div className="items-center flex appearance-none w-full h-9 text-zinc-400 bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+      <div className="items-center flex appearance-none w-full h-9  bg-white border border-inputBorder text-sm pl-2 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
         <span className="font-normal">
           {selectedSalesman
             ? `${selectedSalesman.firstname} ${selectedSalesman.lastname}`
@@ -422,8 +535,41 @@ const filteredCustomers = customers.filter((customer) =>
   </div>
                 </div>
 
+              {/* Warehouse selection */}
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className=''>
+                <label className="block mb-2 font-[400px] text-[#303F58] text-[14px]">Warehouse</label>
+      <select
+        name="warehouse"
+        value={selectedWarehouse}
+        onChange={handleWarehouseSelection}
+        className="w-full p-2 border rounded-md text-[14px] font-normal"
+      >
+        <option value="" className="font-normal text-[#8F99A9]">Select Warehouse</option>
+        {warehouses.map((warehouse) => (
+          <option key={warehouse._id}  className="font-normal">
+            {warehouse.warehouseName}
+          </option>
+        ))}
+      </select>
+   </div>
 
+                  
+                  <div>
+                    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Order Number</label>
+                    <input
+                      type="text"
+                      name="orderNumber"
+                      onChange={updateOrder}
+                      value={orderDetails.orderNumber}
+                      className="w-full p-2 border rounded-md text-[14px] font-normal"
+                      // readOnly
+                    />
+                  </div>
+                </div>
+                
                 {/* Date and Order Number */}
+
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Date</label>
@@ -432,16 +578,7 @@ const filteredCustomers = customers.filter((customer) =>
                       name="date"
                       value={orderDetails.date}
                       onChange={updateOrder}
-                      className="w-full p-2 border rounded-md  text-[#8F99A9] text-[14px] font-normal"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2 font-normal text-[#303F58] text-[14px]">Order Number</label>
-                    <input
-                      type="text"
-                      name="orderNumber"
-                      value={orderDetails.orderNumber}
-                      className="w-full p-2 border rounded-md  text-[#8F99A9] text-[14px] font-normal"
+                      className="w-full p-2 border rounded-md  text-[14px] font-normal"
                     />
                   </div>
                 </div>
@@ -454,12 +591,12 @@ const filteredCustomers = customers.filter((customer) =>
                     name="paymentMode"
                     value={orderDetails.paymentMode}
                     onChange={updateOrder}
-                    className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px] font-normal"
+                    className="w-full p-2 border rounded-md text-[14px] font-normal"
                   >
-                    <option value="" className='text-blue-200 font-normal'>Select payment mode</option>
-                    <option value="cash" className='text-gray-800 font-normal'>Cash</option>
-                    <option value="credit" className='text-gray-800 font-normal'>Credit</option>
-                    <option value="foc" className='text-gray-800 font-normal'>FOC</option>
+                    <option value="" className='font-normal'>Select payment mode</option>
+                    <option value="Cash" className='text-gray-800 font-normal'>Cash</option>
+                    <option value="Credit" className='text-gray-800 font-normal'>Credit</option>
+                    <option value="FOC" className='text-gray-800 font-normal'>FOC</option>
                     {/* Add more payment options as needed */}
                   </select>
                 </div>
@@ -482,13 +619,13 @@ const filteredCustomers = customers.filter((customer) =>
                         <tr key={index}>
                           <td className="border-y py-3 px-2 border-tableBorder">
                             <div className="relative w-full" onClick={() => toggleDropdown(index, "searchProduct")}>
-                              {row.product ? (
+                              {row.itemName ? (
                                 <div className="cursor-pointer gap-2 grid grid-cols-12 appearance-none items-center justify-center h-9 text-zinc-400 bg-white text-sm">
                                   <div className="flex items-start col-span-4">
                                     <img className="rounded-full h-10 w-10" src={defaultImage} alt="" />
                                   </div>
                                   <div className="col-span-8 text-start">
-                                    <p className="text-textColor">{row.product}</p>
+                                    <p className="text-textColor">{row.itemName}</p>
                                   </div>
                                 </div>
                               ) : (
@@ -575,7 +712,7 @@ const filteredCustomers = customers.filter((customer) =>
 
 
                 {/* Notes and Terms */}
-                <div className="mb-4 -mt-10">
+                {/* <div className="mb-4 -mt-10">
                   <label className="block mb-2 font-normal">Add Notes</label>
                   <textarea
                     name="notes"
@@ -595,28 +732,28 @@ const filteredCustomers = customers.filter((customer) =>
                     className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px] font-normal"
                     placeholder='Add Terms and Condition of Your Business'
                   ></textarea>
-                </div>
+                </div> */}
 
-                <div className='flex justify-end mt-5'>
+                {/* <div className='flex justify-end mt-5'>
               <div>
                 <button className="bg-[#FEFDFA] rounded-lg text-[#565148] text-[14px] py-2 px-4 mx-1 mt-2 w-[74px] h-[38px] border border-[#565148]">
                   Cancel
                 </button>
 
-              </div>
+              </div> */}
               {/* <div>
                 <button className="bg-[#FEFDFA] rounded-lg text-[#565148] text-[14px] py-2 px-4 mx-1 mt-2 flex items-center w-[74px] h-[38px] border border-[#565148]">
                   <img src={printer} className='me-1 mt-1 -ms-2' alt="" />
                   Print
                 </button>
               </div> */}
-              <div>
+              {/* <div>
                 <button className="bg-[#820000] rounded-lg text-[#FEFDF9] text-[14px] py-2 px-5 mx-1 mt-2 w-[108px] h-[38px]">
                   Save
                 </button>
               </div>
 
-            </div>
+            </div> */}
 
               </div>
             </div>
@@ -625,10 +762,10 @@ const filteredCustomers = customers.filter((customer) =>
 
 
 
-        <div className="flex w-[30%] h-[250px] p-6 rounded-lg shadow-md mt-12 bg-white">
+        <div className="flex w-[30%] h-[370px] p-6 rounded-lg shadow-md mt-10 bg-white">
 
           <div className='justify-center'>
-            <div className='flex my-2'>
+            {/* <div className='flex my-2'>
               <h3 className='text-[#4B5C79] text-[14px] font-normal'>Untaxed Amount</h3>
               <h1 className='text-[#303F58] text-[18px] font-bold ms-40'>Rs 0.00</h1>
             </div>
@@ -639,10 +776,33 @@ const filteredCustomers = customers.filter((customer) =>
             <div className='flex my-1'>
               <h3 className='text-[#4B5C79] text-[14px] font-normal'>CGST</h3>
               <h1 className='text-[#4B5C79] text-[14px] font-normal ms-64'>Rs 0.00</h1>
-            </div>
-            <div className='flex my-1'>
+            </div> */}
+                  <div className="mb-4">
+                  <label className="block mb-2 font-normal">Add Notes</label>
+                  <textarea
+                    name="notes"
+                    value={orderDetails.notes}
+                    onChange={updateOrder}
+                    className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px] font-normal"
+                    placeholder='Add a Note'
+                  ></textarea>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block mb-1 font-normal">Terms & Conditions</label>
+                  <textarea
+                    name="termsAndCondition"
+                    value={orderDetails.termsAndCondition}
+                    onChange={updateOrder}
+                    className="w-full p-2 border rounded-md text-[#8F99A9] text-[14px] font-normal"
+                    placeholder='Add Terms and Condition of Your Business'
+                  ></textarea>
+                </div>
+                <hr className='my-4 text-[#CCCCCC] text-[10px] font-bold' />
+
+            <div className='flex my-1 justify-between'>
               <h3 className='text-[#0B1320] text-[16px] font-bold'>Total</h3>
-              <h1 className='text-[#303F58] text-[18px] font-bold ms-60'>Rs 0.00</h1>
+              <h1 className='text-[#303F58] text-[18px] font-bold'></h1>
             </div>
 
             <div className='flex ms-24 mt-5'>
@@ -659,7 +819,7 @@ const filteredCustomers = customers.filter((customer) =>
                 </button>
               </div>
               <div>
-                <button className="bg-[#820000] rounded-lg text-[#FEFDF9] text-[14px] py-2 px-5 mx-1 mt-2 w-[108px] h-[38px]">
+                <button onClick={handleSubmit} className="bg-[#820000] rounded-lg text-[#FEFDF9] text-[14px] py-2 px-5 mx-1 mt-2 w-[108px] h-[38px]">
                   Save
                 </button>
               </div>

@@ -12,6 +12,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api', stockRoutes); 
+app.use('/uploads', express.static('uploads'));
 
 
 // Test route

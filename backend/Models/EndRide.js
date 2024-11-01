@@ -45,7 +45,7 @@ const EndRideSchema = new Schema({
     ref: 'ActiveRoute', // Reference to ActiveRoute
     required: true,
   },
-});
+},{ timestamps: true });
 
 const EndRide = mongoose.model('EndRide', EndRideSchema);
 module.exports = EndRide;

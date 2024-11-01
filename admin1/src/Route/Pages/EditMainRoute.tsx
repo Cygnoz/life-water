@@ -4,9 +4,8 @@ import back from '../../assets/images/backbutton.svg';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { updateRouteAPI } from '../../services/RouteAPI/RouteAPI';
-import { BASEURL } from '../../services/Baseurl';
-import axios from 'axios';
+import { getRouteByIdAPI, updateRouteAPI } from '../../services/RouteAPI/RouteAPI';
+
 
 const EditMainRoute: React.FC = () => {
   const { id } = useParams<{ id: string }>();  // Get route ID from URL params
@@ -25,8 +24,8 @@ const EditMainRoute: React.FC = () => {
   useEffect(() => {
     const fetchRouteData = async () => {
       try {
-        const response = await axios.get(`${BASEURL}/api/getroute/${id}`);
-        setFormData(response.data.route); // Populate the form with fetched data
+        const response = await getRouteByIdAPI(id)
+        setFormData(response.data.mainRoute); // Populate the form with fetched data
         setIsLoading(false); // Set loading to false after data is fetched
       
       } catch (error) {

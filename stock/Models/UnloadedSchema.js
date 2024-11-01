@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Warehouse = require('./WarehouseSchema');
+// const Warehouse = require('./WarehouseSchema');
 
 const unloadSchema = new mongoose.Schema({
 
@@ -19,6 +19,8 @@ const unloadSchema = new mongoose.Schema({
   items: [{
     itemName: String,
     quantity: Number,
+    amount:String,
+    rate:String
   }],
   autoNotes: String,
   termsAndConditions: String
