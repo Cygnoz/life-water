@@ -157,7 +157,7 @@ const App: React.FC = () => {
                    {/* ITEMS */}
                    <Route path='/additem' element={<AddItem/>}/>
                    <Route path='/item' element={<CreateItem/>}/>
-                   <Route path='/edititem' element={<EditItem/>}/>
+                   <Route path='/edititem/:id' element={<EditItem/>}/>
 
                    {/* STOCK LOADED */}
                    <Route path='/stockloaded' element={<StockLoaded/>}/>

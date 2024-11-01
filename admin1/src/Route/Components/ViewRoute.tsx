@@ -9,14 +9,11 @@ import bottle from "../../assets/images/bottlesvg.svg";
 import history from "../../assets/images/history.png";
 import dollar from "../../assets/images/badge-dollar-sign.png";
 import { getRouteByIdAPI } from "../../services/RouteAPI/RouteAPI";
-import { getSubRoutesAPI } from "../../services/RouteAPI/subRouteAPI";
 import { getAllEndRidesAPI } from "../../services/RouteAPI/ActiveRoute";
 import search from "../../assets/images/search.svg";
 import vector from "../../assets/images/Vector.svg";
 import map1 from "../../assets/images/map-pin.svg";
-import SubRoute from "../Pages/SubRoute";
 import { getActiveRouteAPI } from "../../services/RouteAPI/ActiveRoute";
-
 
 interface Route {
   _id: string;
@@ -72,19 +69,15 @@ const ViewRoute: React.FC = () => {
   );
   const [rideList, setRideList] = useState<Route[]>([]);
   const [mainRideList, setMainRideList] = useState<Route[]>([]);
-
   const [mostVisitedSbRoute, setMostVisitedSubRoute] = useState<string | null>(
     null
   );
-
   const [activeRoutes, setActiveRoutes] = useState<any[]>([]); // Add a type assertion for clarity
-
   const [searchTerm, setSearchTerm] = useState<string>(""); // Search term state
-
   const [searchTerms, setSearchTerms] = useState<string>(""); // Search term state
-
-
+  const [totalStock,setTotalStock]=useState(0)
   const navigate = useNavigate();
+console.log(rideList,activeRoutes,rides);
 
   // State initialization
 
@@ -198,39 +191,36 @@ const ViewRoute: React.FC = () => {
   useEffect(() => {
     const fetchRide = async () => {
       try {
-        // Call API to fetch rides data
         const response = await getAllEndRidesAPI();
-
-        // Determine if response has data property or is directly an array
         const routes = Array.isArray(response.data) ? response.data : response;
-
-        setRideList(routes); // Set the full list of routes
+        setRideList(routes);
         console.log("All Routes:", routes);
-
-        // Ensure that `routeData` is loaded before filtering
+  
         if (!routeData?.mainRoute?.mainRoute) {
           console.warn("Main route is undefined");
           return;
         }
-
-        // Get main route from routeData
+  
         const mainRoute = routeData.mainRoute.mainRoute;
-
-        // Filter routes based on specified main route
-        const filteredRoutes = routes.filter(
-          (ride) => ride.mainRoute === mainRoute
-        );
+        const filteredRoutes = routes.filter((ride) => ride.mainRoute === mainRoute);
         console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
-
-        setMainRideList(filteredRoutes); // Update state with filtered routes
+  
+        setMainRideList(filteredRoutes);
+  
+        // Calculate total stock for filtered routes
+        const totalStock = filteredRoutes.reduce((acc, ride) => acc + Number(ride.stock), 0);
+        console.log("Total Stock for Main Route:", totalStock);
+        
+        // Optionally set this in state if needed for rendering
+        setTotalStock(totalStock); // Make sure to define totalStock in your component's state if needed
       } catch (error) {
         console.error("Error fetching main route data:", error);
       }
     };
-
+  
     fetchRide();
-  }, [routeData?.mainRoute?.mainRoute]); // Add dependency on `routeData.mainRoute.mainRoute`
-
+  }, [routeData?.mainRoute?.mainRoute]);
+  
 
   useEffect(() => {
     const fetchActiveRoutes = async () => {
@@ -249,23 +239,9 @@ const ViewRoute: React.FC = () => {
     fetchActiveRoutes();
   }, []);
 
-
-
   const handleEdit = (routeId: string): void => {
     navigate(`/route/editmainroute/${routeId}`);
   };
-
-  const totalStockData = activeRoutes.reduce(
-    (acc, route) => {
-      const stock = Number(route.totalStock) || 0;  // Convert to number, fallback to 0 if NaN
-      acc.totalSum += stock;
-      acc.breakdown.push(stock);
-      return acc;
-    },
-    { totalSum: 0, breakdown: [] }
-  );
-
-
 
   // Filter mainRideList based on searchTerm in salesMan and driver
   const filteredRides = mainRideList.filter((ride) => {
@@ -286,11 +262,8 @@ const ViewRoute: React.FC = () => {
     );
   });
 
-  const totalStockSum = totalStockData.totalSum;
-
-
   return (
-    <div className="px-6 py-3">
+    <div className="p-2">
       <div className="flex justify-between gap-3 items-center w-full max-w-8xl mb-3 ">
         <div>
           <div className="icon-placeholder flex">
@@ -358,46 +331,53 @@ const ViewRoute: React.FC = () => {
           <div className="ml-4">
             <div className="text-white"> Bottle Stock</div>
 
-            <div className="text-lg text-white font-bold"> {totalStockSum || "N/A"}</div>
+            <div className="text-lg text-white font-bold">
+              {" "}
+              {totalStock || "N/A"}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="flex space-x-7 mb-4">
         <button
-          className={`w-[221px] font-bold p-2 rounded-lg flex items-center ${activeSection === "routeDetail"
+          className={`w-[221px] font-bold p-2 rounded-lg flex items-center ${
+            activeSection === "routeDetail"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-            }`}
+          }`}
           onClick={() => setActiveSection("routeDetail")}
         >
           <img src={user2} alt="" className="mr-2" />
           Route Detail
         </button>
         <button
-          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${activeSection === "rideHistory"
+          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${
+            activeSection === "rideHistory"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-            }`}
+          }`}
           onClick={() => setActiveSection("rideHistory")}
         >
           <img src={history} alt="" className="mr-2" />
           Ride History
         </button>
         <button
-          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${activeSection === "subRoute"
+          className={`w-[221px] p-2 font-bold rounded-lg flex items-center ${
+            activeSection === "subRoute"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-            }`}
+          }`}
           onClick={() => setActiveSection("subRoute")}
         >
           <img className="me-2" src={map1} alt="" /> Sub Route
         </button>
         <button
-          className={`w-[221px] font-bold p-2  rounded-lg flex items-center ${activeSection === "currentStock"
+          className={`w-[221px] font-bold p-2  rounded-lg flex items-center ${
+            activeSection === "currentStock"
               ? "bg-[#E3E6D5] text-black"
               : "bg-white"
-            }`}
+          }`}
           onClick={() => setActiveSection("currentStock")}
         >
           <img src={dollar} alt="" className="mr-2" />
@@ -440,12 +420,8 @@ const ViewRoute: React.FC = () => {
                 boxShadow: "none",
               }}
               placeholder="Search Ride"
-
-
               value={searchTerm} // Bind search input to state
               onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
-
-
             />
           </div>
           <table className="w-full text-left">
@@ -489,7 +465,9 @@ const ViewRoute: React.FC = () => {
                       {index + 1}
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      {ride.createdAt ? new Date(ride.createdAt).toLocaleDateString() : 'N/A'}
+                      {ride.createdAt
+                        ? new Date(ride.createdAt).toLocaleDateString()
+                        : "N/A"}
                     </td>
                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
                       {ride.salesMan}
@@ -543,7 +521,6 @@ const ViewRoute: React.FC = () => {
                 placeholder="Search Sub Route"
                 value={searchTerms} // Bind search input to state
                 onChange={(e) => setSearchTerms(e.target.value)} // Update searchTerm on input change
-
               />
             </div>
             <table className="w-full text-left">

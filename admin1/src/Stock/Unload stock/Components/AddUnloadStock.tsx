@@ -109,11 +109,11 @@ const getProductIdByName = async (productName: string) => {
       const response = await addUnloadAPI(unloadData);
 
       if (response?.message) {
-        toast.success("stock unloaded successfully")
-        console.log('Failed to add unload:', response);
-      } else {
         console.log('Unload failed:', response);
         toast.error("stock unloade failed")
+      } else {
+        console.log('added unload:', response);
+        toast.success("stock unloaded successfully")
 
         
       }

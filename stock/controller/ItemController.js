@@ -27,25 +27,45 @@ const getItems = async (req, res) => {
     res.status(500).json({ message: 'Failed to retrieve items', error: error.message });
   }
 };
-
-// Update an item by ID
-const updateItem = async (req, res) => {
+// Get a single item by ID
+const getItemById = async (req, res) => {
   try {
-    const { itemName, SKU, purchasePrice, retailPrice, description, itemImage } = req.body;
+    const item = await Item.findById(req.params.id); // Find the item by ID
 
-    const updatedItem = await Item.findByIdAndUpdate(
-      req.params.id,
-      { itemName, SKU, purchasePrice, retailPrice, description, itemImage },
-      { new: true, runValidators: true } // Return the updated document and validate the inputs
-    );
+    if (!item) return res.status(404).json({ message: 'Item not found' });
 
-    if (!updatedItem) return res.status(404).json({ message: 'Item not found' });
-
-    res.status(200).json({ message: 'Item updated successfully', data: updatedItem });
+    res.status(200).json(item); // Return the found item
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update item', error: error.message });
+    res.status(500).json({ message: 'Failed to retrieve item', error: error.message });
   }
 };
+
+// Update an item by ID
+
+const updateItem = async (req, res) => {
+  try {
+      // Destructure data from req.body and check for uploaded file
+      const { itemName, SKU, purchasePrice, retailPrice, description } = req.body;
+      const itemImage = req.file ? req.file.path : null; // Get the file path if a file was uploaded
+
+      const updatedItem = await Item.findByIdAndUpdate(
+          req.params.id,
+          { itemName, SKU, purchasePrice, retailPrice, description, itemImage },
+          { new: true, runValidators: true } // Returns the updated document
+      );
+
+      if (!updatedItem) {
+          return res.status(404).json({ message: 'Item not found' });
+      }
+
+      return res.status(200).json({ message: 'Item updated successfully', item: updatedItem });
+  } catch (error) {
+      console.error("Error updating item:", error);
+      return res.status(500).json({ message: error.message || 'An unexpected error occurred.' });
+  }
+};
+
+
 
 // Delete an item by ID
 const deleteItem = async (req, res) => {
@@ -64,6 +84,7 @@ const deleteItem = async (req, res) => {
 module.exports = {
   addItem,
   getItems,
+  getItemById,
   updateItem,
   deleteItem
 };
