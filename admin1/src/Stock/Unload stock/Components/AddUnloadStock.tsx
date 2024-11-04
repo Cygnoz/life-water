@@ -3,7 +3,7 @@ import trash from '../../../assets/images/trash.svg';
 import circleplus from '../../../assets/images/Icon.svg';
 import printer from '../../../assets/images/printer.svg';
 import back from '../../../assets/images/backbutton.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getItemsAPI } from '../../../services/StockAPI/StockAPI';
 import downarrow from '../../../assets/images/Vector.png';
 import { getRoutesAPI } from '../../../services/RouteAPI/RouteAPI';
@@ -39,12 +39,22 @@ interface UnloadDetails {
   termsAndConditions: string;
 }
 
+const initialOrderDetails = {
+  mainRoute: '',
+  warehouseName: '',
+  date: '',
+  transferNumber: '',
+  items: [], // Assuming items is an array
+  autoNotes: '',
+  termsAndConditions: '',
+};
+
 const AddUnloadStock: React.FC = () => {
   const [orderDetails, setOrderDetails] = useState<UnloadDetails>({
     mainRoute: '',
     warehouseName: '',
     date: '',
-    transferNumber: 'IN-3748',
+    transferNumber: '',
     items: [{ product: '', quantity: 0, rate: 0, amount: 0}],
     autoNotes: '',
     termsAndConditions: '',
@@ -70,57 +80,63 @@ const getProductIdByName = async (productName: string) => {
   }
 };
 
+const navigate = useNavigate();
 
-  // Function to add unload
-  const handleAddUnload = async () => {
-    // Format items to include all required fields by the API
-    const formattedItems = await Promise.all(
-      orderDetails.items.map(async (item) => {
-        const productId = await getProductIdByName(item.product);
-        if (!productId) {
-          throw new Error(`Product not found: ${item.product}`);
-        }
-        return {
-          _id: productId,
-          product: item.product,
-          quantity: item.quantity,
-          rate: (item.rate || 0).toString(),    // Convert rate to string
-          amount: (item.amount || 0).toString() // Convert amount to string
-        };
-      })
-    );
-    
-    console.log("hlo",orderDetails);
-    
-
-    const unloadData: UnloadDetails = {
-      mainRoute: orderDetails.mainRoute,
-      warehouseName: orderDetails.warehouseName,
-      date: new Date(orderDetails.date).toISOString(), // Ensuring date is in ISO format
-      transferNumber: orderDetails.transferNumber,
-      items: formattedItems, // Include the formatted items
-      autoNotes: orderDetails.autoNotes,
-      termsAndConditions: orderDetails.termsAndConditions,
-    };
-
-    console.log('Unload Data:', unloadData); // For debugging
-
-    try {
-      const response = await addUnloadAPI(unloadData);
-
-      if (response?.message) {
-        console.log('Unload failed:', response);
-        toast.error("stock unloade failed")
-      } else {
-        console.log('added unload:', response);
-        toast.success("stock unloaded successfully")
-
-        
+const handleAddUnload = async () => {
+  // Format items to include all required fields by the API
+  const formattedItems = await Promise.all(
+    orderDetails.items.map(async (item) => {
+      const productId = await getProductIdByName(item.product);
+      if (!productId) {
+        throw new Error(`Product not found: ${item.product}`);
       }
-    } catch (error) {
-      console.error('Error while adding unload:', error);
-    }
+      return {
+        _id: productId,
+        product: item.product,
+        quantity: item.quantity,
+        rate: (item.rate || 0).toString(), // Convert rate to string
+        amount: (item.amount || 0).toString() // Convert amount to string
+      };
+    })
+  );
+
+
+  const unloadData: UnloadDetails = {
+    mainRoute: orderDetails.mainRoute,
+    warehouseName: orderDetails.warehouseName,
+    date: new Date(orderDetails.date).toISOString(), // Ensuring date is in ISO format
+    transferNumber: orderDetails.transferNumber,
+    items: formattedItems, // Include the formatted items
+    autoNotes: orderDetails.autoNotes,
+    termsAndConditions: orderDetails.termsAndConditions,
   };
+
+  console.log('Unload Data:', unloadData); // For debugging
+
+  try {
+    const response = await addUnloadAPI(unloadData);
+    console.log(response);
+
+    if (response?.status === 201) { // Use strict equality
+      toast.success("Stock unloaded successfully");
+       // Reset form fields
+       setOrderDetails(initialOrderDetails); // Resetting to initial state
+
+       // Optionally navigate to another page
+       setTimeout(() => {
+        navigate('/unloadstock'); // Replace with the actual route you want to navigate to
+      }, 2000); 
+      
+    } else {
+      toast.error("Stock unload failed");
+      console.log('Failed to add unload:', response);
+    }
+  } catch (error) {
+    console.error('Error while adding unload:', error);
+    toast.error("Stock unload failed");
+  }
+};
+
 
 
 
@@ -404,7 +420,7 @@ const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
                    <input
                      type="number"
                      name="date"
-                    placeholder='123'
+                    placeholder=''
                      className="w-full p-2 border rounded-md  text-[#8F99A9] text-[14px]"
                    />
                  </div>
