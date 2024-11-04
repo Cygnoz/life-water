@@ -25,11 +25,24 @@ const wStockSchema = new mongoose.Schema({
     //   required: true,
       min: 0
     },
+    amount: {
+      type: Number,
+    //   required: true,
+      min: 0
+    },
+    rate: {
+      type: Number,
+    //   required: true,
+      min: 0
+    },   
+    itemImage: {
+      type: String,
+    //   required: true
+    },
   }],
-  totalQuantity: {
-    type: Number,
-  //   required: true,
-    min: 0
+  
+  notes: {
+    type: String
   },
   termsAndConditions: {
     type: String
