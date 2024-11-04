@@ -115,7 +115,6 @@ const createCustomer = async (req, res) => {
 // Controller to add a customer from Salesman module
 const addCustomerFromSalesman = async (req, res) => {
   try {
-    // Destructure only the necessary fields from the request body
     const {
       customerType,
       companyName,
@@ -133,22 +132,16 @@ const addCustomerFromSalesman = async (req, res) => {
       location
     } = req.body;
 
-    console.log(req.body);
-    
+    // Transform location only if it's provided
+    const transformedLocation = location ? {
+      address: location.address,
+      coordinates: {
+        type: "Point",
+        coordinates: [location.coordinates.longitude, location.coordinates.latitude]
+      }
+    } : undefined;
 
-    console.log('Coordinates:', location.coordinates);
-
-    const { address, coordinates } = req.body.location;
-        const transformedLocation = {
-            address,
-            coordinates: {
-                type: "Point",
-                coordinates: [coordinates.longitude, coordinates.latitude] // [longitude, latitude]
-            }
-        };
-
-
-    // Create a new customer document
+    // Create a new customer document, conditionally adding location if it's present
     const newCustomer = new Customer({
       customerType,
       companyName,
@@ -163,18 +156,16 @@ const addCustomerFromSalesman = async (req, res) => {
       depositAmount,
       mainRoute,
       subRoute,
-      location: transformedLocation
+      ...(transformedLocation && { location: transformedLocation })
     });
 
-    // Save the customer to the database
     const savedCustomer = await newCustomer.save();
-    res.status(201).json({ message: 'Customer added successfully', customer: savedCustomer, status:201 });
+    res.status(201).json({ message: 'Customer added successfully', customer: savedCustomer, status: 201 });
   } catch (error) {
     console.error('Error adding customer:', error);
     res.status(500).json({ message: 'Error adding customer', error: error.message });
   }
 };
-
 
 
 
@@ -228,6 +219,70 @@ const updateCustomerById = async (req, res) => {
   }
 };
 
+// Controller to edit a customer from Salesman module
+const editCustomerFromSalesman = async (req, res) => {
+  try {
+    const { id } = req.params;  // Customer ID from request parameters
+    const {
+      customerType,
+      companyName,
+      firstName,
+      lastName,
+      email,
+      numberOfBottles,
+      rate,
+      paymentMode,
+      contactNumber,
+      whatsappNumber,
+      depositAmount,
+      mainRoute,
+      subRoute,
+      location
+    } = req.body;
+
+    // Transform location only if it's provided
+    const transformedLocation = location ? {
+      address: location.address,
+      coordinates: {
+        type: "Point",
+        coordinates: [location.coordinates.longitude, location.coordinates.latitude]
+      }
+    } : undefined;
+
+    // Update customer data, including location if provided
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      id,
+      {
+        customerType,
+        companyName,
+        firstName,
+        lastName,
+        email,
+        noOfBottles: numberOfBottles,
+        ratePerBottle: rate,
+        paymentMode,
+        mobileNo: contactNumber,
+        whatsappNo: whatsappNumber,
+        depositAmount,
+        mainRoute,
+        subRoute,
+        ...(transformedLocation && { location: transformedLocation })
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedCustomer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    res.status(200).json({ message: 'Customer updated successfully', customer: updatedCustomer });
+  } catch (error) {
+    console.error('Error updating customer:', error);
+    res.status(500).json({ message: 'Error updating customer', error: error.message });
+  }
+};
+
+
 
 
  
@@ -251,5 +306,6 @@ module.exports = {
   getCustomerById,
   updateCustomerById,
   deleteCustomerById,
-  addCustomerFromSalesman
+  addCustomerFromSalesman,
+  editCustomerFromSalesman
 };
