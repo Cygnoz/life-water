@@ -130,7 +130,6 @@ const AddCustomer: React.FC = () => {
       );
     });
   };
-
   const handleLocationFetch = async () => {
     if (isLocationSaved) {
       // Clear location if already saved
@@ -145,7 +144,7 @@ const AddCustomer: React.FC = () => {
         },
       }));
       setIsLocationSaved(false); // Mark location as unsaved
-      toast.info("Location clearing.");
+      toast.info("Location cleared.");
     } else {
       // Fetch location if not saved
       try {
@@ -374,14 +373,14 @@ const AddCustomer: React.FC = () => {
           </div> */}
            
            
-            <button
-          type="button"
-          onClick={handleLocationFetch}
-          disabled={isGettingLocation}
-          className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}
-        >
-          {isGettingLocation ? "Fetching Location..." : "Save Location"}
-        </button>
+           <button
+  type="button"
+  onClick={handleLocationFetch}
+  disabled={isGettingLocation}
+  className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}
+>
+  {isLocationSaved ? "Clear Location" : isGettingLocation ? "Fetching Location..." : "Save Location"}
+</button>
 
         {/* Iframe for location display */}
         {isLocationSaved && formData.location.coordinates.latitude && formData.location.coordinates.longitude && (
