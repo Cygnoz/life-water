@@ -4,7 +4,7 @@ const Warehouse = require('../Models/WarehouseSchema');
 // Create new stock entry
 const createStock = async (req, res) => {
   try {
-    const { warehouse, transferNumber, date, items, termsAndConditions } = req.body;
+    const { warehouse, transferNumber, date, items, notes, termsAndConditions } = req.body;
 
     // Validate required fields
     if (!transferNumber || !items || !items.length) {
@@ -21,6 +21,7 @@ const createStock = async (req, res) => {
       transferNumber,
       date: date || new Date(),
       items,
+      notes,
       termsAndConditions
     });
 

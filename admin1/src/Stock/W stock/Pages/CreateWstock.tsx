@@ -3,21 +3,49 @@ import packing from "../../../assets/images/Group 2511.png";
 import processing from "../../../assets//images/Group 2512.png";
 import delivery from "../../../assets/images/Group 2513.png";
 import plus from "../../../assets/circle-plus.svg";
-import dot from "../../../assets/ellipsis-vertical.svg";
 import printer from "../../../assets/images/printer.svg";
 import split from "../../../assets/images/list-filter.svg";
 import search from "../../../assets/images/search.svg";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllStocks } from "../../../services/StockAPI/W-StockAPI";
+interface StockData {
+  warehouse: string;
+  date: string;
+  transferNumber: number;
+  items: Array<{
+    itemName: string;
+    quantity: number;
+    rate: number;
+    amount: number;
+    itemImage?: string;
+  }>;
+  notes: string;
+  termsAndConditions: string;
+}
 
 const CreateWStock: React.FC = () => {
-  const navigate =useNavigate()
+  const navigate = useNavigate();
+  const [stocks, setStocks] = useState<StockData[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  
-  const handleAdd =()=>{
-    navigate('/addWstock')
+  const handleAdd = () => {
+    navigate("/addWstock");
+  };
+  useEffect(() => {
+    const fetchStocks = async () => {
+      try {
+        const data = await getAllStocks();
+        setStocks(data.data);
+        console.log(data.data);
+      } catch (err: any) {
+        setError(err.message);
+        console.log(err.message);
+      }
+    };
 
-  }
-
+    fetchStocks();
+  }, []);
 
   return (
     <div>
@@ -35,11 +63,13 @@ const CreateWStock: React.FC = () => {
                 </p>
               </div>
               <div className="flex justify-between">
-                <button onClick={handleAdd} className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md">
+                <button
+                  onClick={handleAdd}
+                  className="justify-between items-center gap-2 bg-[#820000] text-white flex px-5 py-2 rounded-md"
+                >
                   <img src={plus} alt="" />
                   <p>Add New Stock</p>
                 </button>
-               
               </div>
             </div>
             {/* Cards Section */}
@@ -149,27 +179,31 @@ const CreateWStock: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b">
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16">
-                      {" "}
-                      <input type="checkbox" />
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      1
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      15 May 2023
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      IN-44
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      Lorem
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      60
-                    </td>
-                  </tr>
+                  {stocks.map((stock, index) => (
+                    <tr className="border-b">
+                      <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16">
+                        {""}
+                        <input type="checkbox" />
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {index +1}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        {stock.date.split('T')[0]}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                      {stock.items.map((item)=>(
+                        item.itemName
+                      ))}
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        Lorem
+                      </td>
+                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                        60
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
