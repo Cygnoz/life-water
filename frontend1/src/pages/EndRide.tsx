@@ -12,7 +12,7 @@ interface Expense {
 
 const EndRide: React.FC = () => {
   const [endingKM, setEndingKM] = useState<string>('');
-  const [travelledKM, setTravelledKM] = useState<string>('0');
+  const [travelledKM, setTravelledKM] = useState<string>('');
   const [expenses, setExpenses] = useState<Expense[]>([
     { id: 1, remarks: '', amount: '' },
   ]);
@@ -25,6 +25,7 @@ const EndRide: React.FC = () => {
   const [storedmainRoute, setStoredMainRoute] = useState<string | null>(null);
   const [storedstock, setStoredStock] = useState<string | null>(null);
   const [storedSubRoute, setStoredSubRoute] = useState<string | null>(null);
+  const [storedkilometer, setStoredkilometer] = useState<string | null>(null);
  
 
   // Retrieve data from localStorage on component load
@@ -36,8 +37,15 @@ const EndRide: React.FC = () => {
     setStoredMainRoute(localStorage.getItem("mainRoute"));
     setStoredStock(localStorage.getItem("stock"));
     setStoredSubRoute(localStorage.getItem("subRoute"))
+    setStoredkilometer(localStorage.getItem("startingKm"))
   
   }, []);
+  useEffect(() => {
+    if (endingKM && storedkilometer) {
+      const travelledKM = parseFloat(endingKM) - parseFloat(storedkilometer);
+      setTravelledKM(travelledKM > 0 ? travelledKM.toString() : '0');
+    }
+  }, [endingKM, storedkilometer])
 
   const addExpense = () => {
     setExpenses([

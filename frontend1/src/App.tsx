@@ -20,6 +20,7 @@ import ViewCustomers from './pages/ViewCustomers';
 import EndRide from './pages/EndRide';
 import Dashboard from './pages/Dashboard';
 import Maps from './pages/Map';
+import EditCustomer from './pages/EditCustomer';
 // import Routed from './pages/Route';
 
 const App: React.FC = () => {
@@ -47,6 +48,7 @@ const App: React.FC = () => {
           <Route path="/customers" element={<Customers />} />
           <Route path="/addcustomers" element={<AddCustomer />} />
           <Route path="/viewcustomers" element={<ViewCustomers/>} />
+          <Route path="/editcustomer/:id" element={<EditCustomer/>} />
           <Route path="/return" element={<Returncustomer />} />
           <Route path="/visithistory" element={<Visithistory />} />
           <Route path="/addpayment" element={<Addreturncustomer />} />

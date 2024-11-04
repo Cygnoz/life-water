@@ -1,39 +1,32 @@
-"use client"
-
-import React, { useEffect, useState } from "react"
-import { addCustomerAPI } from "../services/customer/customerAPI"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import React, { useEffect, useState } from "react";
+import { addCustomerAPI } from "../services/customer/customerAPI";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { getSubRoutesAPI } from '../services/StartRide/StartRide';
-import { Link } from "react-router-dom"
-import backbutton from '../assets/images/nav-item.png'
-
-
-// const GOOGLE_MAPS_API_KEY = 'AIzaSyBsK-rqRbm2JJ3Z1194zK4ZtE0YURAeoSY'
-
-
+import { Link } from "react-router-dom";
+import backbutton from '../assets/images/nav-item.png';
 
 interface FormData {
-  customerType: "Business" | "Individual"
-  companyName: string
-  firstName: string
-  lastName: string
-  email: string
-  numberOfBottles: string
-  rate: string
-  paymentMode: "Cash" | "Credit"
-  contactNumber: string
-  whatsappNumber: string
-  depositAmount: string
-  subRoute:string
-  mainRoute:string
+  customerType: "Business" | "Individual";
+  companyName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  numberOfBottles: string;
+  rate: string;
+  paymentMode: "Cash" | "Credit";
+  contactNumber: string;
+  whatsappNumber: string;
+  depositAmount: string;
+  subRoute: string;
+  mainRoute: string;
   location: {
-    address: string
+    address: string;
     coordinates: {
-      latitude: number | null
-      longitude: number | null
-    }
-  }
+      latitude: number | null;
+      longitude: number | null;
+    };
+  };
 }
 
 interface Route {
@@ -43,7 +36,7 @@ interface Route {
 }
 
 interface FormErrors {
-  [key: string]: string
+  [key: string]: string;
 }
 
 const AddCustomer: React.FC = () => {
@@ -59,8 +52,8 @@ const AddCustomer: React.FC = () => {
     contactNumber: "",
     whatsappNumber: "",
     depositAmount: "",
-    mainRoute:"",
-    subRoute:"",
+    mainRoute: "",
+    subRoute: "",
     location: {
       address: "",
       coordinates: {
@@ -68,21 +61,19 @@ const AddCustomer: React.FC = () => {
         longitude: null,
       },
     },
-  })
+  });
 
-  const [errors, setErrors] = useState<FormErrors>({})
-  const [isGettingLocation, setIsGettingLocation] = useState(false)
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [selectedMainRoute, setSelectedMainRoute] = useState<string>('');
   const [selectedSubRoute, setSelectedSubRoute] = useState<string>('');
   const [filteredSubRoutes, setFilteredSubRoutes] = useState<Route[]>([]);
   const [routesList, setRouteList] = useState<Route[]>([]);
   const [mainRouteList, setMainRouteList] = useState<any[]>([]);
-  
-
-
+  const [isLocationSaved, setIsLocationSaved] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (name === "location") {
       setFormData((prevData) => ({
         ...prevData,
@@ -90,15 +81,14 @@ const AddCustomer: React.FC = () => {
           ...prevData.location,
           address: value,
         },
-      }))
+      }));
     } else {
       setFormData((prevData) => ({
         ...prevData,
         [name]: value,
-      }))
+      }));
     }
-  }
-
+  };
 
   const handleMainRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const mainRoute = event.target.value;
@@ -106,7 +96,7 @@ const AddCustomer: React.FC = () => {
     setFilteredSubRoutes(routesList.filter(route => route.mainRoute === mainRoute));
     setSelectedSubRoute(''); // Reset sub-route selection
   };
- 
+
   const handleSubRouteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubRoute(event.target.value);
   };
@@ -116,100 +106,129 @@ const AddCustomer: React.FC = () => {
       try {
         const response = await getSubRoutesAPI();
         setRouteList(response);
- 
-        // Extract unique main routes
+
         const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
         setMainRouteList(uniqueMainRoutes);
       } catch (error) {
         console.error('Error fetching sub-route data:', error);
       }
     };
- 
+
     fetchSubRoutes();
   }, []);
 
   const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        reject(new Error("Geolocation is not supported by your browser"))
-        return
+        reject(new Error("Geolocation is not supported by your browser"));
+        return;
       }
 
       navigator.geolocation.getCurrentPosition(
         (position) => resolve(position.coords),
         (error) => reject(error)
-      )
-    })
-  }
+      );
+    });
+  };
 
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {}
-
-    if (formData.customerType === "Business" && !formData.companyName) {
-      newErrors.companyName = "Company name is required for business customers"
-    }
-    if (!formData.firstName) newErrors.firstName = "First name is required"
-    if (!formData.lastName) newErrors.lastName = "Last name is required"
-    if (isNaN(Number(formData.numberOfBottles)) || Number(formData.numberOfBottles) <= 0) {
-      newErrors.numberOfBottles = "Number of bottles must be a positive number"
-    }
-    if (isNaN(Number(formData.rate)) || Number(formData.rate) <= 0) {
-      newErrors.rate = "Rate must be a positive number"
-    }
-    if (formData.contactNumber.length < 10) newErrors.contactNumber = "Contact number must be at least 10 digits"
-    if (formData.whatsappNumber.length < 10) newErrors.whatsappNumber = "WhatsApp number must be at least 10 digits"
-    if (isNaN(Number(formData.depositAmount)) || Number(formData.depositAmount) < 0) {
-      newErrors.depositAmount = "Deposit amount must be a non-negative number"
-    }
-    if (!formData.location.address) newErrors.location = "Location is required"
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
- 
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-  
-    if (validateForm()) {
+  const handleLocationFetch = async () => {
+    if (isLocationSaved) {
+      // Clear location if already saved
+      setFormData((prevData) => ({
+        ...prevData,
+        location: {
+          address: "",
+          coordinates: {
+            latitude: null,
+            longitude: null,
+          },
+        },
+      }));
+      setIsLocationSaved(false); // Mark location as unsaved
+      toast.info("Location clearing.");
+    } else {
+      // Fetch location if not saved
       try {
         setIsGettingLocation(true);
         const coords = await getCurrentLocation();
-  
-        const updatedFormData = {
-          ...formData,
+        setFormData((prevData) => ({
+          ...prevData,
           location: {
-            ...formData.location,
+            address: "", // Set address if needed
             coordinates: {
               latitude: coords.latitude,
               longitude: coords.longitude,
             },
           },
-          mainRoute: selectedMainRoute, // Add mainRoute
-          subRoute: selectedSubRoute,   // Add subRoute
-        };
-  
-        const response = await addCustomerAPI(updatedFormData);
-        console.log("Response from API:", response); // Debug log
-  
-        if (response?.status === 201) {
-          toast.success("Customer added successfully");
-        } else {
-          toast.error("Something went wrong");
-        }
-  
-        
-        setErrors({});
+        }));
+        setIsLocationSaved(true); // Mark location as saved
+        toast.success("Location fetched successfully");
       } catch (error) {
-        console.error("Error submitting form:", error);
-        toast.error("Error: Unable to get location. Please ensure location services are enabled and try again.");
+        console.error("Error fetching location:", error);
+        toast.error("Error fetching location. Please try again.");
       } finally {
         setIsGettingLocation(false);
       }
     }
   };
   
+
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (formData.customerType === "Business" && !formData.companyName) {
+      newErrors.companyName = "Company name is required for business customers";
+    }
+    if (!formData.firstName) newErrors.firstName = "First name is required";
+    if (!formData.lastName) newErrors.lastName = "Last name is required";
+    if (isNaN(Number(formData.numberOfBottles)) || Number(formData.numberOfBottles) <= 0) {
+      newErrors.numberOfBottles = "Number of bottles must be a positive number";
+    }
+    if (isNaN(Number(formData.rate)) || Number(formData.rate) <= 0) {
+      newErrors.rate = "Rate must be a positive number";
+    }
+    if (formData.contactNumber.length < 10) newErrors.contactNumber = "Contact number must be at least 10 digits";
+    if (formData.whatsappNumber.length < 10) newErrors.whatsappNumber = "WhatsApp number must be at least 10 digits";
+    if (isNaN(Number(formData.depositAmount)) || Number(formData.depositAmount) < 0) {
+      newErrors.depositAmount = "Deposit amount must be a non-negative number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    if (validateForm()) {
+      try {
+        const updatedFormData = {
+          ...formData,
+          mainRoute: selectedMainRoute,
+          subRoute: selectedSubRoute,
+        };
+  
+        if (isLocationSaved) {
+          // Include location only if saved
+          updatedFormData.location = formData.location;
+        }
+        
+        const response = await addCustomerAPI(updatedFormData);
+        if (response?.status === 201) {
+          toast.success("Customer added successfully");
+        } else {
+          toast.error("Something went wrong");
+        }
+  
+        setErrors({});
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.error("Error: Unable to submit form. Please try again.");
+      }
+    }
+  };
+
 
   return (
     <div className="m-3 bg-[#F5F6FA]">
@@ -348,14 +367,34 @@ const AddCustomer: React.FC = () => {
             </select>
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700">Location</label>
             <input type="text" name="location" value={formData.location.address} onChange={handleInputChange} className="w-full p-2 mt-1 border rounded-md" placeholder="Enter Location" />
             {errors.location && <p className="text-red-500 text-sm">{errors.location}</p>}
-          </div>
+          </div> */}
+           
+           
+            <button
+          type="button"
+          onClick={handleLocationFetch}
+          disabled={isGettingLocation}
+          className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}
+        >
+          {isGettingLocation ? "Fetching Location..." : "Save Location"}
+        </button>
 
-          <button type="submit" disabled={isGettingLocation} className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}>
-            {isGettingLocation ? "Getting Location..." : "Save"}
+        {/* Iframe for location display */}
+        {isLocationSaved && formData.location.coordinates.latitude && formData.location.coordinates.longitude && (
+  <iframe
+    src={`https://www.google.com/maps?q=${formData.location.coordinates.latitude},${formData.location.coordinates.longitude}&z=15&output=embed`}
+    width="100%"
+    height="300"
+    className="mt-4 border rounded-md"
+  ></iframe>
+)}
+
+          <button type="submit"  className="w-full bg-[#820000] text-white p-2 mt-4 rounded-md">
+           Save
           </button>
         </form>
       </div>
