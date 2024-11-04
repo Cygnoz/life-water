@@ -53,9 +53,9 @@ const SubHeader: React.FC<SubHeaderProps> = ({subhead}) => {
       </div>
 
       {/* Align the frame image to the end */}
-      <div className="ml-auto">
+      {/* <div className="ml-auto">
         <img src={frame} alt="Frame" />
-      </div>
+      </div> */}
     </div>
     </>
   );
