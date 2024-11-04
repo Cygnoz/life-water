@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import searchIcon from '../assets/images/search (2).svg';
 import plusIcon from '../assets/images/pluscircle.svg';
 import phone from '../assets/images/phone.png';
@@ -17,16 +17,16 @@ interface Customer {
   ratePerBottle: number;
   noOfBottles: number;
   logo: string;
-  mobileNo:string;
-  customerID:string;
-  subRoute:string;
-  mainRoute:string;
+  mobileNo: string;
+  customerID: string;
+  subRoute: string;
+  mainRoute: string;
   paymentMode: string;
   location: {
     address: string;
-    coordinates:{
-      coordinates:[number, number]// [longitude, latitude]
-    } ; 
+    coordinates: {
+      coordinates: [number, number]; // [longitude, latitude]
+    };
   };
 }
 
@@ -34,8 +34,8 @@ const ViewCustomers: React.FC = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
-  const [showLocation, setShowLocation] = useState(false); // Track if location iframe is shown
-
+  const [showLocation, setShowLocation] = useState(false);
+  const navigate = useNavigate();
   const defaultImage = 'https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png';
 
   useEffect(() => {
@@ -56,22 +56,25 @@ const ViewCustomers: React.FC = () => {
   );
 
   const handleOpen = (customer: Customer) => {
-    console.log('Customer coordinates:', customer);
+    console.log('Customer details:', customer);
     setSelectedCustomer(customer);
-    setShowLocation(false);
+    setShowLocation(!!customer.location?.coordinates); // Show location iframe only if coordinates are available
   };
-  
 
   const handleClose = () => {
     setSelectedCustomer(null);
-    setShowLocation(false); // Hide location iframe on close
+    setShowLocation(false);
   };
-
+  const handleEdit = () => {
+    if (selectedCustomer) {
+      navigate(`/editcustomer/${selectedCustomer._id}`);
+    }
+  };
   return (
     <>
       <div className="min-h-screen p-4 bg-gray-100">
         {/* Search and Add Customer UI */}
-        <div className="w-full max-w-md flex items-center justify-between px-4 mb-8">
+        <div className=" w-full max-w-md flex items-center justify-between px-4 mb-8">
           <div className="relative w-full flex items-center">
             <input
               type="text"
@@ -126,7 +129,9 @@ const ViewCustomers: React.FC = () => {
       </div>
 
       {/* Modal */}
-      <Modal
+     
+{/* Modal */}
+<Modal
   open={!!selectedCustomer}
   onClose={handleClose}
   aria-labelledby="modal-title"
@@ -142,64 +147,65 @@ const ViewCustomers: React.FC = () => {
       boxShadow: 24,
       m: 'auto',
       mt: { xs: 2, sm: 4, md: 6 },
-      textAlign: 'center', // Center-aligns all content inside the Box
+      textAlign: 'center',
     }}
   >
-   <div className="flex justify-end mb-5">
-    <button onClick={handleClose} className='bg-red-200 text-red p-2 rounded-full '>
-      <img src={close} alt="" />
-    </button>
-   </div>
-    <Typography 
-      id="modal-title" 
-      variant="h6" 
-      component="h2" 
-      fontWeight="bold"
-    >
-     <span className='text-red-700'> {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : ''}</span>
-      
+    <div className="flex justify-end mb-5">
+      <button onClick={handleClose} className="bg-red-200 text-red p-2 rounded-full">
+        <img src={close} alt="Close" />
+      </button>
+    </div>
+    <Typography id="modal-title" variant="h6" component="h2" fontWeight="bold">
+      <span className="text-red-700">
+        {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : ''}
+      </span>
     </Typography>
-    <Typography
-      id="modal-title" 
-      variant="h6" 
-      component="h2" 
-     >Customer ID : <span className='text-green-500'> {selectedCustomer?.customerID}</span></Typography>
+    <Typography id="modal-title" variant="h6" component="h2">
+      Customer ID : <span className="text-green-500"> {selectedCustomer?.customerID}</span>
+    </Typography>
 
     <Typography id="modal-description" sx={{ mt: 2 }}>
       {selectedCustomer && (
         <>
-          <p className='mb-2'><strong>Phone:</strong> {selectedCustomer.mobileNo}</p>
-          <p className='mb-2'><strong>Main Route:</strong> {selectedCustomer.mainRoute}</p>
-          <p className='mb-2'><strong>Sub Route:</strong> {selectedCustomer.subRoute}</p>
-          <p className='mb-2'><strong>Deposit Amount:</strong> {selectedCustomer.depositAmount}</p>
-          <p className='mb-2'><strong>Rate Per Bottle:</strong> {selectedCustomer.ratePerBottle}</p>
-          <p className='mb-2'><strong>No of Bottles:</strong> {selectedCustomer.noOfBottles}</p>
-          
-          
-          <button 
-            className="bg-red-800 text-white p-2 rounded-md mt-2 mx-auto" // Center-aligns the button with mx-auto
-            onClick={() => setShowLocation(true)} // Set showLocation to true to display iframe
-          >
-            GET LOCATION
-          </button>
+          <p className="mb-2">
+            <strong>Phone:</strong> {selectedCustomer.mobileNo}
+          </p>
+          <p className="mb-2">
+            <strong>Main Route:</strong> {selectedCustomer.mainRoute}
+          </p>
+          <p className="mb-2">
+            <strong>Sub Route:</strong> {selectedCustomer.subRoute}
+          </p>
+          <p className="mb-2">
+            <strong>Deposit Amount:</strong> {selectedCustomer.depositAmount}
+          </p>
+          <p className="mb-2">
+            <strong>Rate Per Bottle:</strong> {selectedCustomer.ratePerBottle}
+          </p>
+          <p className="mb-2">
+            <strong>No of Bottles:</strong> {selectedCustomer.noOfBottles}
+          </p>
         </>
       )}
     </Typography>
 
     {/* Conditional Rendering of Google Maps Iframe */}
-    {showLocation && selectedCustomer && (
-      <div className=" mt-4">
+    {showLocation && selectedCustomer?.location?.coordinates && (
+      <div className="mt-4">
         <iframe
           src={`https://www.google.com/maps?q=${selectedCustomer.location.coordinates.coordinates[1]},${selectedCustomer.location.coordinates.coordinates[0]}&output=embed`}
-          className="w-full h-[400px]"
+          className="w-full h-[350px]"
           allowFullScreen
           loading="lazy"
         ></iframe>
       </div>
     )}
+    <button onClick={handleEdit} className='px-6 py-3 mt-4 bg-[#820000] text-white rounded-lg'>
+                Edit
+              </button>
   </Box>
+  
 </Modal>
-
     </>
   );
 };
