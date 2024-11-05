@@ -47,11 +47,33 @@ interface ApiResponse {
 }
 
 interface CustomerData {
-  // Define the structure of the customer data here
-  name: string;
+  _id: string;
+  customerType: string;
+  companyName: string;
+  firstName: string;
+  lastName: string;
+  mobileNo: string;
+  whatsappNo: string;
   email: string;
-  // ...other customer fields
+  mainRoute: string;
+  subRoute: string;
+  noOfBottles: number;
+  ratePerBottle: number;
+  depositAmount: number;
+  paymentMode: string;
+  createdAt: string;
+  updatedAt: string;
+  customerID: string;
+  Location: {
+    coordinates: {
+      type: string;
+      coordinates: [number, number]; // Longitude and latitude
+    };
+    address: string;
+  };
+  __v: number;
 }
+
 
 const EditCustomer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -87,8 +109,10 @@ const EditCustomer: React.FC = () => {
     const fetchCustomerData = async () => {
       if (id) {
         try {
-          const response = await getACustomerAPI(id) as ApiResponse; // Assuming ApiResponse has a data property of type CustomerData
-          setCustomerData(response.data); // Pass only the relevant data to setCustomerData
+          const response = await getACustomerAPI(id) ; // Assuming ApiResponse has a data property of type CustomerData
+          setCustomerData(response as any); // Pass only the relevant data to setCustomerData
+          console.log(customerData);
+          
         } catch (error) {
           console.error("Error fetching customer data:", error);
           toast.error("Failed to fetch customer data");
