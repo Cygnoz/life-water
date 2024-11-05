@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import backbutton from '../assets/images/nav-item.png';
+import backbutton from "../assets/images/nav-item.png";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { getSubRoutesAPI } from "../services/StartRide/StartRide";
-import { getACustomerAPI, updateCustomerAPI } from "../services/customer/customerAPI";
+import {
+  getACustomerAPI,
+  updateCustomerAPI,
+} from "../services/customer/customerAPI";
 
 interface Route {
   _id: string;
@@ -37,6 +40,18 @@ interface CustomerData {
   subRoute: string;
   location: Location;
 }
+interface ApiResponse {
+  data: CustomerData; // Define `CustomerData` as the type you expect
+  status: number;
+  message: string;
+}
+
+interface CustomerData {
+  // Define the structure of the customer data here
+  name: string;
+  email: string;
+  // ...other customer fields
+}
 
 const EditCustomer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,16 +62,21 @@ const EditCustomer: React.FC = () => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+
   useEffect(() => {
     const fetchSubRoutes = async () => {
       try {
-        const response = await getSubRoutesAPI();
+        const response: Route[] = await getSubRoutesAPI();
         setRouteList(response);
-        const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
+
+        const uniqueMainRoutes: string[] = Array.from(
+          new Set(response.map((route: Route) => route.mainRoute))
+        );
+
         setMainRouteList(uniqueMainRoutes);
       } catch (error) {
-        console.error('Error fetching sub-route data:', error);
-        toast.error('Failed to fetch routes');
+        console.error("Error fetching sub-route data:", error);
+        toast.error("Failed to fetch routes");
       }
     };
 
@@ -67,23 +87,28 @@ const EditCustomer: React.FC = () => {
     const fetchCustomerData = async () => {
       if (id) {
         try {
-          const response = await getACustomerAPI(id);
-          setCustomerData(response);
+          const response = await getACustomerAPI(id) as ApiResponse; // Assuming ApiResponse has a data property of type CustomerData
+          setCustomerData(response.data); // Pass only the relevant data to setCustomerData
         } catch (error) {
           console.error("Error fetching customer data:", error);
-          toast.error('Failed to fetch customer data');
+          toast.error("Failed to fetch customer data");
         } finally {
           setIsLoading(false);
         }
       }
     };
+    
 
     fetchCustomerData();
   }, [id]);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = event.target;
-    setCustomerData((prevData) => prevData ? ({ ...prevData, [name]: value }) : null);
+    setCustomerData((prevData) =>
+      prevData ? { ...prevData, [name]: value } : null
+    );
   };
 
   const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
@@ -101,36 +126,47 @@ const EditCustomer: React.FC = () => {
   };
 
   const handleLocationFetch = async () => {
-    if (customerData?.location?.coordinates?.latitude && customerData?.location?.coordinates?.longitude) {
+    if (
+      customerData?.location?.coordinates?.latitude &&
+      customerData?.location?.coordinates?.longitude
+    ) {
       // Clear location if already saved
-      setCustomerData((prevData) => prevData ? ({
-        ...prevData,
-        location: {
-          address: "",
-          coordinates: {
-            latitude: null,
-            longitude: null,
-          },
-        },
-      }) : null);
+      setCustomerData((prevData) =>
+        prevData
+          ? {
+              ...prevData,
+              location: {
+                address: "",
+                coordinates: {
+                  latitude: null,
+                  longitude: null,
+                },
+              },
+            }
+          : null
+      );
       toast.info("Location cleared.");
     } else {
       // Fetch location if not saved
       try {
         setIsGettingLocation(true);
         const coords = await getCurrentLocation();
-        setCustomerData((prevData) => prevData ? ({
-          ...prevData,
-          location: {
-            address: "", // Set address if needed
-            coordinates: {
-              latitude: coords.latitude,
-              longitude: coords.longitude,
-            },
-          },
-        }) : null);
+        setCustomerData((prevData) =>
+          prevData
+            ? {
+                ...prevData,
+                location: {
+                  address: "", // Set address if needed
+                  coordinates: {
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                  },
+                },
+              }
+            : null
+        );
         console.log(customerData?.location);
-        
+
         toast.success("Location fetched successfully");
       } catch (error) {
         console.error("Error fetching location:", error);
@@ -145,7 +181,7 @@ const EditCustomer: React.FC = () => {
     event.preventDefault();
 
     if (!customerData) {
-      toast.error('No customer data to update');
+      toast.error("No customer data to update");
       return;
     }
 
@@ -161,36 +197,45 @@ const EditCustomer: React.FC = () => {
         depositAmount: Number(customerData.depositAmount),
         // Format location exactly as needed
         location: {
-          address: '',
+          address: "",
           coordinates: {
-            latitude: customerData.location?.coordinates?.latitude !== null ? 
-              Number(customerData.location.coordinates.latitude) : null,
-            longitude: customerData.location?.coordinates?.longitude !== null ? 
-              Number(customerData.location.coordinates.longitude) : null
-          }
-        }
+            latitude:
+              customerData.location?.coordinates?.latitude !== null
+                ? Number(customerData.location.coordinates.latitude)
+                : null,
+            longitude:
+              customerData.location?.coordinates?.longitude !== null
+                ? Number(customerData.location.coordinates.longitude)
+                : null,
+          },
+        },
       };
 
       // Add all fields to FormData
       Object.entries(cleanedCustomerData).forEach(([key, value]) => {
-        if (key === 'location') {
+        if (key === "location") {
           // Add location as a properly structured object
           formData.append(key, JSON.stringify(cleanedCustomerData.location));
         } else {
-          formData.append(key, value?.toString() || '');
+          formData.append(key, value?.toString() || "");
         }
       });
 
       const response = await updateCustomerAPI(customerData._id, formData);
-      console.log(formData);
-      
-      console.log(response);
 
-      toast.success('Customer updated successfully');
-      navigate('/viewcustomers');
+      toast.success("Customer updated successfully");
+      navigate("/viewcustomers");
+
+      console.log(formData);
+
+      console.log(response);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'An error occurred while updating the customer');
-      console.error('Error updating customer:', error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while updating the customer"
+      );
+      console.error("Error updating customer:", error);
     }
   };
 
@@ -215,7 +260,9 @@ const EditCustomer: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Customer Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">Customer Type</label>
+            <label className="block text-sm font-medium text-gray-700 mt-3 mb-3">
+              Customer Type
+            </label>
             <div className="flex space-x-4">
               <label className="flex items-center">
                 <input
@@ -243,7 +290,9 @@ const EditCustomer: React.FC = () => {
           {/* Company Name (for Business customers) */}
           {customerData.customerType === "Business" && (
             <div>
-              <label className="block text-[#303F58] font-[14px] mb-2">Company Name</label>
+              <label className="block text-[#303F58] font-[14px] mb-2">
+                Company Name
+              </label>
               <input
                 type="text"
                 name="companyName"
@@ -375,7 +424,10 @@ const EditCustomer: React.FC = () => {
 
           {/* Main Route */}
           <div className="space-y-1">
-            <label htmlFor="main-route" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="main-route"
+              className="text-sm font-medium text-gray-700"
+            >
               Main Route
             </label>
             <select
@@ -396,7 +448,10 @@ const EditCustomer: React.FC = () => {
 
           {/* Sub Route */}
           <div className="space-y-1">
-            <label htmlFor="sub-route" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="sub-route"
+              className="text-sm font-medium text-gray-700"
+            >
               Sub Route
             </label>
             <select
@@ -409,39 +464,47 @@ const EditCustomer: React.FC = () => {
             >
               <option value="">Select Sub Route</option>
               {routesList
-                .filter(route => route.mainRoute === customerData.mainRoute)
+                .filter((route) => route.mainRoute === customerData.mainRoute)
                 .map((route) => (
                   <option key={route._id} value={route.subRoute}>
                     {route.subRoute}
                   </option>
-                ))
-              }
+                ))}
             </select>
           </div>
 
           {/* Location Map */}
-          {customerData.location?.coordinates?.latitude && customerData.location?.coordinates?.longitude && (
-            <iframe
-              src={`https://www.google.com/maps?q=${customerData.location.coordinates.latitude},${customerData.location.coordinates.longitude}&z=15&output=embed`}
-              width="100%"
-              height="300"
-              className="mt-4 border rounded-md"
-            ></iframe>
-          )}
+          {customerData.location?.coordinates?.latitude &&
+            customerData.location?.coordinates?.longitude && (
+              <iframe
+                src={`https://www.google.com/maps?q=${customerData.location.coordinates.latitude},${customerData.location.coordinates.longitude}&z=15&output=embed`}
+                width="100%"
+                height="300"
+                className="mt-4 border rounded-md"
+              ></iframe>
+            )}
           {/* Location Fetch Button */}
           <button
             type="button"
             onClick={handleLocationFetch}
             disabled={isGettingLocation}
-            className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${isGettingLocation ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`w-full bg-[#820000] text-white p-2 mt-4 rounded-md ${
+              isGettingLocation ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
-            {isGettingLocation ? "Fetching Location..." : 
-              (customerData.location?.coordinates?.latitude && customerData.location?.coordinates?.longitude ? "Clear Location" : "Save Location")}
+            {isGettingLocation
+              ? "Fetching Location..."
+              : customerData.location?.coordinates?.latitude &&
+                customerData.location?.coordinates?.longitude
+              ? "Clear Location"
+              : "Save Location"}
           </button>
 
-
           {/* Submit Button */}
-          <button type="submit" className="w-full bg-[#820000] text-white p-2 mt-4 rounded-md">
+          <button
+            type="submit"
+            className="w-full bg-[#820000] text-white p-2 mt-4 rounded-md"
+          >
             Save
           </button>
         </form>

@@ -54,15 +54,15 @@ const AddStartRide: React.FC = () => {
       try {
         const response = await getSubRoutesAPI();
         setRouteList(response);
- 
-        // Extract unique main routes
-        const uniqueMainRoutes = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
+  
+        // Ensure uniqueMainRoutes is typed correctly
+        const uniqueMainRoutes: string[] = Array.from(new Set(response.map((route: Route) => route.mainRoute)));
         setMainRouteList(uniqueMainRoutes);
       } catch (error) {
         console.error('Error fetching sub-route data:', error);
       }
     };
- 
+  
     fetchSubRoutes();
   }, []);
  
@@ -82,14 +82,14 @@ const AddStartRide: React.FC = () => {
   useEffect(() => {
     const fetchVehicle = async () => {
       try {
-        const apiResponse = await getVehicleAPI();
+        const apiResponse = await getVehicleAPI() as Vehicle[]; // Ensure correct typing
         setVehicleList(apiResponse);
       } catch (error) {
         console.error("Error fetching vehicle data:", error);
         setVehicleList([]);
       }
     };
- 
+  
     fetchVehicle();
   }, []);
  
@@ -111,9 +111,9 @@ const AddStartRide: React.FC = () => {
     const newActiveRoute = {
       mainRoute: selectedMainRoute,
       subRoute: selectedSubRoute,
-      helper: document.getElementById('helper')?.value,
-      driver: document.getElementById('driver')?.value,
-      vehicleNo: document.getElementById('vehicle')?.value,
+      helper: (document.getElementById('helper') as HTMLSelectElement)?.value,
+      driver: (document.getElementById('driver') as HTMLSelectElement)?.value,
+      vehicleNo: (document.getElementById('vehicle') as HTMLSelectElement)?.value,      
       openingStock,
       loadedStock,
       totalStock,
@@ -124,7 +124,7 @@ const AddStartRide: React.FC = () => {
     try {
       const response = await addActiveRouteAPI(newActiveRoute);
       console.log('ActiveRoute created successfully:', response);
-      const { driver , vehicleNo , mainRoute , loadedStock , Salesman, subRoute , startingKm} = response?.data
+      const { driver, vehicleNo, mainRoute, loadedStock, subRoute, startingKm } = response?.data;
       const  activeRouteId = response?.data?._id
       localStorage.setItem("activeRouteId", activeRouteId)
       localStorage.setItem("driver", driver); // Replace driverValue with the actual driver data

@@ -62,21 +62,21 @@ const EndRide: React.FC = () => {
 
   const handleEndRideSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!storedID) {
       toast.error("No active route ID found.");
       return;
     }
-
+  
     const payload = {
       activeRouteId: storedID,
-      salesMan: storedUsername,
-      driver: storeddriver,
-      vehicleNo: storedvehicle,
-      mainRoute: storedmainRoute,
-      stock: storedstock,
-      subRoute:storedSubRoute,
-    
+      salesMan: storedUsername ?? "",    // Fallback to empty string if null
+      driver: storeddriver ?? "",
+      vehicleNo: storedvehicle ?? "",
+      mainRoute: storedmainRoute ?? "",
+      stock: storedstock ?? "",
+      subRoute: storedSubRoute ?? "",
+  
       endingKM: parseFloat(endingKM),
       travelledKM: parseFloat(travelledKM),
       expenses: expenses.map(({ remarks, amount }) => ({
@@ -84,19 +84,20 @@ const EndRide: React.FC = () => {
         amount: amount.toString(),
       })),
     };
-
+  
     try {
       const response = await endRideAPI(payload);
-      console.log('End ride response:', response);
-      toast.success('Ride ended successfully');
+      console.log("End ride response:", response);
+      toast.success("Ride ended successfully");
       setEndingKM("");
       setTravelledKM("");
-      setExpenses([{ id: 1, remarks: '', amount: '' }]);
+      setExpenses([{ id: 1, remarks: "", amount: "" }]);
     } catch (error) {
-      console.error('Error ending ride:', error);
-      toast.error('Failed to end the ride');
+      console.error("Error ending ride:", error);
+      toast.error("Failed to end the ride");
     }
   };
+  
 console.log(storeddriver , storedmainRoute ,storedstock ,storedvehicle);
 
   return (
