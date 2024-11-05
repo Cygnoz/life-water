@@ -10,13 +10,13 @@ const MyComponent: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         
         {/* Sales and Purchases Card */}
-        <div className="bg-gray-100 rounded-lg shadow-lg p-6">
+        <div className="bg-gray-100 rounded-lg  p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Sales and Purchase</h2>
           <SalesAndPurchases />
         </div>
         
         {/* Total Customers Card */}
-        <div className="bg-gray-100 rounded-lg shadow-lg p-6">
+        <div className="bg-gray-100 rounded-lg  p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Total Customers</h2>
           <PieChart />
         </div>
@@ -24,8 +24,7 @@ const MyComponent: React.FC = () => {
       </div>
 
       {/* Full-width Sales by Payment Mode Card */}
-      <div className="bg-gray-100rounded-lg shadow-lg p-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Top Customers by Sales Volume</h2>
+      <div className="bg-gray-100rounded-lg  p-6">
         <SalesbyPaymentMode />
       </div>
     </div>

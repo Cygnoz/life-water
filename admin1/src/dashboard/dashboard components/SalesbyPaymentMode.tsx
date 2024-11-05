@@ -78,7 +78,7 @@ const CustomBar = (props: any) => {
 
 export default function SalesbyPaymentMode() {
   return (
-    <div className="w-full px-2">
+    <div className="w-full ">
       <div className="px-10">
         <h3 className="text-[16px] font-bold">Top Sales by Payment Mode</h3>
         <h4 className="py-4 text-[10px] text-[#4A5568]">Payment mode Volume</h4>
