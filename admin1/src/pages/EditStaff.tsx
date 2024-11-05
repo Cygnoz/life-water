@@ -170,7 +170,7 @@ const EditStaff: React.FC = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Mobile Number *</label>
                   <input
-                    required
+                    
                     type="text"
                     className="mt-1 p-2 h-[36px] border border-gray-300 rounded-lg w-full"
                     name="mobileNumber"
@@ -202,7 +202,7 @@ const EditStaff: React.FC = () => {
                 {/* Visa Status */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Visa Status *</label>
-                  <select required  className="mt-1 p-2 border  h-[36px] border-gray-300 rounded-lg w-full" name="visaStatus" value={staff?.visaStatus || ""} onChange={handleSelectChange}>
+                  <select   className="mt-1 p-2 border  h-[36px] border-gray-300 rounded-lg w-full" name="visaStatus" value={staff?.visaStatus || ""} onChange={handleSelectChange}>
                     <option value="">Enter Visa Status</option>
                     <option value="Valid">Valid</option>
                     <option value="Expired">Expired</option>
@@ -276,15 +276,15 @@ const EditStaff: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700">Designation *</label>
                   <div className="flex flex-col space-y-1 mt-2">
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Sales" checked={staff?.designation === "Sales"} onChange={handleInputChange} className="form-radio  h-[36px]" />
+                      <input  type="radio" name="designation" value="Sales" checked={staff?.designation === "Sales"} onChange={handleInputChange} className="form-radio  h-[36px]" />
                       <span className="ml-2">Salesman</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Driver" checked={staff?.designation === "Driver"} onChange={handleInputChange} className="form-radio" />
+                      <input  type="radio" name="designation" value="Driver" checked={staff?.designation === "Driver"} onChange={handleInputChange} className="form-radio" />
                       <span className="ml-2">Driver</span>
                     </label>
                     <label className="inline-flex items-center">
-                      <input required type="radio" name="designation" value="Helper" checked={staff?.designation === "Helper"} onChange={handleInputChange} className="form-radio" />
+                      <input  type="radio" name="designation" value="Helper" checked={staff?.designation === "Helper"} onChange={handleInputChange} className="form-radio" />
                       <span className="ml-2">Helper</span>
                     </label>
                   </div>

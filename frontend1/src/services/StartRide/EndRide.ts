@@ -1,6 +1,10 @@
 import axios from "axios";
 import { BASEURL } from "../BaseURL";
-
+interface ApiResponse {
+  success: boolean;
+  message: string;
+  // Add other fields as necessary based on the actual API response
+}
 export const getActiveRouteAPI = async () => {
     try {
       const response = await axios.get(`${BASEURL}/api/getActiveRoutes`, {

@@ -10,6 +10,7 @@ import { Box, Modal, Typography } from '@mui/material';
 
 interface Customer {
   id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   message: string;

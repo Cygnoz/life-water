@@ -35,16 +35,16 @@ const Header: React.FC = () => {
       </div>
       
       {/* Company Select Dropdown */}
-      <div className="justify-start items-start flex">
+      {/* <div className="justify-start items-start flex">
         <div className="px-3 py-2.5 bg-[#f7e7ce] rounded-lg border border-[#585953] justify-center items-center gap-1 flex">
           
           <select id="company-select" className="ml-2 bg-[#f7e7ce] border-none text-[#585953]">
             <option value="company">Company</option>
             <option value="company">Company</option>
-            {/* Add more options if needed */}
+         
           </select>
         </div>
-      </div>
+      </div> */}
 
       {/* Icons and Profile */}
       <div className="h-6 justify-start items-center gap-4 flex">
