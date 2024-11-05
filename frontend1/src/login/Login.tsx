@@ -1,47 +1,53 @@
+// Login.tsx
 import React, { useState } from "react"
 import gmail from "../assets/images/Gmail.svg"
 import lock from "../assets/images/lock.svg"
-import { loginStaffAPI } from "../services/login/loginApi" // Adjust the import path according to your project structure
+import { loginStaffAPI } from "../services/login/loginApi"
 import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css" // Import the styles
+import "react-toastify/dist/ReactToastify.css"
 import { useNavigate } from "react-router-dom"
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  
-
   const navigate = useNavigate()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
-    const loginData = { username, password };
-  
+
+    if (!username || !password) {
+      toast.error("Please enter both username and password");
+      return;
+    }
+
     try {
-      const response = await loginStaffAPI(loginData);
-      if (response.status === 200) {
-        const { firstname, _id ,profile } = response.staff; // Extract firstname and _id
+      const response = await loginStaffAPI({ username, password });
+      
+      // The server returns a 200 status in the response body
+      if (response && response.staff) {
+        const { firstname, _id, profile } = response.staff;
+        
+        // Store user data
         localStorage.setItem("username", username);
-        localStorage.setItem("firstname", firstname); // Store firstname in localStorage
-        localStorage.setItem("profile", profile); // Store firstname in localStorage
-        localStorage.setItem("_id", _id); // Store _id in localStorage
-  
-        toast.success("Login successful!");
+        localStorage.setItem("firstname", firstname);
+        localStorage.setItem("profile", profile);
+        localStorage.setItem("_id", _id);
+
+        // Show success message
+        toast.success(response.message || "Login successful!");
+        
+        // Navigate after a brief delay
         setTimeout(() => {
           navigate("/start");
         }, 2000);
       } else {
-        console.log("Login failed:", response);
-        toast.error("Login failed. Please check your credentials.");
+        toast.error("Invalid credentials");
       }
-    } catch (error: any) {
-      console.error("Login failed:", error);
-      toast.error("Login failed. Please check your credentials.");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
     }
   };
-  
-  
   
 
   return (
