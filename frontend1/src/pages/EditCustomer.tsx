@@ -40,11 +40,11 @@ interface CustomerData {
   subRoute: string;
   location: Location;
 }
-interface ApiResponse {
-  data: CustomerData; // Define `CustomerData` as the type you expect
-  status: number;
-  message: string;
-}
+// interface ApiResponse {
+//   data: CustomerData; // Define `CustomerData` as the type you expect
+//   status: number;
+//   message: string;
+// }
 
 interface CustomerData {
   _id: string;
