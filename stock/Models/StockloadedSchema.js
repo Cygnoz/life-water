@@ -14,21 +14,39 @@ const stockSchema = new mongoose.Schema({
   mainRoute: {
     type: String,
   },
-  // filledBottles: {
-  //   type: Number,
-  //   required: true
-  // },
-  // emptyBottles: {
-  //   type: Number,
-  //   default: 0
-  // },
+  subRoute: {
+    type: String,
+  },
+  warehouse: {
+    type: String,
+  },
   items: [{
-    itemName: String,
-    quantity: Number,
-    totalQuantity: Number
+    itemName: {
+      type: String,
+    },
+    quantity: {
+      type: Number,
+      min: 0
+    },
+    amount: {
+      type: Number,
+      min: 0
+    },
+    rate: {
+      type: Number,
+      min: 0
+    }  
+    
   }],
-  autoNotes: String,
-  termsAndConditions: String
+
+  notes: {
+    type: String
+  },
+  
+  termsAndConditions: {
+    type: String
+  }
+
 });
 
 // Virtual for calculating total stock
