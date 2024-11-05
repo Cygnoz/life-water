@@ -16,6 +16,7 @@ import rout from "../assets/images/rout.svg";
 
 import { BASEURL } from "../services/BaseURL";
 import { useNavigate } from "react-router-dom";
+import { Box, Modal, Typography } from "@mui/material";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -50,6 +51,25 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 console.log(storedProfile);
 
+const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 300,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  const handleLogout =()=>{
+    localStorage.clear()
+    navigate('/')
+  }
   return (
     <>
       <div className="fixed top-0 left-0 w-full h-[60px] bg-white shadow-lg z-50 flex items-center justify-between p-4">
@@ -81,6 +101,7 @@ console.log(storedProfile);
           ) : null}
          {storedProfile ? (
     <img 
+    onClick={handleOpen}
       className="object-cover w-11 h-11 rounded-full" 
       src={`${BASEURL}/uploads/${storedProfile}`} 
       alt="Profile"
@@ -260,6 +281,24 @@ console.log(storedProfile);
           </ul>
         </nav>
       </div>
+
+ 
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+           Do you want to logout ?
+          </Typography>
+          <div className="flex gap-4 justify-center mt-5">
+          <button onClick={handleClose} className="px-6 py-3 bg-gray-500 text-white rounded-lg">Cancel</button>
+          <button onClick={handleLogout} className="px-6 py-3 bg-red-800 text-white rounded-lg">Logout</button>
+          </div>
+        </Box>
+      </Modal>
     </>
   );
 };
