@@ -1,6 +1,6 @@
 const LoadedStock = require('../Models/StockloadedSchema');
 const Transfer = require('../Models/TransferSchema');
-const WarehouseStock = require('../Models/WStockSchema');
+const WStock = require('../Models/WStockSchema');
 
 const getAllStock = async (req, res) => {
   try {
@@ -12,84 +12,128 @@ const getAllStock = async (req, res) => {
 };
 
 const addStock = async (req, res) => {
-  try {
-    const {mainRoute, warehouse, date, transferNumber, items, autoNotes, termsAndConditions} = req.body;
+  // try {
+  //   const {mainRoute, subRoute,  warehouse, date, transferNumber, items, autoNotes, termsAndConditions} = req.body;
 
-    // Check if warehouse exists
-    const warehouseExists = await WarehouseStock.findOne({ warehouse: warehouse });
-    if (!warehouseExists) {
-      return res.status(404).json({ 
+  //   // Check if warehouse exists
+  //   const warehouseExists = await WarehouseStock.findOne({ warehouse: warehouse });
+  //   if (!warehouseExists) {
+  //     return res.status(404).json({ 
+  //       success: false,
+  //       message: `Warehouse '${warehouse}' not found` 
+  //     });
+  //   }
+  //   else{
+  //     // await updateWarehouseStock({ warehouseName: warehouse, items });
+  //     const updateResult = await updateWarehouseStock({ warehouseName: warehouse, items });
+  //     if (!updateResult.success) {
+  //       return res.status(400).json({
+  //       success: false,
+  //       message: updateResult.message
+  //       });
+  //     }
+  //     console.log(items);
+      
+  //     const stock = new LoadedStock({
+  //       transferNumber,
+  //       date,
+  //       mainRoute,
+  //       subRoute,
+  //       warehouse,
+  //       items,
+  //       autoNotes,
+  //       termsAndConditions
+  //     });
+  //     const newStock = await stock.save();
+  //     res.status(201).json({
+  //       success: true,
+  //       data: newStock
+  //     });
+  //   }
+
+  //   // // Check and update stock for each item
+  //   // for (const itemName of items) {
+  //   //   const warehouseItem = warehouseExists.inventory.find(
+  //   //     inv => inv.itemId.toString() === itemName.itemId.toString()
+  //   //   );
+
+  //   //   if (!warehouseItem) {
+  //   //     return res.status(400).json({
+  //   //       success: false,
+  //   //       message: `Item ${item.itemName} not found in warehouse inventory`
+  //   //     });
+  //   //   }
+
+  //   //   if (warehouseItem.quantity < item.quantity) {
+  //   //     return res.status(400).json({
+  //   //       success: false,
+  //   //       message: `Insufficient stock for ${item.itemName}. Available: ${warehouseItem.quantity}, Requested: ${item.quantity}`
+  //   //     });
+  //   //   }
+
+  //   //   // Reduce stock quantity
+  //   //   warehouseItem.quantity -= item.quantity;
+  //   // }
+
+  //   // // Save updated warehouse inventory
+  //   // await warehouseExists.save();
+
+  //   // Create new stock entry
+
+
+  // } catch (error) {
+  //   console.error('Error adding stock:', error);
+  //   res.status(400).json({ 
+  //     success: false,
+  //     message: error.message 
+  //   });
+  // }
+  try {
+    const {mainRoute, subRoute,  warehouse, date, transferNumber, items, autoNotes, termsAndConditions} = req.body;
+
+    // Validate required fields
+    if (!transferNumber || !items || !items.length) {
+      return res.status(400).json({
         success: false,
-        message: `Warehouse '${warehouse}' not found` 
+        message: 'Missing required fields'
       });
     }
-    else{
-      // await updateWarehouseStock({ warehouseName: warehouse, items });
-      const updateResult = await updateWarehouseStock({ warehouseName: warehouse, items });
-      if (!updateResult.success) {
-        return res.status(400).json({
-        success: false,
-        message: updateResult.message
-        });
-      }
-      console.log(items);
-      
-      const stock = new LoadedStock({
+    const warehouseExists = await WStock.findOne({ warehouseName: warehouse });
+    if (!warehouseExists) {
+            // Create new stock entry
+    const stock = new LoadedStock({
         transferNumber,
         date,
         mainRoute,
-        items: items.map(item => ({
-          itemName: item.itemName,
-          quantity: item.quantity
-        })),
+        subRoute,
+        warehouse,
+        items,
         autoNotes,
         termsAndConditions
       });
-      const newStock = await stock.save();
-      res.status(201).json({
-        success: true,
-        data: newStock
-      });
+
+    await stock.save();
+
+    res.status(201).json({
+      success: true,
+      data: stock
+    });
+    }
+    else{
+      await updateWarehouseStock({ warehouseName: warehouse, items });
     }
 
-    // // Check and update stock for each item
-    // for (const itemName of items) {
-    //   const warehouseItem = warehouseExists.inventory.find(
-    //     inv => inv.itemId.toString() === itemName.itemId.toString()
-    //   );
-
-    //   if (!warehouseItem) {
-    //     return res.status(400).json({
-    //       success: false,
-    //       message: `Item ${item.itemName} not found in warehouse inventory`
-    //     });
-    //   }
-
-    //   if (warehouseItem.quantity < item.quantity) {
-    //     return res.status(400).json({
-    //       success: false,
-    //       message: `Insufficient stock for ${item.itemName}. Available: ${warehouseItem.quantity}, Requested: ${item.quantity}`
-    //     });
-    //   }
-
-    //   // Reduce stock quantity
-    //   warehouseItem.quantity -= item.quantity;
-    // }
-
-    // // Save updated warehouse inventory
-    // await warehouseExists.save();
-
-    // Create new stock entry
-
-
   } catch (error) {
-    console.error('Error adding stock:', error);
-    res.status(400).json({ 
+    res.status(500).json({
       success: false,
-      message: error.message 
+      message: "iyyane preshnam"
+  
+    
     });
   }
 };
+
+
 
 const getStockStats = async (req, res) => {
   try {
@@ -311,6 +355,8 @@ const updateWarehouseStock = async ({ warehouseName, items }) => {
 //     throw error;
 //   }
 // };
+
+
 
 
 module.exports = {
