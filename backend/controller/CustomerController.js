@@ -132,16 +132,19 @@ const addCustomerFromSalesman = async (req, res) => {
       location
     } = req.body;
 
-    // Transform location only if it's provided
-    const transformedLocation = location ? {
-      address: location.address,
-      coordinates: {
-        type: "Point",
-        coordinates: [location.coordinates.longitude, location.coordinates.latitude]
-      }
-    } : undefined;
+    // Transform location only if it's provided and contains valid coordinates
+    let transformedLocation;
+    if (location && location.coordinates && location.coordinates.latitude && location.coordinates.longitude) {
+      transformedLocation = {
+        address: location.address || '', // Default to empty string if address is not provided
+        coordinates: {
+          type: "Point",
+          coordinates: [location.coordinates.longitude, location.coordinates.latitude]
+        }
+      };
+    }
 
-    // Create a new customer document, conditionally adding location if it's present
+    // Create a new customer document
     const newCustomer = new Customer({
       customerType,
       companyName,
@@ -156,7 +159,7 @@ const addCustomerFromSalesman = async (req, res) => {
       depositAmount,
       mainRoute,
       subRoute,
-      ...(transformedLocation && { location: transformedLocation })
+      location: transformedLocation // This will be undefined if location is not provided
     });
 
     const savedCustomer = await newCustomer.save();
@@ -166,6 +169,7 @@ const addCustomerFromSalesman = async (req, res) => {
     res.status(500).json({ message: 'Error adding customer', error: error.message });
   }
 };
+
 
 
 
@@ -197,10 +201,29 @@ const getCustomerById = async (req, res) => {
 // Update a customer by ID
 const updateCustomerById = async (req, res) => {
   try {
-    // Check if a file (logo) is uploaded
+    // Clone the request body into updatedData
     let updatedData = { ...req.body };
+    console.log('Updated Data:', updatedData);
+
+    // Check if a file (logo) is uploaded and add it to updatedData
     if (req.file) {
-      updatedData.logo = req.file.filename;  // Store the uploaded file's name in the logo field
+      updatedData.logo = req.file.filename;
+    }
+
+    // Parse location if it's a string and transform it
+    if (typeof req.body.location === 'string') {
+      req.body.location = JSON.parse(req.body.location);
+    }
+
+    if (req.body.location) {
+      const { address, coordinates } = req.body.location;
+      updatedData.location = {
+        address,
+        coordinates: {
+          type: "Point",
+          coordinates: [coordinates.longitude, coordinates.latitude] // [longitude, latitude]
+        }
+      };
     }
 
     // Update the customer in the database
@@ -218,6 +241,7 @@ const updateCustomerById = async (req, res) => {
     return res.status(500).json({ message: 'Error updating customer', error });
   }
 };
+
 
 // Controller to edit a customer from Salesman module
 const editCustomerFromSalesman = async (req, res) => {

@@ -59,3 +59,18 @@ export const getACustomerAPI = async (id: string): Promise<ApiResponse> => {
     return { message: error.message || "An unexpected error occurred." }; // Fallback error message
   }
 };
+
+
+
+export const updateCustomerAPI = async (id: string, formData: FormData) => {
+  try {
+    const response = await axios.put(`${BASEURL}/api/editcustomer/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the correct content type for form data
+      },
+    });
+    return response.data; // Return the response data
+  } catch (error: any) {
+    throw new Error(error.response?.data?.message || 'Failed to update customer');
+  }
+};
