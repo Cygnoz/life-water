@@ -29,8 +29,10 @@ COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy SSL certificates into the container
-COPY /path/to/your/fullchain.pem /etc/ssl/certs/fullchain.pem
-COPY /path/to/your/privkey.pem /etc/ssl/private/privkey.pem
+# Copy SSL certificates into the container
+COPY ssl_certs/fullchain.pem /etc/ssl/certs/fullchain.pem
+COPY ssl_certs/privkey.pem /etc/ssl/private/privkey.pem
+
 
 # Expose HTTP and HTTPS ports
 EXPOSE 80
