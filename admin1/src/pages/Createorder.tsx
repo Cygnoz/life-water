@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import shopping from '../assets/shopping-bag_6948334 1.svg'
 import packing from '../assets/images/Group.svg'
 import processing from '../assets//images/packing_customer.svg'
 import delivery from '../assets/images/delivery-box.svg'
 import plus from '../assets/circle-plus.svg'
 import eye from '../assets/images/eye.svg'
-import dot from '../assets/ellipsis-vertical.svg'
 import printer from '../assets/images/printer.svg'
 import trash from '../assets/images/trash.svg'
 import split from '../assets/images/list-filter.svg'
@@ -13,6 +12,9 @@ import search from "../assets/images/search.svg"
 
 
 import { useNavigate } from 'react-router-dom'
+import { deleteOrderAPI, getOrderAPI } from '../services/OrderAPI/OrderAPI'
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
 
 
 
@@ -27,8 +29,104 @@ const CreateOrder: React.FC = () => {
     navigate('/vieworder')
   }
 
+  // const [orders, setOrders] = useState<ApiResponse[]>([]); // State to store order data
+  
+  // useEffect(() => {
+  //   // Fetch all orders on component mount
+  //   const fetchOrders = async () => {
+  //     try {
+  //       const data = await getOrderAPI();
+  //       setOrders(data); // Set the fetched data to the orders state
+  //     } catch (error) {
+  //       console.error("Failed to fetch orders:", error);
+  //     }
+  //   };
+  //   fetchOrders();
+  // }, []);
+  interface Item {
+    itemName: string;
+    quantity: number;
+    rate: number;
+    amount: number;
+  }
+
+  interface OrderDetails {
+    _id: string;
+    customer: string;
+  salesman: string;
+  warehouse:string,
+  date: string;
+  orderNumber: string;
+  paymentMode: string;
+  items: Item[];
+  notes: string;
+  termsAndCondition: string;
+  }
+
+  const [orders, setOrders]= useState<OrderDetails[]>([])
+  // const [filteredOrder, setFilteredOrder] = useState<OrderDetails[]>([])
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await getOrderAPI();
+        console.log("Full API Response:", response); // Check the response
+        setOrders(response); // Store full staff list
+        // setFilteredOrder(response)
+      } catch (error:any) {
+        console.error("Error fetching staff data:", error);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteOrderAPI(id);
+      // Remove the deleted order from the local state
+      setOrders(orders.filter((order) => order._id!== id));
+      toast.success('Order deleted successfully')
+      // alert("Order deleted successfully");
+    } catch (error) {
+      // alert("Failed to delete order");
+      toast.error('Failed to delete order')
+    }
+  };
+
+
+  // const [orders, setOrders] = useState([]);
+
+  // useEffect(() => {
+  //   // Fetch orders when component mounts
+  //   const fetchOrders = async () => {
+  //     try {
+  //       const ordersData = await getOrderAPI();
+  //       setOrders(ordersData.data);
+  //     } catch (error) {
+  //       console.error("Error fetching orders:", error);
+  //     }
+  //   };
+
+  //   fetchOrders();
+  // }, []);
+
+
   return (
     <div className="flex min-h-screen w-full">
+              <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+
       
       <div>
         <div className="p-2">
@@ -116,7 +214,6 @@ const CreateOrder: React.FC = () => {
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Date</th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Order No</th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Customer Name</th>
-                  <th className="p-2 text-[12px] text-center text-[#303F58]">Mobile</th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Item</th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Amount</th>
                   <th className="p-2 text-[12px] text-center text-[#303F58]">Salesman</th>
@@ -124,7 +221,27 @@ const CreateOrder: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
+                {orders.map((order,index)=>(
+                                  <tr className="border-b">
+                                  <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{index + 1}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.date.split('T')[0]}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.orderNumber}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.customer}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.items.map((item)=>(item.itemName))}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.items.map((item)=>(item.amount))}</td>
+                                    <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.salesman}</td>
+                                    <td className="p-2 text-[14] text-center">
+                                    <button onClick={handleView} className="text-blue-500">
+                                        <img src={eye} alt="" />
+                                      </button>
+                                      <button onClick={() => handleDelete(order._id)} className="text-red-500 ml-2"><img src={trash} alt="" /></button>
+                  
+                                    </td>
+                                  </tr>
+                  
+                ))}
+                {/* <tr className="border-b">
                 <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16"> <input type="checkbox" /></td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">1</td>
                   <td className="p-2 text-[14] text-center text-[#4B5C79]">15 May 2023</td>
@@ -141,7 +258,7 @@ const CreateOrder: React.FC = () => {
                     <button className="text-red-500 ml-2"><img src={trash} alt="" /></button>
 
                   </td>
-                </tr>
+                </tr> */}
                 
               </tbody>
             </table>
