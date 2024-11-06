@@ -3,13 +3,62 @@ import packing from "../../../assets/images/Group 2507.png";
 import processing from "../../../assets//images/Group 2508.png";
 import delivery from "../../../assets/images/Group 2509.png";
 import plus from "../../../assets/circle-plus.svg";
-import dot from "../../../assets/ellipsis-vertical.svg";
+
 import printer from "../../../assets/images/printer.svg";
 import split from "../../../assets/images/list-filter.svg";
 import search from "../../../assets/images/search.svg";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getAllStockloaded } from "../../../services/StockAPI/StockLoadedAPI";
 
 const StockLoaded: React.FC = () => {
+  const [stockload, setStockload] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const itemsPerPage = 10;
+
+  
+  useEffect(() => {
+    const fetchStockloads = async () => {
+      try {
+        const stockloadData = await getAllStockloaded();
+        setStockload(stockloadData);
+        console.log(stockloadData);
+        
+      } catch (error) {
+        setError('Failed to fetch unloads. Please try again later.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStockloads();
+  }, []);
+
+  const filteredStockloads = stockload.filter((stock) =>
+    stock.transferNumber.toLowerCase().includes(searchTerm.toLowerCase()),
+  
+  );
+
+  const totalPages = Math.ceil(filteredStockloads.length / itemsPerPage);
+  const paginatedData = filteredStockloads.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  
   return (
     <div>
       <div className="flex min-h-screen w-full">
@@ -22,7 +71,7 @@ const StockLoaded: React.FC = () => {
                   Stock Loaded
                 </h3>
                 <p className="text-[#4B5C79]">
-                  Lorem ipsum dolor sit amet consectetur{" "}
+                View detailed information about all stock items loaded across various periods{" "}
                 </p>
               </div>
               <div className="flex justify-between">
@@ -43,7 +92,7 @@ const StockLoaded: React.FC = () => {
                   Total Stock Load
                 </div>
                 <p className="text-[#4B5C79] w-[400] text-[12]">
-                  Lorem ipsum dolor sit amet consectetur{" "}
+                Total number of stock items loaded this month{" "}
                 </p>
                 <div className="w-[700px] text-[#820000] font-bold  leading-normal text-[18px] mt-3">
                   120
@@ -56,7 +105,7 @@ const StockLoaded: React.FC = () => {
                   Today Stock Loaded
                 </div>
                 <p className="text-[#4B5C79] w-[400] text-[12]">
-                  Lorem ipsum dolor sit amet consectetur{" "}
+                Number of stock items loaded today{" "}
                 </p>
 
                 <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
@@ -70,7 +119,7 @@ const StockLoaded: React.FC = () => {
                   Week Stock Loaded
                 </div>
                 <p className="text-[#4B5C79] w-[400] text-[12]">
-                  Lorem ipsum dolor sit amet consectetur{" "}
+                Total number of stock items loaded this week.{" "}
                 </p>
                 <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
                   10
@@ -83,7 +132,7 @@ const StockLoaded: React.FC = () => {
                   This Month
                 </div>
                 <p className="text-[#4B5C79] w-[400] text-[12]">
-                  Lorem ipsum dolor sit amet consectetur{" "}
+                Total number of stock items loaded in the current month.{" "}
                 </p>
                 <div className="w-[700px] text-[#820000] font-bold leading-normal text-[18px] mt-3">
                   12
@@ -105,6 +154,8 @@ const StockLoaded: React.FC = () => {
                     boxShadow: "none",
                   }}
                   placeholder="Search Stock"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                 />
                 <div className="flex w-[60%] justify-end">
                   <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
@@ -142,29 +193,56 @@ const StockLoaded: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b">
-                    <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16">
-                      {" "}
-                      <input type="checkbox" />
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      1
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      15 May 2023
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      IN-44
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      89
-                    </td>
-                    <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                      Kakka
-                    </td>
-                  </tr>
+                  {paginatedData.map((stock,index)=>(
+                     <tr className="border-b">
+                     <td className="p-2 text-[14px] text-center text-[#4B5C79] w-16">
+                       {" "}
+                       <input type="checkbox" />
+                     </td>
+                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                     {index + 1 + (currentPage - 1) * itemsPerPage}
+                     </td>
+                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                     {stock.date.split('T')[0]}
+                     </td>
+                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                      {stock.transferNumber}
+                     </td>
+                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                     {stock.items.map((item)=>(
+                        item.itemName
+                      ))}
+                     </td>
+                     <td className="p-2 text-[14] text-center text-[#4B5C79]">
+                      {stock.mainRoute}
+                     </td>
+                   </tr>
+
+                  )
+
+                  
+                  )}
+                 
                 </tbody>
               </table>
+                {/* Pagination Controls */}
+                <div className="flex justify-between mt-4">
+                <button
+                  className="px-3 py-1 bg-gray-200 rounded"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button
+                  className="px-3 py-1 bg-gray-200 rounded"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

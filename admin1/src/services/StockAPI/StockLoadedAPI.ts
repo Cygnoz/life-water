@@ -29,3 +29,17 @@ export const addStockLoadedApi = async (stockData: StockData) => {
       throw new Error(error.response?.data || "Failed to add loaded stock");
     }
   };
+
+  
+export const getAllStockloaded = async () => {
+  try {
+    const response = await axios.get(`${STOCK_BASEURL}/api/stock`,);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Error fetching stockloaded:', error.response?.data.message);
+      throw new Error(error.response?.data.message || 'Failed to fetch stockloaded');
+    }
+    throw new Error('An unexpected error occurred');
+  }
+};
