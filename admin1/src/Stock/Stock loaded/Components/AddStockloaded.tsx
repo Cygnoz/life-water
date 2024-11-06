@@ -252,7 +252,7 @@ const AddStockloaded: React.FC = () => {
           {/* Main content */}
           <div className="flex-1 min-h-screen">
             <div className="flex gap-3 items-center w-full max-w-8xl ms-1 mt-2">
-              <Link to="">
+              <Link to="/stockloaded">
                 <img
                   className="bg-gray-200 rounded-full p-2"
                   src={back}
