@@ -1,4 +1,5 @@
 // const BusinessCustomer = require('../Models/BussinessCustomerSchema');
+const axios = require('axios');
 const Customer = require('../Models/CustomerSchema');
  
  
@@ -89,6 +90,14 @@ const createCustomer = async (req, res) => {
       depositAmount,
       paymentMode
     });
+    const name = newCustomer.firstName;
+
+    const response = await axios.post('https://account-api.dev.billbizz.cloud:5001/lw-account', { customerDisplayName: name });
+    if (response.status === 201) {
+      console.log('Customer added successfully to billbizz account');
+    } else {
+      console.error('Failed to add customer to billbizz account');
+    }
  
     const savedCustomer = await newCustomer.save();
  
