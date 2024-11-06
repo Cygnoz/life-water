@@ -67,6 +67,7 @@ export const addOrderAPI = async (formData: FormData): Promise<ApiResponse> => {
   
 
 // export const addOrderAPI = async (orderData: Order): Promise<ApiResponse> => {
+
 //   try {
 //     const response = await axios.post(`${STOCK_BASEURL}/api/orders`, orderData);
     
@@ -79,3 +80,64 @@ export const addOrderAPI = async (formData: FormData): Promise<ApiResponse> => {
 //     throw error; // Rethrow error for component handling
 //   }
 // };
+
+
+// export const getOrderAPI = async (): Promise<ApiResponse> => {
+//     try {
+//         const response = await axios.get(`${STOCK_BASEURL}/api/orders`, {
+//             headers: {
+//                 'Accept': 'application/json',
+//             },
+//         });
+  
+//         // Logging the response for debugging
+//         console.log("Response Status:", response.status); // Check the response status
+//         console.log("Response Data:", response.data); // Check the response data
+  
+//         return response.data; // Return the data for further processing
+//     } catch (error: any) {
+//         console.error("Error fetching order:", error.response?.data || error.message);
+//         throw error; // Rethrow the error to be caught in the component
+//     }
+//   };
+
+export const getOrderAPI = async () => {
+    try {
+      const response = await axios.get(`${STOCK_BASEURL}/api/orders`);
+      return response.data; // Returns the list of orders
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error; // Propagate the error to handle it in the calling function
+    }
+  };
+
+
+  export const deleteOrderAPI = async (id: string) => {
+    try {
+      const response = await axios.delete(`${STOCK_BASEURL}/api/orders/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      throw error;
+    }
+  };
+
+//   export const viewOrderAPI = async (id: string) => {
+//     try {
+//       const response = await axios.get(`${STOCK_BASEURL}/api/orders/${id}`);
+//       return response.data;
+//     } catch (error) {
+//       console.error("Error fetching order:", error);
+//       throw error;
+//     }
+//   };
+
+export const viewOrderAPI = async (id: string) => {
+    try {
+      const response = await axios.get(`${STOCK_BASEURL}/api/orders/${id}`);
+      return response.data;
+    } catch (error: any) {
+      console.error("Error fetching order:", error.response?.data || error.message);
+      throw error;
+    }
+  };
