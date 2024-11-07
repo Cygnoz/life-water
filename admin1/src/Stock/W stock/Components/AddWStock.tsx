@@ -7,7 +7,7 @@ import trash from "../../../assets/images/trash.svg";
 import { Link } from "react-router-dom";
 import back from "../../../assets/images/backbutton.svg";
 import { STOCK_BASEURL } from "../../../services/Baseurl";
-import { createStock, getAllStocks } from "../../../services/StockAPI/W-StockAPI";
+import { createStock} from "../../../services/StockAPI/W-StockAPI";
 
 
 interface Item {
@@ -34,14 +34,14 @@ interface OrderDetails {
   notes: string;
   termsAndConditions: string;
 }
-interface StockItem {
-  itemName: string;
-  quantity: number;
-  rate: number;
-  amount: number;
-  itemImage?: string; // Allow undefined
-  purchasePrice?: number;
-}
+// interface StockItem {
+//   itemName: string;
+//   quantity: number;
+//   rate: number;
+//   amount: number;
+//   itemImage?: string; // Allow undefined
+//   purchasePrice?: number;
+// }
 
 
 
@@ -139,8 +139,8 @@ const AddWStock: React.FC<AddWStockProps> = () => {
 
   const handleItemSelect = (item: Item, index: number) => {
     const quantity = item.quantity || 1;
-    const rate = item.purchasePrice || 0;
-
+    const rate = Number(item.purchasePrice) || 0; // Ensure rate is a number
+  
     setOrderDetails((prev) => {
       const newItems = [...prev.items];
       newItems[index] = {
@@ -155,6 +155,7 @@ const AddWStock: React.FC<AddWStockProps> = () => {
     setOpenDropdownId(null);
     setOpenDropdownType(null);
   };
+  
 
   const handleItemChange = (
     index: number,
@@ -165,16 +166,17 @@ const AddWStock: React.FC<AddWStockProps> = () => {
       const newItems = [...prev.items];
       newItems[index] = {
         ...newItems[index],
-        [field]: value,
+        [field]: field === "rate" || field === "quantity" ? Number(value) : value, // Ensure numbers
       };
-
+  
       const quantity = Number(newItems[index].quantity) || 0;
       const rate = Number(newItems[index].rate) || 0;
       newItems[index].amount = rate * quantity;
-
+  
       return { ...prev, items: newItems };
     });
   };
+  
 
   const toggleDropdown = (index: number, type: string) => {
     setOpenDropdownId(index === openDropdownId ? null : index);
@@ -184,7 +186,14 @@ const AddWStock: React.FC<AddWStockProps> = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await createStock(orderDetails);
+      const orderWithDefaults = {
+        ...orderDetails,
+        items: orderDetails.items.map(item => ({
+          ...item,
+          itemImage: item.itemImage || defaultImage, // Fallback if `itemImage` is undefined
+        })),
+      };
+      const response = await createStock(orderWithDefaults);
       console.log('Stock created:', response);
       // Reset form or show a success message if needed
     } catch (error: any) {
@@ -192,6 +201,7 @@ const AddWStock: React.FC<AddWStockProps> = () => {
       // Show an error message to the user
     }
   };
+  
 
   
 

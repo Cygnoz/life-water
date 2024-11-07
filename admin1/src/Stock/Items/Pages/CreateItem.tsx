@@ -7,7 +7,7 @@ import plus from "../../../assets/circle-plus.svg";
 import search from "../../../assets/images/search.svg";
 import { Link, useNavigate } from 'react-router-dom';
 import { getItemsAPI,deleteItemAPI } from '../../../services/StockAPI/StockAPI';
-import { BASEURL, STOCK_BASEURL } from '../../../services/Baseurl';
+import {  STOCK_BASEURL } from '../../../services/Baseurl';
 
 
 const CreateItem: React.FC = () => {

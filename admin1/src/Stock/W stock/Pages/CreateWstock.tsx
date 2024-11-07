@@ -28,6 +28,8 @@ const CreateWStock: React.FC = () => {
   const navigate = useNavigate();
   const [stocks, setStocks] = useState<StockData[]>([]);
   const [error, setError] = useState<string | null>(null);
+  console.log(error);
+  
 
   const handleAdd = () => {
     navigate("/addWstock");

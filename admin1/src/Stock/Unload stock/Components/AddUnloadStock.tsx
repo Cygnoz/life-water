@@ -94,17 +94,16 @@ const handleAddUnload = async () => {
         _id: productId,
         product: item.product,
         quantity: item.quantity,
-        rate: (item.rate || 0).toString(), // Convert rate to string
-        amount: (item.amount || 0).toString() // Convert amount to string
+        rate: parseFloat(item.rate.toString()), // Convert rate back to number
+        amount: parseFloat(item.amount.toString()) // Convert amount back to number
       };
     })
   );
 
-
   const unloadData: UnloadDetails = {
     mainRoute: orderDetails.mainRoute,
     warehouseName: orderDetails.warehouseName,
-    date: new Date(orderDetails.date).toISOString(), // Ensuring date is in ISO format
+    date: new Date(orderDetails.date).toISOString(),
     transferNumber: orderDetails.transferNumber,
     items: formattedItems, // Include the formatted items
     autoNotes: orderDetails.autoNotes,
@@ -119,12 +118,10 @@ const handleAddUnload = async () => {
 
     if (response?.status === 201) { // Use strict equality
       toast.success("Stock unloaded successfully");
-       // Reset form fields
-       setOrderDetails(initialOrderDetails); // Resetting to initial state
+      setOrderDetails(initialOrderDetails); // Resetting to initial state
 
-       // Optionally navigate to another page
-       setTimeout(() => {
-        navigate('/unloadstock'); // Replace with the actual route you want to navigate to
+      setTimeout(() => {
+        navigate('/unloadstock');
       }, 2000); 
       
     } else {
@@ -136,6 +133,7 @@ const handleAddUnload = async () => {
     toast.error("Stock unload failed");
   }
 };
+
 
 
 

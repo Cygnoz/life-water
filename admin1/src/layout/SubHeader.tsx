@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Home from '../assets/images/home.svg';
-import frame from '../assets/images/frame.svg';
 
 interface SubHeaderProps {
   selectedNav: string; // Declare selectedNav as a prop

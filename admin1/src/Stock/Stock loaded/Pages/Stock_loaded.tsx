@@ -18,6 +18,9 @@ const StockLoaded: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 10;
+console.log(loading);
+console.log(error);
+
 
   
   useEffect(() => {
@@ -209,7 +212,7 @@ const StockLoaded: React.FC = () => {
                       {stock.transferNumber}
                      </td>
                      <td className="p-2 text-[14] text-center text-[#4B5C79]">
-                     {stock.items.map((item)=>(
+                     {stock.items.map((item:any)=>(
                         item.itemName
                       ))}
                      </td>

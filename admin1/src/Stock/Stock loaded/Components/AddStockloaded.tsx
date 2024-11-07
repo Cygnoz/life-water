@@ -66,6 +66,9 @@ const AddStockloaded: React.FC = () => {
   const [routesList, setRouteList] = useState<Route[]>([]);
   // const [filteredSubRoutes, setFilteredSubRoutes] = useState<Route[]>([]);
   const [subRoutes, setSubRoutes] = useState<string[]>([]); // Specify type here
+  
+  console.log(routesList);
+  
 
   const defaultImage =
     "https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-512.png";
@@ -100,8 +103,8 @@ const AddStockloaded: React.FC = () => {
 
         // Filter for subRoutes based on the dynamic mainRoute from orderDetails
         const filteredSubRoutes: string[] = response
-          .filter((route) => route.mainRoute === orderDetails.mainRoute)
-          .map((route) => route.subRoute);
+        .filter((route: Route) => route.mainRoute === orderDetails.mainRoute)
+        .map((route: Route) => route.subRoute);
 
         setSubRoutes(filteredSubRoutes);
         console.log(

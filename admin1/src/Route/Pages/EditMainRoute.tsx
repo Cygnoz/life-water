@@ -21,22 +21,28 @@ const EditMainRoute: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);  // Add loading state
 
   // Fetch existing route data (if editing)
-  useEffect(() => {
-    const fetchRouteData = async () => {
-      try {
-        const response = await getRouteByIdAPI(id)
-        setFormData(response.data.mainRoute); // Populate the form with fetched data
-        setIsLoading(false); // Set loading to false after data is fetched
-      
-      } catch (error) {
-        console.error('Error fetching route data:', error);
-        toast.error('Error fetching route data');
-        setIsLoading(false);
+ useEffect(() => {
+  const fetchRouteData = async () => {
+    try {
+      if (!id) {
+        console.warn("Route ID is undefined");
+        return;
       }
-    };
+      
+      const response = await getRouteByIdAPI(id); // Now `id` is safely a string
+      setFormData(response.data.mainRoute); // Populate the form with fetched data
+      setIsLoading(false); // Set loading to false after data is fetched
+    
+    } catch (error) {
+      console.error('Error fetching route data:', (error as Error).message);
+      toast.error('Error fetching route data');
+      setIsLoading(false);
+    }
+  };
 
-    if (id) fetchRouteData();
-  }, [id]);
+  fetchRouteData();
+}, [id]);
+
 
   // Handle input change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
