@@ -31,7 +31,7 @@ router.delete('/warehouse/:id', warehouseController.deleteWarehouse);
 
 
 //Orders
-router.post('/orders', orderController.createOrder);
+router.post('/orders',upload.single('itemImage'), orderController.createOrder);
 router.get('/orders/:id', orderController.viewOrder);
 router.get('/orders', orderController.viewAllOrders);
 router.delete('/orders/:id', orderController.deleteOrder);

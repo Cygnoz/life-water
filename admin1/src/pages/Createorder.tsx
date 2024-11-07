@@ -16,7 +16,26 @@ import { deleteOrderAPI, getOrderAPI } from '../services/OrderAPI/OrderAPI'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from "react-toastify";
 
+interface Item {
+  itemName: string;
+  quantity: number;
+  rate: number;
+  amount: number;
+}
 
+interface OrderDetails {
+  _id: string;
+ 
+  customer: string;
+salesman: string;
+warehouse:string,
+date: string;
+orderNumber: string;
+paymentMode: string;
+items: Item[];
+notes: string;
+termsAndCondition: string;
+}
 
 const CreateOrder: React.FC = () => {
   const navigate = useNavigate()
@@ -25,8 +44,8 @@ const CreateOrder: React.FC = () => {
     navigate('/addneworder')
   }
 
-  const handleView = (): void => {
-    navigate('/vieworder')
+  const handleView = (id : string): void => {
+    navigate(`/vieworder/${id}`)
   }
 
   // const [orders, setOrders] = useState<ApiResponse[]>([]); // State to store order data
@@ -43,25 +62,7 @@ const CreateOrder: React.FC = () => {
   //   };
   //   fetchOrders();
   // }, []);
-  interface Item {
-    itemName: string;
-    quantity: number;
-    rate: number;
-    amount: number;
-  }
 
-  interface OrderDetails {
-    _id: string;
-    customer: string;
-  salesman: string;
-  warehouse:string,
-  date: string;
-  orderNumber: string;
-  paymentMode: string;
-  items: Item[];
-  notes: string;
-  termsAndCondition: string;
-  }
 
   const [orders, setOrders]= useState<OrderDetails[]>([])
   // const [filteredOrder, setFilteredOrder] = useState<OrderDetails[]>([])
@@ -232,7 +233,7 @@ const CreateOrder: React.FC = () => {
                                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.items.map((item)=>(item.amount))}</td>
                                     <td className="p-2 text-[14] text-center text-[#4B5C79]">{order.salesman}</td>
                                     <td className="p-2 text-[14] text-center">
-                                    <button onClick={handleView} className="text-blue-500">
+                                    <button onClick={()=> handleView (order._id)} className="text-blue-500">
                                         <img src={eye} alt="" />
                                       </button>
                                       <button onClick={() => handleDelete(order._id)} className="text-red-500 ml-2"><img src={trash} alt="" /></button>

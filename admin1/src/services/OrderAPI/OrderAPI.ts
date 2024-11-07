@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { STOCK_BASEURL } from "../Baseurl";
-// import { Item } from '../StockAPI/StockAPI';
+
 
 interface ApiResponse {
   success: boolean;
@@ -46,6 +46,32 @@ interface ApiResponse {
 
 
 // Change the API function signature
+// Define commonAPI within the same file as addOrderAPI
+ const commonApiForOrder = async (
+  method: string,
+  url: string,
+  body: any,
+  headers: HeadersInit = {}
+): Promise<any> => {
+  const response = await fetch(url, {
+    method,
+    body: JSON.stringify(body), // Serialize body to JSON
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json', // Ensure Content-Type is set
+      ...headers,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json(); // Capture error message from server
+    throw new Error(errorData.message || 'Network response was not ok');
+  }
+
+  return response.json(); // Parse JSON response
+};
+
+// addOrderAPI function
 export const addOrderAPI = async (data: {
   customer: string;
   salesman: string;
@@ -55,25 +81,20 @@ export const addOrderAPI = async (data: {
   paymentMode: string;
   notes: string;
   termsAndCondition: string;
-  items: { itemName: string; quantity: number; price: number; amount: number; }[];
+  items: { itemName: string; itemImage: string; quantity: number; price: number; amount: number; }[];
 }): Promise<ApiResponse> => {
   try {
-    const response = await axios.post(`${STOCK_BASEURL}/api/orders`, data, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-    });
-
-    console.log("Response Status:", response.status);
-    console.log("Response Data:", response.data);
-
-    return response.data;
+    const response = await commonApiForOrder('POST', `${STOCK_BASEURL}/api/orders`, data);
+    console.log("Response Status:", response.status); // Check the response status
+    console.log("Response Data:", response.data); // Check the response data
+    return response;
   } catch (error: any) {
-    console.error("Error adding order:", error.response?.data || error.message);
+    console.error("Error adding order:", error.message);
     throw error;
   }
 };
+
+
 
 
 // export const addOrderAPI = async (orderData: Order): Promise<ApiResponse> => {
