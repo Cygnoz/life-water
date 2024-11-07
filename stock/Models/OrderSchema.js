@@ -44,6 +44,9 @@ const orderSchema = new mongoose.Schema({
       type: String,
     //   required: true
     },
+    itemImage: {
+      type: String, // URL or path to the image
+    },
     quantity: {
       type: Number,
     //   required: true,
@@ -59,7 +62,8 @@ const orderSchema = new mongoose.Schema({
       type: Number,
     //   required: true,
     //   min: 0
-    }
+    },
+ 
   }],
 
   // Additional information

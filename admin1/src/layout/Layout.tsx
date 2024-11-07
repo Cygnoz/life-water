@@ -73,6 +73,9 @@ import ViewActiveRoute from '../Route/Components/ViewActiveRoute';
 
 import ViewSubRoute from '../Route/Components/ViewSubRoute';
 import MyComponent from '../dashboard/pages/DashBoard';
+import AddJournalEntry from '../Accounts/Components/AddJournalEntry';
+import Banking from '../Accounts/Pages/Banking';
+import CreateProfile from '../Settings/Pages/CreateProfile';
 
 
 
@@ -106,7 +109,7 @@ const App: React.FC = () => {
                {/* ORDERS */}
               <Route path='/orders' element={<CreateOrder />} />
               <Route path='/addneworder' element={<NewOrder />} />
-              <Route path='/vieworder' element={<ViewOrder />} />
+              <Route path='/vieworder/:id' element={<ViewOrder />} />
 
 
                {/* STAFF */}
@@ -209,6 +212,18 @@ const App: React.FC = () => {
             <Route path='/invoice' element={<Invoice/>}/>
             <Route path='/reciept' element={<Receipt/>}/>
             <Route path='/salesman' element={<Salesman/>}/>
+
+
+            {/* ACCOUNTS */}
+            <Route path='/addjournal' element={<AddJournalEntry/>}/>
+            <Route path='/banking' element={<Banking/>}/>
+           
+
+
+           {/* SETTINGS */}
+
+           <Route path='/settings' element={<CreateProfile/>}/>
+
             
 
 

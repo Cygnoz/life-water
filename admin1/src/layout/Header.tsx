@@ -5,8 +5,14 @@ import profile from '../assets/images/headerassets/profile.svg';
 import bell from '../assets/images/headerassets/bell.svg';
 import settings from '../assets/images/headerassets/settings.svg';
 import users from '../assets/images/headerassets/users.svg';
+import { useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleSettings = ()=>{
+    navigate('/settings')
+  }
   return (
     <div className="w-[1380px] py-1 border-b border-[#1c1c1c]/10 justify-start items-center gap-6 inline-flex">
       {/* Search Input */}
@@ -51,7 +57,7 @@ const Header: React.FC = () => {
         <div className="rounded-lg justify-start items-center gap-2.5 flex">
           <img src={bell} alt="Notifications" />
           <img src={users} alt="Users" />
-          <img src={settings} alt="Settings" />
+          <button onClick={handleSettings}><img  src={settings} alt="Settings" /></button>
           <img className="w-6 h-6 rounded-full" src={profile} alt="Profile" />
         </div>
       </div>

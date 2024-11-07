@@ -8,7 +8,7 @@ import { Link } from "react-router-dom"
 import icondown from "../assets/images/Icon down.svg"
 import search from "../assets/images/search.svg"
 import { getAllCustomersAPI } from "../services/CustomerAPI/Customer"
-import { BASEURL } from "../services/Baseurl"
+import { BASEURL, STOCK_BASEURL } from "../services/Baseurl"
 import { getAllStaffsAPI } from "../services/AllApi"
 import { getItemsAPI } from "../services/StockAPI/StockAPI"
 import downarrow from "../assets/images/Vector.png"
@@ -22,6 +22,7 @@ interface Item {
   quantity: number
   rate: number
   amount: number
+  itemImage:string
 }
 
 interface OrderDetails {
@@ -44,7 +45,7 @@ const NewOrder: React.FC = () => {
     date: "",
     orderNumber: "",
     paymentMode: "",
-    items: [{ itemName: "", quantity: 0, rate: 0, amount: 0 }],
+    items: [{ itemName: "",itemImage: '', quantity: 0, rate: 0, amount: 0 }],
     notes: "",
     termsAndCondition: "",
   })
@@ -54,17 +55,17 @@ const NewOrder: React.FC = () => {
   const [openDropdownType, setOpenDropdownType] = useState<string | null>(null)
   const [searchValue, setSearchValue] = useState<string>("")
 
-  const [rows, setRows] = useState<Item[]>([{ itemName: "", quantity: 0, rate: 0, amount: 0 }])
+  const [rows, setRows] = useState<Item[]>([{ itemName: "",itemImage: '', quantity: 0, rate: 0, amount: 0 }])
 
   const addRow = () => {
-    setRows([...rows, { itemName: "", quantity: 0, rate: 0, amount: 0 }])
+    setRows([...rows, { itemName: "",itemImage: '', quantity: 0, rate: 0, amount: 0 }])
   }
 
   const removeRow = (index: number) => {
     if (rows.length > 1) {
       setRows(rows.filter((_, i) => i !== index))
     } else {
-      setRows([{ itemName: "", quantity: 0, rate: 0, amount: 0 }])
+      setRows([{ itemName: "",itemImage: '', quantity: 0, rate: 0, amount: 0 }])
     }
   }
 
@@ -76,6 +77,7 @@ const NewOrder: React.FC = () => {
 
     newRows[index] = {
       itemName: item.itemName,
+      itemImage: item.itemImage,
       quantity: quantity,
       rate: rate,
       amount: rate * quantity,
@@ -272,7 +274,7 @@ const NewOrder: React.FC = () => {
   }
 
   const [warehouses, setWarehouses] = useState<WarehouseItem[]>([])
-  const [selectedWarehouse] = useState<string>("")
+  const [selectedWarehouse, setSelectedWarehouse] = useState<string>("")
 
   useEffect(() => {
     const fetchWarehouse = async () => {
@@ -289,6 +291,7 @@ const NewOrder: React.FC = () => {
 
   const handleWarehouseSelection = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const warehouseValue = e.target.value
+    setSelectedWarehouse(warehouseValue)
     setOrderDetails((prevDetails) => ({
       ...prevDetails,
       warehouse: warehouseValue,
@@ -313,6 +316,7 @@ const NewOrder: React.FC = () => {
         termsAndCondition: orderDetails.termsAndCondition,
         items: orderDetails.items.map((item) => ({
           itemName: item.itemName,
+          itemImage: item.itemImage,
           quantity: item.quantity,
           price: item.rate, // Ensure this matches your backend schema
           amount: item.amount,
@@ -335,7 +339,7 @@ const NewOrder: React.FC = () => {
           date: "",
           orderNumber: "",
           paymentMode: "",
-          items: [{ itemName: "", quantity: 0, rate: 0, amount: 0 }],
+          items: [{ itemName: "",itemImage: "", quantity: 0, rate: 0, amount: 0 }],
           notes: "",
           termsAndCondition: "",
         })
@@ -550,7 +554,10 @@ const NewOrder: React.FC = () => {
                               {row.itemName ? (
                                 <div className="cursor-pointer gap-2 grid grid-cols-12 appearance-none items-center justify-center h-9 text-zinc-400 bg-white text-sm">
                                   <div className="flex items-start col-span-4">
-                                    <img className="rounded-full h-10 w-10" src={defaultImage} alt="" />
+                                  <img 
+  className="mx-auto object-cover w-11 h-11 rounded-full"
+  src={row.itemImage ? `${STOCK_BASEURL}/${row.itemImage.replace(/\\/g, '/')}` : defaultImage} 
+  alt={`${row.itemName}`} />
                                   </div>
                                   <div className="col-span-8 text-start">
                                     <p className="text-textColor">{row.itemName}</p>
@@ -579,7 +586,8 @@ const NewOrder: React.FC = () => {
                                        hover:bg-gray-100 cursor-pointer border border-slate-400 rounded-lg bg-lightPink"
                                     >
                                       <div className="col-span-2 flex justify-center">
-                                        <img className="rounded-full h-10" src={item.itemImage || defaultImage} alt="" />
+                                        <img className="rounded-full h-10"   src={item.itemImage ? `${STOCK_BASEURL}/${item.itemImage.replace(/\\/g, '/')}` : defaultImage} 
+ alt="" />
                                       </div>
                                       <div className="col-span-10 flex">
                                         <div className="text-start">
