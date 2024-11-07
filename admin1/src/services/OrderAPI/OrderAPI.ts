@@ -45,26 +45,36 @@ interface ApiResponse {
 //   };
 
 
-export const addOrderAPI = async (formData: FormData): Promise<ApiResponse> => {
+// Change the API function signature
+export const addOrderAPI = async (data: {
+  customer: string;
+  salesman: string;
+  warehouse: string;
+  date: string;
+  orderNumber: string;
+  paymentMode: string;
+  notes: string;
+  termsAndCondition: string;
+  items: { itemName: string; quantity: number; price: number; amount: number; }[];
+}): Promise<ApiResponse> => {
   try {
-      const response = await axios.post(`${STOCK_BASEURL}/api/orders`, formData, {
-          headers: {
-              'Accept': 'application/json',
-              // 'Content-Type' should not be set; Axios handles that for FormData
-          },
-      });
+    const response = await axios.post(`${STOCK_BASEURL}/api/orders`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    });
 
-      // Logging the response for debugging
-      console.log("Response Status:", response.status); // Check the response status
-      console.log("Response Data:", response.data); // Check the response data
+    console.log("Response Status:", response.status);
+    console.log("Response Data:", response.data);
 
-      return response.data; // Return the data for further processing
+    return response.data;
   } catch (error: any) {
-      console.error("Error adding order:", error.response?.data || error.message);
-      throw error; // Rethrow the error to be caught in the component
+    console.error("Error adding order:", error.response?.data || error.message);
+    throw error;
   }
 };
-  
+
 
 // export const addOrderAPI = async (orderData: Order): Promise<ApiResponse> => {
 
