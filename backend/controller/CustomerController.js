@@ -171,6 +171,13 @@ const addCustomerFromSalesman = async (req, res) => {
       location: transformedLocation // This will be undefined if location is not provided
     });
 
+    const response = await axios.post('https://account-api.dev.billbizz.cloud:5001/lw-account', { customerDisplayName: firstName });
+    if (response.status === 201) {
+      console.log('Customer added successfully to billbizz account');
+    } else {
+      console.error('Failed to add customer to billbizz account');
+    }
+
     const savedCustomer = await newCustomer.save();
     res.status(201).json({ message: 'Customer added successfully', customer: savedCustomer, status: 201 });
   } catch (error) {
