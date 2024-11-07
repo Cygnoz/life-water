@@ -7,6 +7,11 @@ require('./db/connection');
 // Import routes
 const stockRoutes = require('./routes/router.js'); 
 
+
+app.use(cors({
+  origin: 'http://3.110.171.51:4173'
+}));
+
 app.use(cors())
 app.use(express.json());
 
