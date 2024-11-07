@@ -55,7 +55,7 @@ const EditItem: React.FC = () => {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!id) return;
-
+    
         setLoading(true);
         const formData = new FormData();
         formData.append('itemName', itemName);
@@ -64,7 +64,7 @@ const EditItem: React.FC = () => {
         formData.append('retailPrice', String(retailPrice));
         formData.append('description', description);
         if (profile) formData.append('itemImage', profile);
-
+    
         try {
             console.log("Before Submission:", {
                 itemName,
@@ -74,7 +74,7 @@ const EditItem: React.FC = () => {
                 description,
                 profile,
             });
-
+    
             const response = await updateItemAPI(id, formData);
             console.log("Update Response:", response);
             if (response.message === 'Item updated successfully') {
@@ -88,11 +88,12 @@ const EditItem: React.FC = () => {
             }
         } catch (error) {
             console.error("Error updating item:", error);
-            toast.error(`Error updating item: ${error.message}`);
+            toast.error(`Error updating item: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
     };
+    
 
     if (isLoading) return <div>Loading...</div>;
 

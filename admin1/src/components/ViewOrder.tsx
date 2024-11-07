@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import bottle from '../assets/images/bottle1.svg';
 import bottleside from '../assets/images/bottleside.png';
 import printer from '../assets/images/printer.svg';
-import lines from '../assets/images/lines.svg';
+// import lines from '../assets/images/lines.svg';
 import lines2 from '../assets/images/lines2.svg';
 
 import backbutton from '../assets/images/backbutton.svg'

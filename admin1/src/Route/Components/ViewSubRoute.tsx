@@ -39,20 +39,17 @@ const ViewSubRoute: React.FC = () => {
   const [subrouteData, setSubRouteData] = useState<any>(null);
   const [activeSection, setActiveSection] = useState("routeDetail");
   const [route, setRoute] = useState<any>(null);
-  const [rides, setRides] = useState([]);
+  const [rides, setRides] = useState<Ride[]>([]); // Explicitly type as Ride[]
   const [mostVisitedSalesman, setMostVisitedSalesman] = useState<string | null>(
     null
   );
   const [mostVisitedVehicle, setMostVisitedVehicle] = useState<string | null>(
     null
   );
-  const [rideList, setRideList] = useState<Ride[]>([]);
-  const [mainRideList, setMainRideList] = useState<Ride[]>([]);
+  const [mainRideList, setMainRideList] = useState<Ride[]>([]); // Explicitly type as Ride[]
   const navigate = useNavigate();
 
-
-  // subroute data
-
+  // Subroute data
   useEffect(() => {
     const fetchSubRouteData = async () => {
       try {
@@ -86,7 +83,7 @@ const ViewSubRoute: React.FC = () => {
 
         // Filter rides by the specified main route
         const filteredRides = data.data.filter(
-          (ride) => ride.subRoute === targetSubRoute
+          (ride: Ride) => ride.subRoute === targetSubRoute // Type annotation for ride
         );
 
         if (filteredRides.length === 0) {
@@ -101,7 +98,7 @@ const ViewSubRoute: React.FC = () => {
         const vehicleCount: Record<string, number> = {};
         const subRouteCount: Record<string, number> = {};
 
-        filteredRides.forEach((ride) => {
+        filteredRides.forEach((ride: Ride) => {
           const { salesMan, vehicleNo, subRoute } = ride;
 
           if (salesMan) {
@@ -154,12 +151,12 @@ const ViewSubRoute: React.FC = () => {
         // Determine if response has data property or is directly an array
         const routes = Array.isArray(response.data) ? response.data : response;
 
-        setRideList(routes); // Set the full list of routes
+        setRides(routes); // Set the full list of routes
         console.log("All Routes:", routes);
 
         // Ensure that `routeData` is loaded before filtering
         if (!subrouteData?.subRoute) {
-          console.warn(" Subroute is undefined");
+          console.warn("Subroute is undefined");
           return;
         }
 
@@ -168,7 +165,7 @@ const ViewSubRoute: React.FC = () => {
 
         // Filter routes based on specified main route
         const filteredRoutes = routes.filter(
-          (ride) => ride.subRoute === Route
+          (ride: Ride) => ride.subRoute === Route // Type annotation for ride
         );
         console.log("Filtered Routes for", Route, ":", filteredRoutes);
 
@@ -184,6 +181,11 @@ const ViewSubRoute: React.FC = () => {
   const handleEdit = (id: string): void => {
     navigate(`/route/editsubroute/${id}`);
   };
+
+  
+
+
+
   return (
     <div className="px-6 py-3">
       {/* Back Button and Title */}

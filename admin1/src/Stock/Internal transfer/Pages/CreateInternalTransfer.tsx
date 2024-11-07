@@ -3,7 +3,7 @@ import split from '../../../assets/images/list-filter.svg'
 import search from "../../../assets/images/search.svg"
 
 
-import plus from '../../../assets/circle-plus.svg'
+// import plus from '../../../assets/circle-plus.svg'
 import { Link } from 'react-router-dom';
  
 const CreateInternalTransfer: React.FC = () => {

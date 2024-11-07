@@ -1,11 +1,11 @@
-import printer from "../../assets/images/printer.svg";
-import split from "../../assets/images/list-filter.svg";
+// import printer from "../../assets/images/printer.svg";
+// import split from "../../assets/images/list-filter.svg";
 
 import plus from "../../assets/circle-plus.svg";
 import plusbank from "../../assets/images/circle-plus banking.svg";
 
-import dot from "../../assets/ellipsis-vertical.svg";
-import search from "../../assets/images/search.svg";
+// import dot from "../../assets/ellipsis-vertical.svg";
+// import search from "../../assets/images/search.svg";
 const Banking: React.FC = () => {
   return (
     <div>

@@ -13,7 +13,10 @@ const UnloadedAdd: React.FC = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 10; // Number of items to display per page
+  const itemsPerPage = 10;
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const fetchUnloads = async () => {
@@ -31,16 +34,22 @@ const UnloadedAdd: React.FC = () => {
     fetchUnloads();
   }, []);
 
-  // Calculate the items for the current page
+  // Filter unloads based on search term
+  const filteredUnloads = unloads.filter((unload) =>
+    Object.values(unload)
+      .join(" ")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+  // Pagination calculations
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = unloads.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredUnloads.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUnloads.length / itemsPerPage);
 
   // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  // Handle pagination buttons
-  const totalPages = Math.ceil(unloads.length / itemsPerPage);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -65,18 +74,21 @@ const UnloadedAdd: React.FC = () => {
       {/* Table Section */}
       <div className="bg-white shadow-md rounded-lg p-2">
         <div className="flex justify-between items-center mb-4">
-          <div className="absolute ml-3">
-            <img src={search} alt="search" className="h-5 w-5" />
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Search Stock"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 text-sm w-full rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
+              style={{
+                backgroundColor: "rgba(28, 28, 28, 0.04)",
+                outline: "none",
+                boxShadow: "none",
+              }}
+            />
+            <img src={search} alt="search" className="h-5 w-5 absolute top-1/2 left-2 transform -translate-y-1/2" />
           </div>
-          <input
-            className="pl-9 text-sm w-[100%] rounded-md text-start text-gray-800 h-10 p-2 border-0 focus:ring-1 focus:ring-gray-400"
-            style={{
-              backgroundColor: "rgba(28, 28, 28, 0.04)",
-              outline: "none",
-              boxShadow: "none",
-            }}
-            placeholder="Search Stock"
-          />
           <div className="flex w-[60%] justify-end">
             <button className="flex border text-[14] w-[500] text-[#565148] border-[#565148] px-4 py-2 me-2 rounded-lg">
               <img className="mt-1 me-1" src={split} alt="" />
@@ -96,7 +108,6 @@ const UnloadedAdd: React.FC = () => {
               <th className="p-2 text-[12px] text-center text-[#303F58]">Date</th>
               <th className="p-2 text-[12px] text-center text-[#303F58]">Transfer No</th>
               <th className="p-2 text-[12px] text-center text-[#303F58]">Main Route</th>
-              {/* <th className="p-2 text-[12px] text-center text-[#303F58]">Sub Route</th> */}
               <th className="p-2 text-[12px] text-center text-[#303F58]">Warehouses</th>
             </tr>
           </thead>
@@ -108,7 +119,6 @@ const UnloadedAdd: React.FC = () => {
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">{new Date(unload.date).toLocaleDateString()}</td>
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">{unload.transferNumber}</td>
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">{unload.mainRoute}</td>
-                {/* <td className="p-2 text-[14px] text-center text-[#4B5C79]">{unload.subRoute}</td> */}
                 <td className="p-2 text-[14px] text-center text-[#4B5C79]">{unload.warehouseName}</td>
               </tr>
             ))}

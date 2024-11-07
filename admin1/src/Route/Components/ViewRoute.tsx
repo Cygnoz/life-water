@@ -59,7 +59,7 @@ const ViewRoute: React.FC = () => {
   const [error, setError] = useState("");
   const { id } = useParams(); // Assumes route ID is passed as a URL parameter
   const [mainRouteList, setMainRouteList] = useState<Route[]>([]);
-  const [rides, setRides] = useState([]);
+  const [rides, setRides] = useState<Ride[]>([]);
   const [mostVisitedSalesman, setMostVisitedSalesman] = useState<string | null>(
     null
   );
@@ -202,14 +202,14 @@ console.log(rideList,activeRoutes,rides);
         }
   
         const mainRoute = routeData.mainRoute.mainRoute;
-        const filteredRoutes = routes.filter((ride) => ride.mainRoute === mainRoute);
-        console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
+        const filteredRoutes = routes.filter((ride: Ride) => ride.mainRoute === mainRoute);   
+             console.log("Filtered Routes for", mainRoute, ":", filteredRoutes);
   
         setMainRideList(filteredRoutes);
   
         // Calculate total stock for filtered routes
-        const totalStock = filteredRoutes.reduce((acc, ride) => acc + Number(ride.stock), 0);
-        console.log("Total Stock for Main Route:", totalStock);
+        const totalStock = filteredRoutes.reduce((acc: number, ride: Ride) => acc + Number(ride.stock), 0);     
+           console.log("Total Stock for Main Route:", totalStock);
         
         // Optionally set this in state if needed for rendering
         setTotalStock(totalStock); // Make sure to define totalStock in your component's state if needed
