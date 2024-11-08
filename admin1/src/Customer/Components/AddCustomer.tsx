@@ -334,6 +334,10 @@ export default function AddCustomer() {
                     <input type="radio" name="paymentMode" value="Credit" checked={formData.paymentMode === "Credit"} onChange={handleInputChange} className="mr-2" required />
                     Credit
                   </label>
+                  <label className="flex items-center">
+                    <input type="radio" name="paymentMode" value="Coupon" checked={formData.paymentMode === "Coupon"} onChange={handleInputChange} className="mr-2" required />
+                    Coupon
+                  </label>
                 </div>
               </div>
             </div>
