@@ -131,7 +131,7 @@ const customerSchema = new mongoose.Schema({
   },
   paymentMode: {
     type: String,
-    enum: ['Cash', 'Credit']
+    enum: ['Cash', 'Credit','Coupon']
   },
   location: {
     address: {

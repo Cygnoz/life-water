@@ -24,7 +24,7 @@ const createCustomer = async (req, res) => {
       area,
       zipPostalCode,
       billingAddress,
-      email,
+      email, // Now optional
       landmark,
       buildingNo,
       street,
@@ -39,23 +39,18 @@ const createCustomer = async (req, res) => {
     } = req.body;
 
     console.log(req.body);
-    
- 
+
     // Validate required fields
     if (!firstName) {
       return res.status(400).json({ message: 'First name is required.' });
     }
- 
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!email || !emailRegex.test(email)) {
-    //   return res.status(400).json({ message: 'Invalid email format.' });
-    // }
- 
+
+    // Check for existing customer by WhatsApp number (unique identifier)
     const existingCustomer = await Customer.findOne({ whatsappNo });
     if (existingCustomer) {
       return res.status(400).json({ message: 'A customer with this WhatsApp number already exists.' });
     }
- 
+
     // Create a new customer based on type
     const newCustomer = new Customer({
       customerType,
@@ -77,7 +72,7 @@ const createCustomer = async (req, res) => {
       area,
       zipPostalCode,
       billingAddress,
-      email,
+      email: email || null, // Set email to null if not provided
       landmark,
       buildingNo,
       street,
@@ -90,17 +85,9 @@ const createCustomer = async (req, res) => {
       depositAmount,
       paymentMode
     });
-    const name = newCustomer.firstName;
 
-    const response = await axios.post('https://account-api.dev.billbizz.cloud:5001/lw-account', { customerDisplayName: name });
-    if (response.status === 201) {
-      console.log('Customer added successfully to billbizz account');
-    } else {
-      console.error('Failed to add customer to billbizz account');
-    }
- 
     const savedCustomer = await newCustomer.save();
- 
+
     return res.status(201).json({
       message: 'Customer created successfully!',
       data: savedCustomer,
@@ -108,15 +95,10 @@ const createCustomer = async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating customer:', error);
- 
-    // if (error.code === 11000) {
-    //   return res.status(400).json({ message: 'A customer with this email already exists.' });
-    // }
- 
+
     return res.status(500).json({ message: 'Error creating customer', error });
   }
 };
-
 
 
 // Ensure correct path to your model
