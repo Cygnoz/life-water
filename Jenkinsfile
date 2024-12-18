@@ -31,7 +31,7 @@ pipeline {
             -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} \
             -Dsonar.sources=. \
             -Dsonar.exclusions=**/dependency-check-report.html,**/trivyfs.txt,**/trivyimage.txt \
-            -Dsonar.login=${SONAR_TOKEN}""
+            -Dsonar.login=${SONAR_TOKEN}"
                     }
                 }
             }
